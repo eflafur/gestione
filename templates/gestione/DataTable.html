@@ -1,0 +1,50 @@
+
+{% load static %}
+
+<html>
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="{% static '/Plugins/jquery-ui/css/jquery-ui.min.css' %}">
+      <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+      <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+      <link rel="stylesheet" type="text/css" href="{% static 'css/stile.css' %}">
+     <link rel="stylesheet" href="{% static 'mbraak-jqTree-c564b2f/jqtree.css' %}">
+  </head>
+  <body>
+
+<div class="row gutter-xs">
+    <div>
+        <input type="text" />
+        <button type="button"  id="invio">vai</button>
+    </div>
+</div>
+
+    <div class="col-xs-6 col-md-5">
+        <table id="mytable"  class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ruolo</th>
+                    <th>tipo</th>
+                    <th>qualifica</th>
+                   
+                </tr>
+            </thead>
+            <tbody id="tb1">
+            
+            </tbody>
+        </table>
+    </div>
+    
+    
+<script src="{% static 'jquery-3.2.1.js' %}" ></script>
+<script src="{% static 'mbraak-jqTree-c564b2f/tree.jquery.js' %}" ></script>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+<script src="{% static 'dittemng/DataTables.js' %}" ></script>
+<button id="bt1" type="submit" class="btn btn-primary">Tree</button>
+<div id="tree1"></div>
+
+</body>
+</html>
+

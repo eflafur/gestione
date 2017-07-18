@@ -1,0 +1,45 @@
+
+{% extends 'gestione/layout.html'%}
+{% load static %}
+{%block insert%}
+
+<!--{% for el in item %}-->
+ <!--<p> {{el}} </p>-->
+<!--{% endfor %}-->
+
+<!--<ul>-->
+    <!--{% for key,value  in item.items %}           -->
+            <!--<li> {{key}}: {{value}} </li>-->
+    <!--{% endfor %}    -->
+<!--</ul>-->
+
+ <div class="container">
+  <div class="row">
+    <div class="col-md-3"><h2>Cancella Articolo</h2>    
+    
+    <p id="result"></p>
+        
+            <form class="form-horizontal" action="ma" method="post"> 
+            
+                <select class="form-control" name="s1" id="slc1">
+                    {% for entry in items %}
+                        <option value="{{ entry.nome }}">{{ entry.nome}}</option>
+                    {% endfor %}
+                </select>
+                <br/>
+                
+                <select class="form-control" name="s2" id="tx1">
+                </select>
+                <br/><br/>
+                <button type="submit" class="btn btn-primary">Insert</button>
+            </form>
+        </div>
+     </div>
+</div>
+
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'gestione/modify/Modifica_settore.js' %}" ></script>
+{% endblock %}
+

@@ -1,0 +1,52 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2"><h2>Cerca Fornitore</h2> </div>      
+    </div>
+    <br/><br/>
+
+    <div class="row">
+        <div class="col-md-3">        
+            <div class="input-group">
+                <span class="input-group-addon">Azienda </span>    
+                <select class="form-control" name="a2" id="azienda">
+                   {% for entry in items %}
+                       <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+                   {% endfor %}
+                </select>
+            </div>
+        </div>     
+        <br/><br/><br/>       
+      
+        <div class=" col-md-3" id="idLKP1">
+            <table id="mytable"  class="table">
+                <thead>
+                    <tr>
+                        <th>Articolo</th>
+                    </tr>
+                </thead>
+                <tbody id="tb1">
+                </tbody>
+            </table>
+        </div>
+      
+        <div class=" col-md-3 col-md-offset-1" id="idLKP">
+            <div class="input-group" >
+                <span class="input-group-addon">Tel</span>
+                <input type="text" id="pr" class="form-control" name="a3" readonly>
+            </div>
+        </div>
+    </div>
+</div>
+        
+  
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Consultazione/GetProduct.js' %}" ></script>
+{% endblock %}

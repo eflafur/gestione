@@ -1,0 +1,126 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container">
+   <div class="row">
+        <div class="col-md-8 col-md-offset-2"><h2>Elimina Fornitore</h2> </div>      
+    </div>
+    <br/><br/>
+
+ <div class="row">
+  <div class="col-md-3">        
+  
+   
+  
+  <form class="form-horizontal" action="fe" method="post">            
+       
+        <div class="input-group">
+        <span class="input-group-addon">Azienda </span>    
+         <select class="form-control" name="a2" id="aziendadel">
+           {% for entry in items %}
+               <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+           {% endfor %}
+       </select>
+       </div>
+       <br/><br/>       
+       
+       <div class="input-group">
+         <span class="input-group-addon">Articolo</span>
+          <input type="text" id="slc" class="form-control" name="a1" placeholder="Contatto" readonly>
+        </div>
+        <br/><br/>
+
+       
+       <div class="input-group">
+         <span class="input-group-addon">Regione</span>
+          <input type="text" id="ct" class="form-control" name="a4" placeholder="Contatto" readonly>
+        </div>
+        <br/><br/>
+        
+     
+       <div class="input-group">
+         <span class="input-group-addon">Citta</span>
+          <input type="text" id="citta" class="form-control" name="a5" placeholder="Contatto" readonly>
+       </div>
+       <br/><br/>
+
+
+       <div class="input-group">
+         <span class="input-group-addon">Contatto</span>
+          <input type="text" id="contatto" class="form-control" name="a3" placeholder="Contatto" readonly>
+       </div>
+       <br/><br/>
+       
+       
+
+     
+       <div class="input-group">
+         <span class="input-group-addon">Data</span>
+          <input type="date" id="acq" class="form-control" name="a6" placeholder="Data" readonly>
+       </div>
+            </div>
+       <!--<br/><br/>-->
+    
+    <div class="col-md-3 ">
+    <!--<h1></h1> -->      
+
+  
+
+        <div class="input-group">
+         <span class="input-group-addon">Capacità</span>
+           <select class="form-control" name="a7" id="cap">
+            <option value=""> Nessuna</option>
+            <option value="Alta"> Alta</option>
+            <option value="Media"> Media</option>
+            <option value="Bassa"> Bassa</option>
+          </select>       
+        </div>
+       <br/><br/>
+       
+        <div class="input-group">
+         <span class="input-group-addon">Email</span>
+          <input type="email" id="email" class="form-control" name="a8" placeholder="caca" readonly>
+       </div>
+       
+       
+       <br/><br/>
+      
+       
+       <div class="input-group">
+         <span class="input-group-addon">Tel</span>
+          <input type="text" id="tel" class="form-control" name="a9" placeholder="Tel" readonly>
+       </div>
+      <br/><br/>
+      
+       <div class="input-group">
+         <span class="input-group-addon">Termini  pagamento</span>
+          <input type="number" id="trpag" class="form-control" name="a10" placeholder="gg" readonly>
+       </div>
+       <br/><br/>
+       
+       <div class="input-group">
+         <span class="input-group-addon">Margine</span>
+          <input type="number" id="margine" class="form-control" name="a11" placeholder="%" readonly>
+       </div>
+       <br/><br/>
+       
+       <div class="input-group">
+         <span class="input-group-addon">Fatturato</span>
+          <input type="number" id="fatturato" class="form-control" name="a12" placeholder="Euro" readonly>
+       </div>
+       <br/><br/>
+       
+        <button type="submit" class="btn btn-primary">Insert</button>
+     </form>
+         </div>
+        </div>
+     </div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'gestione/modify/Modifica.js' %}" ></script>
+  <!--<script src="{% static 'gestione/modify/Modifica_citta.js' %}" ></script>-->
+{% endblock %}

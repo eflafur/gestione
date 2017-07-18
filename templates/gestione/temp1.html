@@ -1,0 +1,31 @@
+{% extends 'dittemng/layout.html'%}
+
+{% load static %}
+
+{%block css%}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/stile.css' %}">
+{% endblock %}
+
+{%block script%}
+  <script src="{% static 'dittemng/I_Tables.js' %}" ></script>
+{% endblock %}
+
+{%block Tcontent%}
+
+<div id="btgr" class="btn-group1">
+  <button id="bt0" type="button" class="btn btn-primary btn-lg">Presentazione Lista</button>
+  <button id="bt1" type="button" class="btn btn-primary btn-lg">Prsentazione DATATABLE</button>    
+</div>
+
+<table id="tb" class="display">
+  <thead>
+    <tr>
+      <th>settore</th>
+      <th>areagoegrafica</th>
+      <th>numofferte</th>
+    </tr>
+  </thead>
+  <tbody id="prova"> </tbody>
+</table>
+
+{%endblock%}

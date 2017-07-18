@@ -1,0 +1,87 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container">
+ <div class="row">
+  <div class="col-md-3"><h1>Produttore</h1>        
+  
+   
+  
+  <form class="form-inline" action="mp" method="post">            
+       <select class="form-control" name="a1" id="slc">
+        </select>
+        <br/><br/>
+       
+         <select class="form-control" name="a2" id="azienda">
+           {% for entry in items %}
+               <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+           {% endfor %}
+       </select>
+       <br/><br/>       
+       
+        <select class="form-control" name="a4" id="ct">
+        </select>
+        <br/><br/>
+        
+         <select class="form-control" name="a10" id="lsart">
+        </select>
+        <br/><br/>
+       
+       
+       <!--<input type="text" name="a2" list="cityname">-->
+         <!--<datalist  id="cityname">-->
+           <!--{% for entry in items3 %}-->
+               <!--<option value="{{ entry.azienda }}">{{ entry.azienda}}</option>-->
+           <!--{% endfor %}-->
+       <!--</datalist>-->
+       <!--<br/><br/>-->
+     
+       <div class="input-group">
+         <span class="input-group-addon">Contatto</span>
+          <input type="text" id="contatto" class="form-control" name="a3" placeholder="Contatto">
+       </div>
+       <br/><br/>
+       
+       <select class="form-control" name="a5" id="citta">
+       </select>
+       <br/><br/>
+
+     
+       <div class="input-group">
+         <span class="input-group-addon">Data</span>
+          <input type="date" id="acq" class="form-control" name="a6" placeholder="Data">
+       </div>
+      <br/><br/>
+       
+        <div class="input-group">
+         <span class="input-group-addon">Capacità</span>
+          <input type="number" id="cap" class="form-control" name="a7" placeholder="Quintali">
+       </div>
+       <br/><br/>
+       
+        <div class="input-group">
+         <span class="input-group-addon">Email</span>
+          <input type="email" id="email" class="form-control" name="a8" placeholder="caca">
+       </div>
+       <br/><br/>
+       
+       <div class="input-group">
+         <span class="input-group-addon">cacca</span>
+          <input type="text" id="tel" class="form-control" name="a9" placeholder="Tel">
+       </div>
+      <br/><br/>
+       
+        <button type="submit" class="btn btn-primary">Insert</button>
+     </form>
+         </div>
+        </div>
+     </div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'gestione/modify/Modifica.js' %}" ></script>
+  <!--<script src="{% static 'gestione/modify/Modifica_citta.js' %}" ></script>-->
+{% endblock %}

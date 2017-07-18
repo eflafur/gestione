@@ -1,0 +1,25 @@
+
+{% extends 'dittemng/layout.html'%}
+
+{% load static %}
+
+{%block css%}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/stile.css' %}">
+{% endblock %}
+
+{%block script%}
+    <script src="{% static 'mbraak-jqTree-c564b2f/tree.jquery.js' %}" ></script>
+    <script src="{% static 'dittemng/Tree.js' %}" ></script>
+{% endblock %}
+
+
+
+{%block Tcontent%}
+<div id="btgr" class="btn-group1">
+  <button id="bt1" type="button" class="btn btn-primary btn-lg">Alberatura</button>
+</div>
+
+<div id="tree1"></div>
+{%endblock%}
+
+

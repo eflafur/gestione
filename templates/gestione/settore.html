@@ -1,0 +1,49 @@
+
+{% extends 'gestione/layout.html'%}
+{% load static %}
+{%block insert%}
+
+<!--{% for el in item %}-->
+ <!--<p> {{el}} </p>-->
+<!--{% endfor %}-->
+
+<!--<ul>-->
+    <!--{% for key,value  in item.items %}           -->
+            <!--<li> {{key}}: {{value}} </li>-->
+    <!--{% endfor %}    -->
+<!--</ul>-->
+
+ <div class="container">
+  <div class="row">
+    <div class="col-md-3"><h2>Crea Articolo</h2>    
+    
+    <p id="result"></p>
+        
+            <form class="form-inline" action="articolo" method="post"> 
+            
+                <select class="form-control" name="s1" id="slc1">
+                    {% for entry in items %}
+                        <option value="{{ entry.nome }}">{{ entry.nome}}</option>
+                    {% endfor %}
+                </select>
+                <br/><br/>
+                
+                 <input type="text" id="tx1" name="s2" list="s2" >
+                <datalist  id="s2" >
+                </datalist>
+                <br/><br/>
+            
+               
+                
+                <button type="submit" class="btn btn-primary">Insert</button>
+            </form>
+        </div>
+     </div>
+</div>
+
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'gestione/Settore.js' %}" ></script>
+{% endblock %}
+
