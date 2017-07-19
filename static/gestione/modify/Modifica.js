@@ -8,22 +8,15 @@ $(document).ready(function(){
     
     
     $("#azienda").click(function(){
-        $("#acq").val("2000-01-01");
-        $("#trpag").val("0");
-        $("#margine").val("0");
-        $("#fatturato").val("0");
       var a=$("#azienda option:selected").text();
-    //var a=$("#a5").html();
      Put(a);
     });
     $("#ct").click(function(){
       var r=$("#ct option:selected").text();
-    //var a=$("#a5").html();
      PutCitta(r);
     });
  $("#aziendadel").click(function(){
       var r=$("#aziendadel option:selected").text();
-    //var a=$("#a5").html();
      DelFornitore(r);
     });
 
@@ -34,11 +27,6 @@ function Put(item) {
             "mp",
             { var: item,a2:"insert"},
             function (result) {
-         $("#acq").val("2000-01-01");
-        $("#trpag").val("0");
-        $("#margine").val("0");
-        $("#fatturato").val("0");
-            //var result= [1, 2, 3, 4, 5];
             var option=" ";
             var option1=" ";
             var option2=" ";
