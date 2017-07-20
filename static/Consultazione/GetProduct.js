@@ -49,7 +49,7 @@ $(document).ready(function(){
                     label = label + '</tr>';
                 }
                 $("#tb1").html(label);
-                $("#pr").html(result[0].tel);  //val(result[0].tel);
+                $("#pr").val(result[0].tel);  //val(result[0].tel);
             });
     return;
 };
