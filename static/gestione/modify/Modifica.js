@@ -2,22 +2,17 @@
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    
- 
-       
-    
-    
     $("#azienda").click(function(){
       var a=$("#azienda option:selected").text();
-     Put(a);
+      Put(a);
     });
     $("#ct").click(function(){
       var r=$("#ct option:selected").text();
-     PutCitta(r);
+      PutCitta(r);
     });
  $("#aziendadel").click(function(){
       var r=$("#aziendadel option:selected").text();
-     DelFornitore(r);
+      DelFornitore(r);
     });
 
 });
@@ -35,9 +30,9 @@ function Put(item) {
             for (var i=0;i<result[0].prova.length;i++){
                     option += '<option value="'+ result[0].prova[i].regione+ '">' + result [0].prova[i].regione+ '</option>';
                 }
-            for (var i=0;i<result[0].art.length;i++){
-                option1 += '<option value="'+ result[0].art[i].articolo+ '">' + result [0].art[i].articolo+ '</option>';
-            }
+            //for (var i=0;i<result[0].art.length;i++){
+                //option1 += '<option value="'+ result[0].art[i].articolo+ '">' + result [0].art[i].articolo+ '</option>';
+            //}
             for (var i=0;i<result[0].ct.length;i++){
                 option2 += '<option value="'+ result[0].ct[i].sito__citta+ '">' + result [0].ct[i].sito__citta+ '</option>';
             }
@@ -45,13 +40,13 @@ function Put(item) {
                 option3 += '<option value="'+ result[i].settore__articolo+ '">' + result [i].settore__articolo+ '</option>';
             }
                 $('#lsart').html(option3);
-                //$('#lsart').val(result[0].citta);
+                $('#lsart').val(result[0].citta);
+                $('#slc').val(result[0].settore__articolo);
                 $('#cct').html(option2);
                 $('#cct').val(result[0].citta);
                 $('#ct').html(option);
                 $('#ct').val(result[0].regione);
-                $('#slc').html(option1);
-                $('#slc').val(result[0].settore__articolo);
+                //$('#slc').html(option1);
                 $('#tel').val(result[0].tel);
                 $('#email').val(result[0].email);
                 $('#acq').val(result[0].acquisizione);
@@ -60,13 +55,6 @@ function Put(item) {
                 $('#trpag').val(result[0].trpag);
                 $('#margine').val(result[0].margine);
                 $('#fatturato').val(result[0].fatturato);
-
-                
-                //$('#reg select').val(result[0].regione);
-
-
-
-
             });
     return;
 };

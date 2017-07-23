@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import date,datetime
 
 class Genere(models.Model):
 	nome=models.CharField(max_length=50)
@@ -26,7 +26,7 @@ class Produttore(models.Model):
 	azienda=models.CharField(max_length=50,unique=True,blank=True,default=" ")
 	contatto=models.CharField(max_length=50,blank=True,default=" ")
 	indirizzo=models.CharField(max_length=60,null=True,blank=True,default=" ")
-	acquisizione=models.DateField(null=True,blank=True)
+	acquisizione=models.DateField(default=date.today)
 	capacita=models.CharField(max_length=10,null=True,blank=True,default="Bassa ")
 	email=models.EmailField(null=True,blank=True)
 	tel=models.CharField(max_length=15,null=True,blank=True,default=" ")

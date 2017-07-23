@@ -97,8 +97,8 @@ def MP(request):
             MPaz=res[0]['azienda']
             regioni=el.GetRegione() 
             res[0]['prova']=regioni
-            articolo=el.GetArticolo() 
-            res[0]['art']=articolo   
+            #articolo=el.GetArticolo() 
+            #res[0]['art']=articolo   
             citta=el.GetCitta(res[0]['regione']) 
             res[0]['ct']=citta
             a=res
@@ -134,6 +134,52 @@ def MP(request):
         context={"items":prod}
         H2=0
     return render(request,"gestione/modify/Modifica.html",context)        
+        
+def AddArt(request):    
+    if(request.method=="POST"):
+        message=request.POST
+        if (message["insert"]=="prdc"):
+            var=message["data"]
+            obj=GetProduct.LKPData()
+            res=obj.ListAddArt(var)
+            return JsonResponse(res,safe=False)
+        elif(message["insert"]=="add"): 
+            art=message["articolo"]
+            azd=message["azienda"]
+            if(art!=""):
+                obj=Modifica.ModProd()
+                res=obj.AddArticolo(azd,art) 
+            obj=GetProduct.LKPData()
+            res=obj.ListAddArt(azd)            
+            return JsonResponse(res,safe=False)            
+    if(request.method=="GET"):
+        el=Modifica.ModProd()
+        prod=el.GetProduttori()
+        context={"items":prod}
+        return render(request,"gestione/modify/ModificaArt.html",context) 
+        
+def DelArt(request):       
+    if(request.method=="POST"):
+        message=request.POST
+        if (message["insert"]=="dlrt"):
+            var=message["data"]
+            obj=GetProduct.LKPData()
+            res=obj.ListDelArt(var)
+            return JsonResponse(res,safe=False)
+        elif(message["insert"]=="del"): 
+            azd=message["azienda"]
+            art=message["articolo"]
+            if(art!=""):
+                obj=Modifica.ModProd()
+                res=obj.DelArticolo(azd,art) 
+            obj=GetProduct.LKPData()
+            res=obj.ListDelArt(azd)            
+            return JsonResponse(res,safe=False)            
+    if(request.method=="GET"):
+        el=Modifica.ModProd()
+        prod=el.GetProduttori()
+        context={"items":prod}
+        return render(request,"gestione/modify/DelArt.html",context)
         
 def MA(request):
     context={}

@@ -1,0 +1,55 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2"><h2>Cerca Fornitore</h2> </div>      
+    </div>
+    <br/><br/>
+
+    <div class="row">
+        <div class="col-md-3">        
+            <div class="input-group">
+                <span class="input-group-addon">Azienda </span>    
+                <select class="form-control" name="a2" id="azienda">
+                   {% for entry in items %}
+                       <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+                   {% endfor %}
+                </select>
+            </div>
+        </div>     
+
+         <div class="col-md-3">   
+            <div class="input-group" id="caddart1" >
+                <span class="input-group-addon">Elimina Articolo</span>
+                <select class="form-control" name="a1" id="delart">
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <br/><br/>
+    <div class="row">    
+        <div class=" col-md-3" id="idLKP1">
+            <table id="mytable"  class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Articolo</th>
+                    </tr>
+                </thead>
+                <tbody id="tb1">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+        
+  
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'gestione/modify/DelArt.js' %}" ></script>
+{% endblock %}

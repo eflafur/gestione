@@ -101,11 +101,11 @@ class ModProd:
         elif(pt[0]["fatturato"]!=int(self.row["a12"])):
             val=1            
             
-        for item in pt:
-            if(item["settore__articolo"]==self.row["a1"]):
-                val1=1
-                break
-        if ((val==0)&(val1==1)):
+        #for item in pt:
+            #if(item["settore__articolo"]==self.row["a1"]):
+                #val1=1
+                #break
+        if (val==0):
             return 2
             
         if (val==1):
@@ -121,8 +121,17 @@ class ModProd:
             p.fatturato=self.row["a12"]
             
             p.save()
-        if(val1==0):
-            s=Settore.objects.get(articolo=self.row["a1"])
-            p.settore.add(s)
+        #if(val1==0):
+            #s=Settore.objects.get(articolo=self.row["a1"])
+            #p.settore.add(s)
         return "okey"
-        
+    def AddArticolo(self,azd,art):
+        p=Produttore.objects.get(azienda=azd)
+        s=Settore.objects.get(articolo=art)
+        p.settore.add(s)
+        return              
+    def DelArticolo(self,azd,art):
+        p=Produttore.objects.get(azienda=azd)
+        s=Settore.objects.get(articolo=art)
+        p.settore.remove(s)
+        return              
