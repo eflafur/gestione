@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date,datetime
 
+
 class Genere(models.Model):
 	nome=models.CharField(max_length=50)
 	def __str__(self):
@@ -15,7 +16,7 @@ class Preferenza(models.Model):
 
 class Settore(models.Model):
 	genere=models.ForeignKey(Genere,on_delete=models.CASCADE,null=True)
-	articolo=models.CharField(max_length=50)
+	articolo=models.CharField(max_length=50,null=True)
 	def __str__(self):
 		return "%s" % (self.articolo)
 	

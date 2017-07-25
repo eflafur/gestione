@@ -6,8 +6,7 @@ $(document).ready(function(){
 
   $("#articolo").click(function(){
     var a=$("#articolo option:selected").text();
-    
-    Get(a);
+    GetList(a);
       $("#idLKP").show();
     });
   $("#bt0").click(function(){
@@ -36,13 +35,13 @@ $(document).ready(function(){
   
   function GetList(name){
   $.post(
-    "ricercaP",
+    "ricercaA",
      {data:name},
     function (result){
     var label = " ";
         for (i = 0; i < result.length; i++) {
                     label = label + '<tr>';
-                    label = label + '<td>' + result[i].settore__articolo + '</td>';
+                    label = label + '<td>' + result[i].produttore__azienda + '</td>';
                     label = label + '</tr>';
                 }
                 $("#tb1").html(label);

@@ -1,0 +1,34 @@
+{% load static %}
+
+{%block insert%}
+
+
+  <p>{{items}}</p>
+            
+<div class="container">
+    <div class="row">
+        <div class="col-xs-2 col-md-8 col-md-offset-2"><h2>Pagina di Login</h2> </div>      
+    </div>
+    <br/><br/>
+   
+   <div class="row">
+      <div class="col-xs-2 col-md-3">      
+         <form class="form-group" action="login" method="post"> 
+            <div class="input-group">
+               <input type="text" id="Contatto" class="form-control" name="a1" placeholder="Nome">
+            </div>
+       <br/><br/>
+       
+       <div class="input-group">
+          <input type="text" id="acq" class="form-control"  name="a2" placeholder="Password">
+       </div>
+     
+       <button type="submit" class="btn btn-primary">Insert</button>
+    </form>
+    </div>
+ </div>
+     
+      
+    </div>
+
+{%endblock%}

@@ -2,24 +2,51 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template import loader
 from django.shortcuts import render
-import sys, jsonpickle
+#import sys, jsonpickle
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-import CreateTable,Modifica,GetProduct
-import wingdbstub
+#import CreateTable,Modifica,GetProduct,validazione
+#import wingdbstub
 #nuova relaease salvata
-#runserver --noreload 8000
+#runserver --noreload 8000 
+
+
 MPaz=" "
 
+login=1
 H1=0
 H2=0
+H3=0
+H4=0
 
 
-def Home(request):
-    context={}
-    return render(request,"gestione/base.html",context)
+def Logout(request):
+    global login
+    login=0
+    context={"items":"Fine sessione"}
+    return render(request,"Validazione/Logout.html",context)    
+    
+def Login(request):
+    global login
+    if(request.method=="POST"):
+        message=request.POST
+        obj=validazione.Credentials()
+        res=obj.GetCredentials(message)
+        if(res==1):
+            login=1
+            context={}
+            return render(request,"gestione/base.html",context)
+        elif(res==0):
+            context={"items":"autenticazione non riuscita"}
+            return render(request,"Validazione/login.html",context)
+    if(request.method=="GET"):
+        context={}
+    return render(request,"Validazione/login.html",context)    
 
 def Produttore(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
     global H1
     context={}
     if(request.method=="POST"):
@@ -57,6 +84,9 @@ def Produttore(request):
     return render(request,"gestione/insert.html",context)
 
 def Articolo(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
     context={}
     if(request.method=="POST"):
         message=request.POST
@@ -84,6 +114,9 @@ def Articolo(request):
     return render(request,"gestione/settore.html",context)
 
 def MP(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
     global H2
     global MPaz
     context={}
@@ -135,7 +168,10 @@ def MP(request):
         H2=0
     return render(request,"gestione/modify/Modifica.html",context)        
         
-def AddArt(request):    
+def AddArt(request):   
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
         if (message["insert"]=="prdc"):
@@ -158,7 +194,10 @@ def AddArt(request):
         context={"items":prod}
         return render(request,"gestione/modify/ModificaArt.html",context) 
         
-def DelArt(request):       
+def DelArt(request):      
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
         if (message["insert"]=="dlrt"):
@@ -166,7 +205,7 @@ def DelArt(request):
             obj=GetProduct.LKPData()
             res=obj.ListDelArt(var)
             return JsonResponse(res,safe=False)
-        elif(message["insert"]=="del"): 
+        elif((message["insert"]=="del") & (message["articolo"]!="")): 
             azd=message["azienda"]
             art=message["articolo"]
             if(art!=""):
@@ -182,21 +221,24 @@ def DelArt(request):
         return render(request,"gestione/modify/DelArt.html",context)
         
 def MA(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    global H4
     context={}
     if(request.method=="POST"):
         message=request.POST
         if(message["s1"]=="insert"):
+            H4=1
             el=CreateTable.GetSett()
             a=message["var"]
             res=el.GetSettore(a)     
             return JsonResponse(res,safe=False)             
-        
-        else: #(message['s1']!="insert"):
-            el=CreateTable.Sett()
-            res=el.Delete(message)
-            if(res==2):
-                context={}
-                return render(request,"gestione/safe_settore.html",context)
+        else: 
+            if(H4==1):
+                el=CreateTable.Sett()
+                res=el.Delete(message)
+                H4=0
             el=CreateTable.GetSett()
             res=el.GetGenere() 
             context={"items":res}
@@ -208,18 +250,25 @@ def MA(request):
     return render(request,"gestione/modify/Modifica_settore.html",context)
 
 def DelFornitore(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    global H3
     context={}
     if(request.method=="POST"):
         message=request.POST
         if(message["a2"]=="insert"):
+            H3=1
             el=Modifica.ModProd()
             a=message["var"]
             res=el.GetAll(a)
             return JsonResponse(res,safe=False)
         else:
             el=CreateTable.GetProd()
-            var=message["a2"]
-            res=el.DelProduttori(var)
+            if(H3==1):
+                var=message["a2"]
+                res=el.DelProduttori(var)
+                H3=0
             prod=el.GetProduttori()
             context={"items":prod}
             return render(request,"gestione/modify/DelFornitore.html",context)    
@@ -230,6 +279,9 @@ def DelFornitore(request):
     return render(request,"gestione/modify/DelFornitore.html",context)    
 
 def LKProduttore(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
         var=message["data"]
@@ -242,6 +294,9 @@ def LKProduttore(request):
         context={"items":prod}
         return render(request,"Consultazione/GetProduct.html",context)            
 def LKPArticolo(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
         var=message["data"]
@@ -254,6 +309,9 @@ def LKPArticolo(request):
         context={"items":prod}
         return render(request,"Consultazione/GetArticolo.html",context)    
 def LKPMargine(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
         var=message["data"]

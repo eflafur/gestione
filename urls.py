@@ -3,7 +3,8 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    #url('home',views.Home),
+    url('logout',views.Logout),
+    url('login',views.Login),
     url('produttore',views.Produttore),
     url('articolo',views.Articolo),
     url('mp',views.MP),
@@ -16,5 +17,5 @@ urlpatterns = [
     url('fe',views.DelFornitore),
     url('logo',views.Logo),
     url('ppp',views.ImportTable),
-    url(r'^$',views.Home),
+    url(r'^$',views.Login),
 ]
