@@ -5,12 +5,12 @@ from django.shortcuts import render
 #import sys, jsonpickle
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-#import CreateTable,Modifica,GetProduct,validazione
+#import CreateTable,Modifica,GetProduct,validazione,viewsF
 #import wingdbstub
 #nuova relaease salvata
 #runserver --noreload 8000 
 
-
+artic11=""
 MPaz=" "
 
 login=1
@@ -177,7 +177,7 @@ def AddArt(request):
         if (message["insert"]=="prdc"):
             var=message["data"]
             obj=GetProduct.LKPData()
-            res=obj.ListAddArt(var)
+            res=obj.ListAddArt(var,0)
             return JsonResponse(res,safe=False)
         elif(message["insert"]=="add"): 
             art=message["articolo"]
@@ -186,13 +186,13 @@ def AddArt(request):
                 obj=Modifica.ModProd()
                 res=obj.AddArticolo(azd,art) 
             obj=GetProduct.LKPData()
-            res=obj.ListAddArt(azd)            
-            return JsonResponse(res,safe=False)            
+            res=obj.ListAddArt(azd,0)
+            return JsonResponse(res,safe=False) 
     if(request.method=="GET"):
         el=Modifica.ModProd()
         prod=el.GetProduttori()
         context={"items":prod}
-        return render(request,"gestione/modify/ModificaArt.html",context) 
+        return render(request,"gestione/modify/ModificaArt.html",context)
         
 def DelArt(request):      
     if(login==0):
@@ -201,19 +201,19 @@ def DelArt(request):
     if(request.method=="POST"):
         message=request.POST
         if (message["insert"]=="dlrt"):
-            var=message["data"]
+            azd=message["data"]
             obj=GetProduct.LKPData()
-            res=obj.ListDelArt(var)
+            res=obj.ListDelArt(azd,1)
             return JsonResponse(res,safe=False)
-        elif((message["insert"]=="del") & (message["articolo"]!="")): 
-            azd=message["azienda"]
+        elif((message["insert"]=="del") & (message["articolo"] != "null")): 
             art=message["articolo"]
-            if(art!=""):
-                obj=Modifica.ModProd()
-                res=obj.DelArticolo(azd,art) 
-            obj=GetProduct.LKPData()
-            res=obj.ListDelArt(azd)            
-            return JsonResponse(res,safe=False)            
+            azd=message["azienda"]
+            obj=Modifica.ModProd()
+            res=obj.DelArticolo(azd,art) 
+        azd=message["azienda"]
+        obj=GetProduct.LKPData()
+        res=obj.ListDelArt(azd,1)            
+        return JsonResponse(res,safe=False)            
     if(request.method=="GET"):
         el=Modifica.ModProd()
         prod=el.GetProduttori()
@@ -292,7 +292,7 @@ def LKProduttore(request):
         el=Modifica.ModProd()
         prod=el.GetProduttori()
         context={"items":prod}
-        return render(request,"Consultazione/GetProduct.html",context)            
+        return render(request,"gestione/Consultazione/GetProduct.html",context)            
 def LKPArticolo(request):
     if(login==0):
         context={}
@@ -307,7 +307,7 @@ def LKPArticolo(request):
         el=Modifica.ModProd()
         prod=el.GetArticolo()
         context={"items":prod}
-        return render(request,"Consultazione/GetArticolo.html",context)    
+        return render(request,"gestione/Consultazione/GetArticolo.html",context)    
 def LKPMargine(request):
     if(login==0):
         context={}
@@ -320,14 +320,37 @@ def LKPMargine(request):
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         context={"items":""}
-        return render(request,"Consultazione/GetByMargin.html",context)        
-
-
-#def LKArticolo(request):
-    #if(request.method=="POST"):
-
-    #if(request.method=="GET"):
+        return render(request,"gestione/Consultazione/GetByMargin.html",context)
     
+def LKPNomeMargine(request):
+    global artic11
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)
+    if(request.method=="POST"):
+        data=[]
+        message=request.POST
+        azd=""
+        if(message['a3']!=""):
+            el=GetProduct.LKPData()
+            azd=el.GetArticoloMargine(message)
+            if(azd):
+                var=azd[0]["azienda"]
+            else:
+                azd=" "
+        context={"items":artic11,"items1":azd}
+        return render(request,"gestione/Consultazione/GetArticoloMargine.html",context)
+    elif(request.method=="GET"):
+        el=Modifica.ModProd()
+        artic11=el.GetArticolo()
+        context={"items":artic11}
+        return render(request,"gestione/Consultazione/GetArticoloMargine.html",context) 
+
+def Base(request):
+    context={}
+    return render(request,"gestione/base.html",context)
+
+
 
 def Logo(request):
     context={}

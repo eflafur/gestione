@@ -26,6 +26,7 @@ class Produt:
             trpag=self.row["a10"],
             margine=self.row["a11"],
             fatturato=self.row["a12"],
+            pi=self.row["a13"],
         )
         p.settore.add(item)
         return (1)

@@ -1,0 +1,59 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2"><h2>Cerca Fornitore</h2> </div>      
+    </div>
+    <br/><br/>
+
+    <div class="row">
+        <div class="col-xs-2 col-md-3">      
+            <form class="form-group" action="RCAM" method="post"> 
+                <div class="input-group">
+                    <span class="input-group-addon">Articolo </span> 
+                    <select class="form-control" name="a2" id="azienda">
+                       {% for entry in items %}
+                           <option value="{{ entry.articolo}}">{{ entry.articolo}}</option>
+                       {% endfor %}
+                    </select>
+                </div>
+            </div>     
+            <div class="col-md-3">   
+                <div class="input-group" id="idLKP2">
+                  <span class="input-group-addon">Margine:</span>
+                  <input type="number" id="margine" class="form-control" name="a3" >
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btn">Insert</button>
+        </div>
+    </div>
+    
+    <br/><br/>
+    <div class="row">    
+        <div class=" col-md-3" id="idLKP11">
+            <table id="mytable"  class="table table-hover" id="tb">
+                <!--<thead>-->
+                    <!--<tr>-->
+                        <!--<th>Articolo</th>-->
+                    <!--</tr>-->
+                <!--</thead>-->
+                <tbody id="tb1">
+                    {% for entry in items1 %}
+                        <tr>
+                        <td> {{entry.azienda}} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Consultazione/GetArticoloMargine.js' %}" ></script>
+{% endblock %}

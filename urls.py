@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
 from . import views
+#from Fatturazione import viewsF
 
 urlpatterns = [
     url('logout',views.Logout),
@@ -14,8 +15,10 @@ urlpatterns = [
     url('ricercaP',views.LKProduttore),
     url('ricercaA',views.LKPArticolo),
     url('ricercaM',views.LKPMargine),
+    url('RCAM',views.LKPNomeMargine),
     url('fe',views.DelFornitore),
     url('logo',views.Logo),
     url('ppp',views.ImportTable),
+    url('base',views.Base),
     url(r'^$',views.Login),
 ]

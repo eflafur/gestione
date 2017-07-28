@@ -34,6 +34,7 @@ class Produttore(models.Model):
 	trpag=models.IntegerField(null=True,blank=True,default=0)
 	margine=models.IntegerField(null=True,blank=True,default=0)
 	fatturato=models.IntegerField(null=True,blank=True,default=0)
+	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")
 	def __str__(self):
 		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)	
 	

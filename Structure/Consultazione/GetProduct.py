@@ -1,6 +1,6 @@
 import django
 django.setup()
-from gestione.models import Produttore,Settore,Genere,Area,Sito,Preferenza
+from gestione.models import Produttore,Settore,Genere,Area,Sito
 from django.db.models import Q
 
 class LKPData:
@@ -25,12 +25,12 @@ class LKPData:
             return (2)
         data=list(p)
         return data
-    def ListAddArt(self,line):
+    def ListAddArt(self,line,par):
         dd=[]
+        vv=[]
         self.row=line
         allart=Settore.objects.all().values("articolo")
         prd=Produttore.objects.filter(Q(azienda=line)).values("settore__articolo")
-        
         for item in allart:
             h=0
             for item1 in prd:
@@ -41,11 +41,26 @@ class LKPData:
                     c="ciccio"
             if(h==0):
                 dd.append(item["articolo"])
-        data=list(dd)
-        return dd 
-    def ListDelArt(self,line):
-        dd=[]
-        self.row=line
+        if(par==1):
+            return dd
+            
+        res=self.ListDelArt(line,0)
+        t=dd,res
+        return t
+    
+    def ListDelArt(self,line,par):
+        cc=[]
         prd=Produttore.objects.filter(Q(azienda=line)).values("settore__articolo")
+        for item in prd:
+            cc.append(item["settore__articolo"])
+        if (par==1):
+            res=self.ListAddArt(line,par)
+            t=cc,res            
+            return t
+        return cc
+
+    def GetArticoloMargine(self,line):
+        dd=[]
+        prd=Produttore.objects.filter(Q(settore__articolo=line['a2']), Q(margine__gte=line['a3'])).values("azienda","settore__articolo")
         data=list(prd)
-        return data     
+        return data

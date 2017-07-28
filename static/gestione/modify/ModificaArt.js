@@ -11,6 +11,7 @@ $(document).ready(function(){
       $("#caddart1").show();
       $("#idLKP1").show();
     });
+
     
   $("#slc").click(function(){
     var a=$("#azienda option:selected").text();
@@ -25,21 +26,21 @@ $(document).ready(function(){
     "addart",
      {data:name,insert:"prdc"},
     function (result){
-    var label = " ";
-    var option= " ";
-     for (var i=0;i<result.length;i++){
-                    option += '<option value="'+ result[i]+ '">' + result[i]+ '</option>';
-                }
-            $('#slc').html(option);
-        for (i = 0; i < result.length; i++) {
-                    label = label + '<tr>';
-                    label = label + '<td>' + result[i].settore__articolo + '</td>';
-                    //label = label + '<td>' + result[i].tel + '</td>';
-                    label = label + '</tr>';
-                }
-                $("#tb1").html(label);
-        });
-    return;
+      var label = " ";
+      var option= " ";
+      for (var i=0;i<result[0].length;i++){
+        option += '<option value="'+ result[0][i]+ '">' + result[0][i]+ '</option>';
+        }
+        $('#slc').html(option);
+        for (i = 0; i < result[1].length; i++) {
+            label = label + '<tr>';
+            label = label + '<td>' + result[1][i] + '</td>';
+            label = label + '</tr>';
+          }
+          $("#tb1").html(label);
+         });
+
+         return;
 };
 
   function Add(azd,art){
@@ -49,13 +50,13 @@ $(document).ready(function(){
   function (result){
     var label = " ";
     var option= " ";
-     for (var i=0;i<result.length;i++){
-                    option += '<option value="'+ result[i]+ '">' + result[i]+ '</option>';
+     for (var i=0;i<result[0].length;i++){
+                    option += '<option value="'+ result[0][i]+ '">' + result[0][i]+ '</option>';
                 }
             $('#slc').html(option);
-        for (i = 0; i < result.length; i++) {
+        for (i = 0; i < result[1].length; i++) {
                     label = label + '<tr>';
-                    label = label + '<td>' + result[i] + '</td>';
+                    label = label + '<td>' + result[1][i] + '</td>';
                     label = label + '</tr>';
                 }
                 $("#tb1").html(label);

@@ -10,24 +10,26 @@
     <br/><br/>
 
     <div class="row">
-        <div class="col-md-3">        
+        <div class="col-md-4">        
             <div class="input-group">
-                <span class="input-group-addon">Articolo </span>    
-                <select class="form-control" name="a2" id="articolo">
-                   {% for entry in items %}
-                       <option value="{{ entry.articolo}}">{{ entry.articolo}}</option>
-                   {% endfor %}
-                </select>
+              <span class="input-group-addon">Margine maggiore o uguale a:</span>
+              <input type="number" id="margine" class="form-control" name="a3" min="0" >
             </div>
         </div>     
-        <br/><br/><br/>       
+  
       
-      
+        <div class="col-md-1 ">  
+            <button type="button"  class="btn btn-info " id="bt2">Cerca</button>
+        </div>
+   
         <div class=" col-md-5" id="idLKP" >
-            <table id="mytable"  class="table table-hover">
+            <table id="mytable"  class="table  table-hover">
                 <thead>
                     <tr>
-                        <th>Fornitori</th>
+                        <th>Azienda</th>
+                        <th>Margine</th>
+                        <th>Regione</th>
+                        <th>Citta</th>
                     </tr>
                 </thead>
                 <tbody id="tb1">
@@ -43,5 +45,5 @@
 {%endblock%}
 
 {%block script%}
-  <script src="{% static 'Consultazione/GetArticolo.js' %}" ></script>
+  <script src="{% static 'Consultazione/GetByMargin.js' %}" ></script>
 {% endblock %}

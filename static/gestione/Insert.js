@@ -2,6 +2,7 @@
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+        $('input').first().focus();
         $("#acq").val("2000-01-01");
     
         $("#trpag").val("0");

@@ -57,7 +57,7 @@ class ModProd:
     def GetAll(self,line):
         self.row=line
         res=Produttore.objects.filter(Q(azienda=line)).values("azienda","settore__articolo",
-            "contatto","regione","citta","acquisizione","capacita","email","tel","trpag","margine","fatturato")
+            "contatto","regione","citta","acquisizione","capacita","email","tel","trpag","margine","fatturato","pi")
         ret=list(res)    
         return ret
     def GetRegione(self):
@@ -78,8 +78,7 @@ class ModProd:
         val1=0
         p=Produttore.objects.get(azienda=self.row["a2"])
         pt=Produttore.objects.filter(Q(azienda=self.row["a2"])).values("settore__articolo","contatto","regione",
-                                    "citta","acquisizione","capacita","email","tel","trpag","margine","fatturato")
-        
+                                    "citta","acquisizione","capacita","email","tel","trpag","margine","fatturato","pi")
         if(pt[0]["contatto"]!=self.row["a3"]):
             val=1
         elif(pt[0]["regione"]!=self.row["a4"]):
@@ -88,8 +87,6 @@ class ModProd:
             val=1
         elif(pt[0]["capacita"]!=self.row["a7"]):
             val=1            
-        #elif(pt[0]["acquisizione"]!=self.row["a6"]):
-            #val=1
         elif(pt[0]["tel"]!=self.row["a9"]):
             val=1
         elif(pt[0]["email"]!=self.row["a8"]):
@@ -100,14 +97,10 @@ class ModProd:
             val=1
         elif(pt[0]["fatturato"]!=int(self.row["a12"])):
             val=1            
-            
-        #for item in pt:
-            #if(item["settore__articolo"]==self.row["a1"]):
-                #val1=1
-                #break
+        elif(pt[0]["pi"]!=self.row["a13"]):
+            val=1
         if (val==0):
             return 2
-            
         if (val==1):
             p.contatto=self.row["a3"]
             p.regione=self.row["a4"]
@@ -119,11 +112,8 @@ class ModProd:
             p.trpag=self.row["a10"]
             p.margine=self.row["a11"]
             p.fatturato=self.row["a12"]
-            
+            p.pi=self.row["a13"]
             p.save()
-        #if(val1==0):
-            #s=Settore.objects.get(articolo=self.row["a1"])
-            #p.settore.add(s)
         return "okey"
     def AddArticolo(self,azd,art):
         p=Produttore.objects.get(azienda=azd)

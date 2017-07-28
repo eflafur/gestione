@@ -49,23 +49,13 @@
 
   <!--<div class="jumbotron">-->
     <div class="page-header">
-      <h3>Gestione Fornitori 
+      <h1>Gestione Fornitori 
         <small>Ortofrutta F.V. SrL</small>
-      </h3>
-      <div class=" col-md-3 col-md-offset-10"> 
-        <div class="btn-group">
-          <a href="base" class="btn btn-white btn-default active">
-              <i class="fa fa-cog" aria-hidden="true"></i> Home
-          </a>
-          <a href="logout" class="btn btn-default">
-              <i class="fa fa-ban" aria-hidden="true"></i> Logout
-          </a>
-        </div>
-      </div>
+      </h2>
     </div>
     <!--</div>-->
-    
-
+  
+    <a href="logout">Logout</a>
    
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="navbar-header" >
@@ -84,6 +74,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             Fornitori<b class="caret"></b></a>
              <ul class="dropdown-menu">
+              <li><a href="." id="md">CACCA</a></li>
               <li><a href="produttore" id="md1">Creazione</a></li>
               <li><a href="addart">Aggiungi Articolo</a></li>
               <li><a href="delart">Elimina Articolo</a></li>
@@ -96,6 +87,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             Articoli<b class="caret"></b></a>
              <ul class="dropdown-menu">
+              <li><a href="." id="md">Home</a></li>
               <li><a href="articolo">Crea </a></li>
               <li><a href="ma">Elimina </a></li>
             </ul>
@@ -198,8 +190,6 @@
 <script src="{% static 'cookie.js' %}" ></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
- <script src="{% static 'gestione/layout.js' %}" ></script>
-
 {% block script%}
 {% endblock %}
 
