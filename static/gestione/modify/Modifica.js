@@ -8,7 +8,8 @@ $(document).ready(function(){
     });
     $("#ct").click(function(){
       var r=$("#ct option:selected").text();
-      PutCitta(r);
+      if(r!="")
+       PutCitta(r);
     });
  $("#aziendadel").click(function(){
       var r=$("#aziendadel option:selected").text();

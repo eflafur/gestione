@@ -3,7 +3,7 @@ var TempUserTable=null;
 
 $(document).ready(function(){
   $.ajaxSetup({cache:false});
-
+  $('select').focus();
   $("#azienda").click(function(){
     var a=$("#azienda option:selected").text();
     

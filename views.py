@@ -2,23 +2,20 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template import loader
 from django.shortcuts import render
-#import sys, jsonpickle
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-#import CreateTable,Modifica,GetProduct,validazione,viewsF
+import CreateTable,Modifica,GetProduct,validazione,Fviews
 #import wingdbstub
 #nuova relaease salvata
 #runserver --noreload 8000 
 
 artic11=""
 MPaz=" "
-
 login=1
 H1=0
 H2=0
 H3=0
 H4=0
-
 
 def Logout(request):
     global login

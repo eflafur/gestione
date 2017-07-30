@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from . import views
-#from Fatturazione import viewsF
+from Fatturazione import Fviews
 
 urlpatterns = [
     url('logout',views.Logout),
@@ -21,4 +21,11 @@ urlpatterns = [
     url('ppp',views.ImportTable),
     url('base',views.Base),
     url(r'^$',views.Login),
+
+    #URL DI FATTURAZIONE
+    url('fatt',Fviews.FBase),
+    url('ca',Fviews.CreaAnagrafica),
+    url('delcliente',Fviews.DelCliente),
+    url('modana',Fviews.ModificaAnagrafica),
+    
 ]

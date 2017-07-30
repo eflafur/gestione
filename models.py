@@ -49,7 +49,22 @@ class Sito(models.Model):
 	sigla=models.CharField(max_length=5,null=True)
 	comune=models.CharField(max_length=30,null=True)
 	def __str__(self):
-		return "%s" % (self.citta)	
+		return "%s" % (self.citta)
+	
+#FATTURAZIONE
+
+class Cliente(models.Model):
+	regione=models.CharField(max_length=20,null=True)
+	citta=models.CharField(max_length=20,null=True)
+	azienda=models.CharField(max_length=50,unique=True,blank=True,default=" ")
+	indirizzo=models.CharField(max_length=60,null=True,blank=True,default=" ")
+	acquisizione=models.DateField(default=date.today)
+	email=models.EmailField(null=True,blank=True)
+	tel=models.CharField(max_length=15,null=True,blank=True,default=" ")
+	trpag=models.IntegerField(null=True,blank=True,default=0)
+	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")
+	def __str__(self):
+		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)
 
 
 
