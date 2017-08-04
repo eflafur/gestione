@@ -1,6 +1,6 @@
 import django
 django.setup()
-from gestione.models import Produttore,Settore,Genere,Area,Sito,Preferenza
+from gestione.models import Produttore,Settore,Genere,Area,Sito,Preferenza,Specifica,IDcod
 from django.db.models import Q
 
 class Produt:
@@ -119,9 +119,43 @@ class ModProd:
         p=Produttore.objects.get(azienda=azd)
         s=Settore.objects.get(articolo=art)
         p.settore.add(s)
-        return              
+        return
     def DelArticolo(self,azd,art):
         p=Produttore.objects.get(azienda=azd)
         s=Settore.objects.get(articolo=art)
         p.settore.remove(s)
-        return              
+        return
+    
+    def ChangeSpec(self,message):
+        sp=Specifica.objects.filter(Q(nome=message["a4"]))
+        st=Settore.objects.filter(Q(articolo=message["a3"]),  Q(specifica__nome=message["a4"]))
+        if((not sp) & (message["a4"]!="")):
+            sp=Specifica(nome=message["a4"])
+            sp.save()
+            st=Settore.objects.get(articolo=message["a3"])
+            sp.settore.add(st)
+        elif ((sp is not None) & (message["a4"]!="") & (not st)):
+                st=Settore.objects.get(articolo=message["a3"])
+                sp=Specifica.objects.get(nome=message["a4"])
+                sp.settore.add(st)
+        #res=self.ChangeIDcod(message)    
+        
+    #def ChangeIDcod(self,message):
+        codifica=message["a1"] + "-" + message["a2"] + "-"  + message["a3"] + "-"  + message["a4"] 
+        c=IDcod.objects.filter(Q(cod=codifica))
+        if (c):
+            return 2
+        p=Produttore.objects.get(azienda=message["a1"])
+        g=Genere.objects.get(nome=message["a2"])
+        st=Settore.objects.get(articolo=message["a3"])
+        if(message["a4"]==""):
+            c=IDcod(cod=codifica,genere=g,settore=st,produttore=p)
+        else:
+            sp=Specifica.objects.get(nome=message["a4"])
+            c=IDcod(cod=codifica,genere=g,settore=st,specifica=sp,produttore=p)
+        c.save()
+        return 1
+
+        
+    
+        

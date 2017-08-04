@@ -15,23 +15,24 @@
                 <span class="input-group-addon">Articolo </span>    
                 <select class="form-control" name="a2" id="articolo">
                    {% for entry in items %}
-                       <option value="{{ entry.articolo}}">{{ entry.articolo}}</option>
+                       <option value="{{ entry.nome}}">{{ entry.nome}}</option>
                    {% endfor %}
                 </select>
             </div>
         </div>     
-        <br/><br/><br/>       
       
       
-        <div class=" col-md-5" id="idLKP" >
+      
+        <div class=" col-md-5 col-md-offset-1" id="idLKP" >
             <table id="mytable"  class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Fornitori</th>
-                    </tr>
+                        <th>Azienda</th>
+                        <th>Margine</th>
+                        <th>Articoli</th>
+                     </tr>
                 </thead>
                 <tbody id="tb1">
-                
                 </tbody>
             </table>
         </div>

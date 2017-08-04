@@ -1,19 +1,20 @@
 import django
 django.setup()
-from gestione.models import Produttore,Settore,Genere,Area,Sito
+from gestione.models import Produttore,Settore,Genere,Area,Sito,Specifica,IDcod
 from django.db.models import Q
 
 class LKPData:
     def getbyCompany(self,line):
         self.row=line
-        p=Produttore.objects.filter(Q(azienda=line)).values("settore__articolo","tel")
+        p=IDcod.objects.filter(Q(produttore__azienda=line)).values("settore__articolo","genere__nome","produttore__margine").order_by("genere__nome","settore__articolo")
         if (p==""):
             return (2)
         data=list(p)
         return data
     def getbyArticolo(self,line):
         self.row=line
-        p=Settore.objects.filter(Q(articolo=line)).values("articolo","produttore__azienda")
+        p=IDcod.objects.filter(Q(genere__nome=line)).values("genere__nome","settore__articolo",
+                                            "produttore__azienda","produttore__margine").order_by("-produttore__margine","produttore__azienda","settore__articolo")
         if (p==""):
             return (2)
         data=list(p)
@@ -63,4 +64,23 @@ class LKPData:
         dd=[]
         prd=Produttore.objects.filter(Q(settore__articolo=line['a2']), Q(margine__gte=line['a3'])).values("azienda","settore__articolo")
         data=list(prd)
+        return data
+    
+    def GetGenere(self):
+        res=Genere.objects.all().values("nome")
+        data=list(res)
+        return data
+    
+    def GetByGenere(self,art):
+        res=Settore.objects.filter(Q(genere__nome=art)).values("genere__nome","articolo")
+        data=list(res)
+        return data
+    
+    def GetSpec(self,art):
+        s=Specifica.objects.all().values("nome")
+        data=list(s)
+        return data
+    def GetIDcod(self,art):
+        s=IDcod.objects.all().values("cod").order_by("produttore__azienda","genere__nome","settore__articolo")
+        data=list(s)
         return data

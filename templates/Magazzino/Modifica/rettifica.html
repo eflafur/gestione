@@ -1,0 +1,69 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container">
+ <div class="row">
+  <div class="col-md-8 col-md-offset-2"><h2>Modifica Fornitore</h2> </div>      
+ </div>
+ <br/><br/>
+
+ <div class="row">
+  <form class="form-horizontal" action="rettifica" method="post">  
+  
+   <div class="col-md-3">  
+    <div class="input-group">
+     <span class="input-group-addon">Bolla </span>    
+     <select class="form-control" name="a1" id="bolla">
+       {% for entry in items %}
+           <option value="{{ entry.bolla}}">{{ entry.bolla}}</option>
+       {% endfor %}
+     </select>
+    </div>
+   </div>
+      
+
+   <div class="col-md-3" id="cldt2"> 
+    <div class="input-group" >
+     <span class="input-group-addon">Kilogrammi</span>
+     <input type="number" id="kg" class="form-control" name="a2" >
+    </div>
+   </div> 
+ </div>
+ </br>
+ 
+  <div class="row">
+   <div class="col-md-3" id="idLKP1"> 
+    <div class="input-group">
+     <span class="input-group-addon">Codice</span>
+     <input type="text" id="cdc"  class="form-control" name="a3" readonly>
+    </div>
+   </div>
+   
+   <div class="col-md-3" id="idLKP2"> 
+    <div class="input-group">
+     <span class="input-group-addon">Data</span>
+     <input type="text" id="dt3"  class="form-control" name="a3" readonly>
+    </div>
+   </div>
+  </div>
+  <br/>
+
+     <div class="row">
+        <div class="col-md-3"> 
+            <button type="submit" class="btn btn-primary" id="btn1">Elimina</button>  
+        </div>
+    </div>
+        </form>
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Magazzino/Modifica/rettifica.js' %}" ></script>
+{% endblock %}
+
+
+
+

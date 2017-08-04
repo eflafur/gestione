@@ -62,10 +62,9 @@
     <br/><br/>
    
    <div class="row">
-      <div class="col-xs-2 col-md-3">      
-        <form class="form-group" action="produttore" method="post"> 
-        
-         <div class="input-group">
+      <div class="col-xs-2 col-md-3">
+      <form class="form-group" action="produttore" method="post">
+      <div class="input-group">
          <span class="input-group-addon">Azienda</span>
           <input type="text" id="dl" class="form-control" name="a2" list="cityname">
            <datalist  id="cityname">
@@ -76,20 +75,7 @@
        </div>
        <br/><br/>
         
-    <div class="input-group">
-        <span class="input-group-addon">Articolo +</span>    
-            <select class="form-control"   name="a1" id="slc">
-                {% for entry in items %}
-                    <option value="{{ entry.articolo }}">{{ entry.articolo}}</option>
-                {% endfor %}
-            </select>
-            </div>
-     
-       <br/><br/>
-   
-
-            
-       <div class="input-group">
+         <div class="input-group">
          <span class="input-group-addon">Regione</span>
             <select class="form-control" name="a5" id="reg">
                 {% for entry in items1 %}

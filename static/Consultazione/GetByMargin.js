@@ -6,7 +6,9 @@ $(document).ready(function(){
 
   $("#bt2").click(function(){
     var a=$("#margine").val();
-    
+    if(a==""){
+      return
+    }
     GetList(a);
       $("#idLKP").show();
     });

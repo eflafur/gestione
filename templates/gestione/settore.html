@@ -14,13 +14,10 @@
 <!--</ul>-->
 
  <div class="container">
-  <div class="row">
-    <div class="col-md-3"><h2>Crea Articolo</h2>    
-    
-    <p id="result"></p>
-        
+    <div class="row">
+        <div class="col-md-3"><h2>Crea Articolo</h2>    
+            <p id="result"></p>
             <form class="form-inline" action="articolo" method="post"> 
-            
                 <select class="form-control" name="s1" id="slc1">
                     {% for entry in items %}
                         <option value="{{ entry.nome }}">{{ entry.nome}}</option>
@@ -28,17 +25,14 @@
                 </select>
                 <br/><br/>
                 
-                 <input type="text" id="tx1" name="s2" list="s2" >
-                <datalist  id="s2" >
+                <input type="text" id="tx1" name="s2" list="ss2">
+                <datalist  id="ss2" >
                 </datalist>
                 <br/><br/>
-            
-               
-                
                 <button type="submit" class="btn btn-primary">Insert</button>
             </form>
         </div>
-     </div>
+    </div>
 </div>
 
 {%endblock%}

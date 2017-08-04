@@ -1,31 +1,38 @@
 from django.conf.urls import url
 
 from . import views
-from Fatturazione import Fviews
+from Magazzino import Mviews
+#from Fatturazione import Fviews
 
 urlpatterns = [
     url('logout',views.Logout),
     url('login',views.Login),
     url('produttore',views.Produttore),
-    url('articolo',views.Articolo),
-    url('mp',views.MP),
-    url('ma',views.MA),
-    url('addart',views.AddArt),
-    url('delart',views.DelArt),
+    url('articolo',views.CreaArticolo),
+    url('mp',views.ModProd),
+    url('ma',views.DelArt),
+    url('addart',views.AddCod),
+#    url('delart',views.DelArtbyProd),
     url('ricercaP',views.LKProduttore),
     url('ricercaA',views.LKPArticolo),
     url('ricercaM',views.LKPMargine),
-    url('RCAM',views.LKPNomeMargine),
+#    url('RCAM',views.LKPNomeMargine),
     url('fe',views.DelFornitore),
     url('logo',views.Logo),
-    url('ppp',views.ImportTable),
+#    url('ppp',views.ImportTable),
     url('base',views.Base),
     url(r'^$',views.Login),
+    
+    #MAGAZZINO
+    url('entrata',Mviews.CaricoMerci),
+    url('rettifica',Mviews.ModificaCaricoMerci),
+    url('lkfornitore',Mviews.LKCaricoFornitore),
+#    url('lkprodotto',Mviews.LKCaricoProdotto),
 
     #URL DI FATTURAZIONE
-    url('fatt',Fviews.FBase),
-    url('ca',Fviews.CreaAnagrafica),
-    url('delcliente',Fviews.DelCliente),
-    url('modana',Fviews.ModificaAnagrafica),
+    #url('fatt',Fviews.FBase),
+    #url('ca',Fviews.CreaAnagrafica),
+    #url('delcliente',Fviews.DelCliente),
+    #url('modana',Fviews.ModificaAnagrafica),
     
 ]

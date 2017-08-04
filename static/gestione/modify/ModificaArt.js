@@ -3,23 +3,100 @@ var TempUserTable=null;
 
 $(document).ready(function(){
   $.ajaxSetup({cache:false});
+   $('select').first().focus();
+  $("#catls").text("");
+  
   $("#azienda").click(function(){
+     $('select').first().focus();
     var a=$("#azienda option:selected").text();
-    
-    GetList(a);
-      $("#caddart").show();
-      $("#caddart1").show();
-      $("#idLKP1").show();
+    GetGenere(a)
+      $("#caddgen").show();
+      $("#caddart").hide();
+      $("#caddcat").hide();
+      $("#btn1").hide();
     });
 
-    
-  $("#slc").click(function(){
+  $("#gen").click(function(){
     var a=$("#azienda option:selected").text();
-    var b=$("#slc option:selected").text();
-    Add(a,b);
-    });
-    
+    var b=$("#gen option:selected").text();
+    GetSettore(a,b);
+    $("#caddart").show();
+    $("#caddcat").hide();
+    $("#btn1").hide();
+
   });
+
+ $("#art").click(function(){
+    var a=$("#art option:selected").text();
+    GetSpec(a);
+    $("#caddcat").show();
+    $("#btn1").show();
+  });
+  });
+  
+  function GetGenere(name){
+  $.post(
+    "addart",
+     {azienda:name,a2:"genere"},
+    function (result){
+      var label = " ";
+      var option= " ";
+      for (var i=0;i<result.length;i++){
+        option += '<option value="'+ result[i]["nome"]+ '">' + result[i]["nome"]+ '</option>';
+        }
+        $('#gen').html(option);
+        for (i = 0; i < result[1].length; i++) {
+            label = label + '<tr>';
+            label = label + '<td>' + result[i]["nome"] + '</td>';
+            label = label + '</tr>';
+          }
+          $("#tb1").html(label);
+         });
+         return;
+};
+
+ function GetSettore(azd,art){
+  $.post(
+    "addart",
+     {azienda:azd,genere:art,a2:"settore"},
+    function (result){
+      var label = " ";
+      var option= " ";
+      for (var i=0;i<result.length;i++){
+        option += '<option value="'+ result[i]["articolo"]+ '">' + result[i]["articolo"]+ '</option>';
+        }
+        $('#art').html(option);
+        for (i = 0; i < result[1].length; i++) {
+            label = label + '<tr>';
+            label = label + '<td>' + result[i]["articolo"] + '</td>';
+            label = label + '</tr>';
+          }
+          $("#tb1").html(label);
+        });
+         return;
+};
+
+function GetSpec(art){
+  $.post(
+    "addart",
+     {articolo:art,a2:"spec"},
+    function (result){
+      var label = " ";
+      var option= " ";
+      for (var i=0;i<result.length;i++){
+        option += '<option value="'+ result[i]["nome"]+ '">' + result[i]["nome"]+ '</option>';
+        }
+        $('#catls').html(option);
+        for (i = 0; i < result[1].length; i++) {
+            label = label + '<tr>';
+            label = label + '<td>' + result[i]["nome"] + '</td>';
+            label = label + '</tr>';
+          }
+          $("#tb1").html(label);
+         });
+         return;
+};
+
   
   function GetList(name){
   $.post(
@@ -31,7 +108,7 @@ $(document).ready(function(){
       for (var i=0;i<result[0].length;i++){
         option += '<option value="'+ result[0][i]+ '">' + result[0][i]+ '</option>';
         }
-        $('#slc').html(option);
+        $('#art').html(option);
         for (i = 0; i < result[1].length; i++) {
             label = label + '<tr>';
             label = label + '<td>' + result[1][i] + '</td>';
@@ -39,7 +116,6 @@ $(document).ready(function(){
           }
           $("#tb1").html(label);
          });
-
          return;
 };
 
@@ -53,15 +129,13 @@ $(document).ready(function(){
      for (var i=0;i<result[0].length;i++){
                     option += '<option value="'+ result[0][i]+ '">' + result[0][i]+ '</option>';
                 }
-            $('#slc').html(option);
+            $('#gen').html(option);
         for (i = 0; i < result[1].length; i++) {
                     label = label + '<tr>';
                     label = label + '<td>' + result[1][i] + '</td>';
                     label = label + '</tr>';
                 }
                 $("#tb1").html(label);
-            
-           
         });
     return;
 };

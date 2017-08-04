@@ -7,7 +7,7 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="{% static '/Plugins/jquery-ui/css/jquery-ui.min.css' %}">
-      <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+      <!--<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.css">-->
       <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
       <link rel="stylesheet" type="text/css" href="{% static 'css/stile.css' %}">
       {% block css%}
@@ -80,31 +80,28 @@
       
       <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav nav-tabs">
+        
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Fornitori<b class="caret"></b></a>
-             <ul class="dropdown-menu">
-              <li><a href="produttore" id="md1">Creazione</a></li>
-              <li><a href="addart">Aggiungi Articolo</a></li>
-              <li><a href="delart">Elimina Articolo</a></li>
-              <li><a href="mp">Modifica</a></li>
-              <li><a href="fe">Elimina</a></li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Fornitori<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+             <li><a href="produttore" id="md1">Creazione</a></li>
+             <li><a href="addart">Aggiungi Articolo</a></li>
+             <!--<li><a href="delart">Elimina Articolo</a></li>-->
+             <li><a href="mp">Modifica</a></li>
+             <li><a href="fe">Elimina</a></li>
             </ul>
           </li>
          
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Articoli<b class="caret"></b></a>
-             <ul class="dropdown-menu">
-              <li><a href="articolo">Crea </a></li>
-              <li><a href="ma">Elimina </a></li>
-            </ul>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Articoli<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+             <li><a href="articolo">Crea </a></li>
+             <li><a href="ma">Elimina </a></li>
+           </ul>
           </li>
- 
- 
+
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Ricerca<b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ricerca<b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li class="dropdown-submenu">
                 <a tabindex="-1" href="#">Produttore <i class="fa fa-chevron-right"></i></a>
@@ -114,21 +111,34 @@
                   </ul>
               </li>	
               <li class="dropdown-submenu">
-                  <a tabindex="-1" href="#">Articoli <i class="fa fa-chevron-right"></i></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="RCAM">Nome-Margine</a></li>
-                    <li><a href="ricercaA">Nome</a></li>
-                  </ul>
+                <a tabindex="-1" href="#">Articoli <i class="fa fa-chevron-right"></i></a>
+                <ul class="dropdown-menu">
+                  <li><a href="ricercaA">Nome</a></li>
+                </ul>
               </li>		
             </ul>
-          </li>		
-
-
-
- 
-  
+          </li>	
           
-          
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magazzino<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Merci <i class="fa fa-chevron-right"></i></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="entrata">Entrata</a></li>
+                    <li><a href="rettifica">Rettifica</a></li>
+                  </ul>
+              </li>	
+              
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Ricerca <i class="fa fa-chevron-right"></i></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="lkfornitore">Fornitore</a></li>
+                    <li><a href="lkprodotto">Prodotto</a></li>
+                  </ul>
+              </li>	
+            </ul>
+          </li>
         </ul>
       <!--<p class="navbar-text navbar-right">Navigazione IOT</p>-->
       </div>
@@ -194,10 +204,10 @@
 
       
 <script src="{% static 'jquery-3.2.1.js' %}" ></script>
-
+<script src="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.js' %}" ></script>
 <script src="{% static 'cookie.js' %}" ></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+<!--<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>-->
  <script src="{% static 'gestione/layout.js' %}" ></script>
 
 {% block script%}

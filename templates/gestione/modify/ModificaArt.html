@@ -10,42 +10,51 @@
     <br/><br/>
 
     <div class="row">
-        <div class="col-md-3">        
-            <div class="input-group">
-                <span class="input-group-addon">Azienda </span>    
-                <select class="form-control" name="a2" id="azienda">
-                   {% for entry in items %}
-                       <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
-                   {% endfor %}
-                </select>
+        <form class="form-group" action="addart" method="post">
+            <div class="col-md-3">        
+                <div class="input-group">
+                    <span class="input-group-addon" >Azienda </span>    
+                    <select class="form-control" name="a1" id="azienda">
+                       {% for entry in items %}
+                           <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+                       {% endfor %}
+                    </select>
+                </div>
+            </div>  
+            
+            <div class="col-md-3">   
+                <div class="input-group" id="caddgen">
+                    <span class="input-group-addon" id="addgen">Genere</span>
+                    <select class="form-control" name="a2" id="gen">
+                    </select>
+                </div>
             </div>
-        </div>     
-        <div class="col-md-3">   
-            <div class="input-group" id="caddart">
-                <span class="input-group-addon" id="addart">Aggiungi Articolo</span>
-                <select class="form-control" name="a1" id="slc">
-                </select>
+            
+            <div class="col-md-3"> 
+                <div class="input-group" id="caddart">
+                    <span class="input-group-addon">Articolo</span>
+                    <select class="form-control" name="a3" id="art" ></select>
+                </div>
             </div>
-        </div>
-    </div>
     
-    <br/><br/>
-    <div class="row">    
-        <div class=" col-md-3" id="idLKP1">
-            <table id="mytable"  class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Articolo</th>
-                    </tr>
-                </thead>
-                <tbody id="tb1">
-                </tbody>
-            </table>
+            <div class="col-md-3">   
+                <div class="input-group" id="caddcat">
+                    <span class="input-group-addon">Categoria</span>
+                    <input type="text" id="cat" class="form-control" name="a4" list="catls">
+                        <datalist  id="catls">
+                        </datalist>
+                </div>
+            </div>
+    </div>
+        
+    </br> </br>
+    <div class="row">
+        <div class="col-md-3"> 
+            <button type="submit" class="btn btn-primary" id="btn1">Insert</button>  
         </div>
     </div>
+        </form>
 </div>
-        
-  
   
 {%endblock%}
 

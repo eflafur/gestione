@@ -15,36 +15,30 @@
                 <span class="input-group-addon">Azienda </span>    
                 <select class="form-control" name="a2" id="azienda">
                    {% for entry in items %}
-                       <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+                       <option value="{{ entry.nome}}">{{ entry.nome}}</option>
                    {% endfor %}
                 </select>
             </div>
         </div>     
-        <br/><br/><br/>       
-      
+
+        <div class=" col-md-3 col-md-offset-1" id="idLKP">
+            <!--<div class="input-group" >-->
+                <span class="input-group-addon">Tel</span>
+                <label type="text" id="pr" class="form-control" name="a3" >
+            <!--</div>-->
+        </div>
+    </div>
+    
+    <div class="row">
         <div class=" col-md-3" id="idLKP1">
             <table id="mytable"  class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Articolo</th>
-                    </tr>
-                </thead>
-                <tbody id="tb1">
+                <tbody id="tt">
                 </tbody>
             </table>
-        </div>
-      
-        <div class=" col-md-3 col-md-offset-1" id="idLKP">
-            <div class="input-group" >
-                <span class="input-group-addon">Tel</span>
-                <input type="text" id="pr" class="form-control" name="a3" readonly>
-            </div>
         </div>
     </div>
 </div>
         
-  
-  
 {%endblock%}
 
 {%block script%}

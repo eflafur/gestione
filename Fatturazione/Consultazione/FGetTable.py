@@ -1,5 +1,3 @@
-import django
-django.setup()
 from gestione.models import Cliente, Area,Sito
 from django.db.models import Q
 

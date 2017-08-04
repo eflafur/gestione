@@ -20,6 +20,12 @@ class Settore(models.Model):
 	def __str__(self):
 		return "%s" % (self.articolo)
 	
+class Specifica(models.Model):
+	settore=models.ManyToManyField(Settore)
+	nome=models.CharField(max_length=30,unique=True,null=True,blank=True)
+	def __str__(self):
+		return "%s" % (self.nome)	
+
 class Produttore(models.Model):
 	settore=models.ManyToManyField(Settore)
 	regione=models.CharField(max_length=20,null=True)
@@ -36,7 +42,16 @@ class Produttore(models.Model):
 	fatturato=models.IntegerField(null=True,blank=True,default=0)
 	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")
 	def __str__(self):
-		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)	
+		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)
+	
+class IDcod(models.Model):
+	cod=models.CharField(max_length=40,null=True)
+	genere=models.ForeignKey(Genere,on_delete=models.CASCADE,null=True)
+	settore=models.ForeignKey(Settore,on_delete=models.CASCADE,null=True)
+	specifica=models.ForeignKey(Specifica,on_delete=models.CASCADE,null=True)
+	produttore=models.ForeignKey(Produttore,on_delete=models.CASCADE,null=True)
+	def __str__(self):
+		return "%s" % (self.cod)	
 	
 class Area(models.Model):
 	regione=models.CharField(max_length=30)
@@ -50,6 +65,12 @@ class Sito(models.Model):
 	comune=models.CharField(max_length=30,null=True)
 	def __str__(self):
 		return "%s" % (self.citta)
+	
+class Carico(models.Model):
+	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
+	q=models.IntegerField(null=True,blank=True,default=0)
+	data=models.DateField(default=date.today)
+	bolla=models.CharField(max_length=20,null=True)
 	
 #FATTURAZIONE
 

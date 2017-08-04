@@ -14,7 +14,7 @@ class Produt:
             contatto1=self.row["a2"]
         if (p):
             return (2)
-        item=Settore.objects.get(articolo=self.row["a1"])
+#        item=Settore.objects.get(articolo=self.row["a1"])
         p=Produttore.objects.create(
             azienda=self.row["a2"],
             contatto=contatto1,
@@ -28,7 +28,7 @@ class Produt:
             fatturato=self.row["a12"],
             pi=self.row["a13"],
         )
-        p.settore.add(item)
+#        p.settore.add(item)
         return (1)
 
 

@@ -41,6 +41,8 @@ def Login(request):
     return render(request,"Validazione/login.html",context)    
 
 def Produttore(request):
+    res=""
+    res1=""
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)         
@@ -66,21 +68,18 @@ def Produttore(request):
                 context={}
                 return render(request,"gestione/safe.html",context)            
         el=CreateTable.GetProd()
-        res=el.GetArticolo() 
         res1=el.GetArea()
         prod=el.GetProduttori()
         context={"items":res,"items1":res1,"items3":prod}
         return render(request,"gestione/insert.html",context)            
-        
     if(request.method=="GET"):
         el=CreateTable.GetProd()
-        res=el.GetArticolo() 
         res1=el.GetArea()
         prod=el.GetProduttori()
-        context={"items":res,"items1":res1,"items3":prod}
+        context={"items1":res1,"items3":prod}
     return render(request,"gestione/insert.html",context)
 
-def Articolo(request):
+def CreaArticolo(request):
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)     
@@ -110,7 +109,8 @@ def Articolo(request):
         context={"items":res}
     return render(request,"gestione/settore.html",context)
 
-def MP(request):
+def ModProd(request):
+    res=""
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)     
@@ -127,8 +127,6 @@ def MP(request):
             MPaz=res[0]['azienda']
             regioni=el.GetRegione() 
             res[0]['prova']=regioni
-            #articolo=el.GetArticolo() 
-            #res[0]['art']=articolo   
             citta=el.GetCitta(res[0]['regione']) 
             res[0]['ct']=citta
             a=res
@@ -141,14 +139,11 @@ def MP(request):
             res[0]['ct']=citta
             return JsonResponse(res,safe=False)            
         elif(message['a2']!="insert"):
-            if(H2!=1):
-                context={}
-                return render(request,"gestione/modify/safe_modifica.html",context)              
-            #if (message['a1']==" "):
+            if(H2==1):
                 #context={}
-                #return render(request,"gestione/modify/safe_modifica.html",context)                    
-            el=Modifica.ModProd()
-            res=el.Change(message)
+                #return render(request,"gestione/modify/safe_modifica.html",context)              
+                el=Modifica.ModProd()
+                res=el.Change(message)
             H2=0
             if(res==2):
                 H2=0
@@ -165,59 +160,42 @@ def MP(request):
         H2=0
     return render(request,"gestione/modify/Modifica.html",context)        
         
-def AddArt(request):   
+def AddCod(request):   
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
+        obj=GetProduct.LKPData()
         message=request.POST
-        if (message["insert"]=="prdc"):
-            var=message["data"]
-            obj=GetProduct.LKPData()
-            res=obj.ListAddArt(var,0)
+        if (message["a2"]=="genere"):
+            res=obj.GetGenere()
             return JsonResponse(res,safe=False)
-        elif(message["insert"]=="add"): 
-            art=message["articolo"]
-            azd=message["azienda"]
-            if(art!=""):
+        elif(message["a2"]=="settore"): 
+            var=message["genere"]
+            res=obj.GetByGenere(var)
+            return JsonResponse(res,safe=False)
+        elif(message["a2"]=="spec"): 
+            var=message["articolo"]
+            res=obj.GetSpec(var)
+            return JsonResponse(res,safe=False)        
+        elif(message["a1"]!=""):
+            if ((message["a1"]!="") & (message["a2"]!="")  & (message["a3"]!="" )):
                 obj=Modifica.ModProd()
-                res=obj.AddArticolo(azd,art) 
-            obj=GetProduct.LKPData()
-            res=obj.ListAddArt(azd,0)
-            return JsonResponse(res,safe=False) 
+                res=obj.ChangeSpec(message)
+                if(res==2):
+                    context={}
+                    return render(request,"gestione/modify/safe_modifica.html",context)
+        obj=Modifica.ModProd()
+        prod=obj.GetProduttori()
+        context={"items":prod}
+        return render(request,"gestione/modify/ModificaArt.html",context)
     if(request.method=="GET"):
-        el=Modifica.ModProd()
-        prod=el.GetProduttori()
+        obj=Modifica.ModProd()
+        prod=obj.GetProduttori()
         context={"items":prod}
         return render(request,"gestione/modify/ModificaArt.html",context)
         
-def DelArt(request):      
-    if(login==0):
-        context={}
-        return render(request,"Validazione/login.html",context)     
-    if(request.method=="POST"):
-        message=request.POST
-        if (message["insert"]=="dlrt"):
-            azd=message["data"]
-            obj=GetProduct.LKPData()
-            res=obj.ListDelArt(azd,1)
-            return JsonResponse(res,safe=False)
-        elif((message["insert"]=="del") & (message["articolo"] != "null")): 
-            art=message["articolo"]
-            azd=message["azienda"]
-            obj=Modifica.ModProd()
-            res=obj.DelArticolo(azd,art) 
-        azd=message["azienda"]
-        obj=GetProduct.LKPData()
-        res=obj.ListDelArt(azd,1)            
-        return JsonResponse(res,safe=False)            
-    if(request.method=="GET"):
-        el=Modifica.ModProd()
-        prod=el.GetProduttori()
-        context={"items":prod}
-        return render(request,"gestione/modify/DelArt.html",context)
-        
-def MA(request):
+def DelArt(request):
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)     
@@ -251,7 +229,7 @@ def DelFornitore(request):
         context={}
         return render(request,"Validazione/login.html",context)     
     global H3
-    context={}
+#    context={}
     if(request.method=="POST"):
         message=request.POST
         if(message["a2"]=="insert"):
@@ -289,7 +267,8 @@ def LKProduttore(request):
         el=Modifica.ModProd()
         prod=el.GetProduttori()
         context={"items":prod}
-        return render(request,"gestione/Consultazione/GetProduct.html",context)            
+        return render(request,"Consultazione/GetProduct.html",context)          
+    
 def LKPArticolo(request):
     if(login==0):
         context={}
@@ -301,10 +280,11 @@ def LKPArticolo(request):
         res=obj.getbyArticolo(var)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
-        el=Modifica.ModProd()
-        prod=el.GetArticolo()
+        el=GetProduct.LKPData()
+        prod=el.GetGenere()
         context={"items":prod}
-        return render(request,"gestione/Consultazione/GetArticolo.html",context)    
+        return render(request,"Consultazione/GetArticolo.html",context)    
+    
 def LKPMargine(request):
     if(login==0):
         context={}
@@ -312,56 +292,43 @@ def LKPMargine(request):
     if(request.method=="POST"):
         message=request.POST
         var=message["data"]
-        obj=GetProduct.LKPData()
-        res=obj.getbyMargin(var)
-        return JsonResponse(res,safe=False)
+        if(var!=""):
+            obj=GetProduct.LKPData()
+            res=obj.getbyMargin(var)
+            return JsonResponse(res,safe=False)
+        context={"items":""}
+        return render(request,"gestione/Consultazione/GetByMargin.html",context)        
     if(request.method=="GET"):
         context={"items":""}
         return render(request,"gestione/Consultazione/GetByMargin.html",context)
-    
-def LKPNomeMargine(request):
-    global artic11
-    if(login==0):
-        context={}
-        return render(request,"Validazione/login.html",context)
-    if(request.method=="POST"):
-        data=[]
-        message=request.POST
-        azd=""
-        if(message['a3']!=""):
-            el=GetProduct.LKPData()
-            azd=el.GetArticoloMargine(message)
-            if(azd):
-                var=azd[0]["azienda"]
-            else:
-                azd=" "
-        context={"items":artic11,"items1":azd}
-        return render(request,"gestione/Consultazione/GetArticoloMargine.html",context)
-    elif(request.method=="GET"):
-        el=Modifica.ModProd()
-        artic11=el.GetArticolo()
-        context={"items":artic11}
-        return render(request,"gestione/Consultazione/GetArticoloMargine.html",context) 
 
 def Base(request):
     context={}
     return render(request,"gestione/base.html",context)
 
-
-
 def Logo(request):
     context={}
     return render(request,"gestione/logo.html",context)
 
-def ImportTable(request):
-    obj=Import.getTable()
-    res=obj.readTable("go")
-    context={}
-    return render(request,"gestione/logo.html",context)
+
+
+
+
+
+
+
+
 
 
 
 #--- per usi futuri---
+
+#def ImportTable(request):
+    #obj=Import.getTable()
+    #res=obj.readTable("go")
+    #context={}
+    #return render(request,"gestione/logo.html",context)
+
 
 
 #def Offerta(request):
