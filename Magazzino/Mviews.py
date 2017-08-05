@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 import CreateTable,Modifica,GetProduct,validazione,Fviews,MCreateTable,MGetTable,MModifica
+import re
 #import wingdbstub
 #nuova relaease salvata
 #runserver --noreload 8000 
@@ -27,7 +28,12 @@ def CaricoMerci(request):
         message=request.POST
         if((message["a1"]!="") & (message["a2"]!="")  & (message["a3"]!="")):
             obj1=MCreateTable.CreateData()
-            obj1.Entrata(message)
+            res=obj1.Entrata(message)
+            return JsonResponse(res,safe=False)
+        #if(res==2):
+            #var= message["a1"].split("-")
+            #context={"avviso":"bolla esistente per il fornitore: "+ var[0],"azione":"entrata"}
+            #return render(request,"gestione/safe1.html",context) 
         obj=GetProduct.LKPData()
         res=obj.GetIDcod("ciao")
         context={"items":res}
@@ -58,7 +64,7 @@ def LKCaricoFornitore(request):
         context={"items":prod}
     return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)      
 
-def ModificaCaricoMerci(request):
+def EliminaBolla(request):
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)         
@@ -66,21 +72,21 @@ def ModificaCaricoMerci(request):
     context={}
     if(request.method=="POST"):
         message=request.POST
-        if((message["a1"]=="js")):
+        res=re.sub('[" "]',"",message["a1"])
+        var=res.split("-")
+        if((message["a2"]=="js")):
             obj1=MGetTable.GetData()
-            var=message["res"]
             res=obj1.GetBolla(var)
             return JsonResponse(res,safe=False)
-        elif ((message["a1"]!="")):
-            var=message["a1"]
+        elif ((message["a2"]!="js")):
             obj5=MModifica.ModProd()
             res=obj5.DelBolla(var)
         obj3=MGetTable.GetData()
         res=obj3.GetCarico()
         context={"items":res}
-        return render(request,"Magazzino/Modifica/rettifica.html",context)
+        return render(request,"Magazzino/Modifica/eliminabolla.html",context)
     if(request.method=="GET"):
         obj3=MGetTable.GetData()
         res=obj3.GetCarico()
         context={"items":res}
-        return render(request,"Magazzino/Modifica/rettifica.html",context)
+        return render(request,"Magazzino/Modifica/eliminabolla.html",context)

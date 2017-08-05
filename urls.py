@@ -25,7 +25,7 @@ urlpatterns = [
     
     #MAGAZZINO
     url('entrata',Mviews.CaricoMerci),
-    url('rettifica',Mviews.ModificaCaricoMerci),
+    url('elimina',Mviews.EliminaBolla),
     url('lkfornitore',Mviews.LKCaricoFornitore),
 #    url('lkprodotto',Mviews.LKCaricoProdotto),
 

@@ -10,14 +10,14 @@
  <br/><br/>
 
  <div class="row">
-  <form class="form-horizontal" action="rettifica" method="post">  
+  <form class="form-horizontal" action="elimina" method="post">  
   
-   <div class="col-md-3">  
+   <div class="col-md-4">  
     <div class="input-group">
      <span class="input-group-addon">Bolla </span>    
      <select class="form-control" name="a1" id="bolla">
        {% for entry in items %}
-           <option value="{{ entry.bolla}}">{{ entry.bolla}}</option>
+           <option >{{ entry.bolla}} - {{ entry.idcod__produttore__azienda}}</option>
        {% endfor %}
      </select>
     </div>
@@ -27,14 +27,14 @@
    <div class="col-md-3" id="cldt2"> 
     <div class="input-group" >
      <span class="input-group-addon">Kilogrammi</span>
-     <input type="number" id="kg" class="form-control" name="a2" >
+     <input type="number" id="kg" class="form-control" name="a2" readonly>
     </div>
    </div> 
  </div>
  </br>
  
   <div class="row">
-   <div class="col-md-3" id="idLKP1"> 
+   <div class="col-md-4" id="idLKP1"> 
     <div class="input-group">
      <span class="input-group-addon">Codice</span>
      <input type="text" id="cdc"  class="form-control" name="a3" readonly>
@@ -61,7 +61,7 @@
 {%endblock%}
 
 {%block script%}
-  <script src="{% static 'Magazzino/Modifica/rettifica.js' %}" ></script>
+  <script src="{% static 'Magazzino/Modifica/eliminabolla.js' %}" ></script>
 {% endblock %}
 
 

@@ -8,10 +8,10 @@ class GetData:
         data=list(rec)
         return data
     def GetCarico(self):
-        rec=Carico.objects.all().values("bolla").order_by("bolla")
+        rec=Carico.objects.all().values("bolla","idcod__produttore__azienda").order_by("bolla")
         data=list(rec)
         return data    
-    def GetBolla(self,item):
-        rec=Carico.objects.filter(Q(bolla=item)).values("idcod__cod","q","data")
+    def GetBolla(self,line):
+        rec=Carico.objects.filter(Q(bolla=line[0]), Q(idcod__produttore__azienda=line[1])).values("idcod__cod","q","data")
         data=list(rec)
         return data    

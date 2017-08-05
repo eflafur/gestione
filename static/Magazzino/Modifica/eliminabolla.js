@@ -12,8 +12,8 @@ $(document).ready(function(){
 
 function Put(item) {
     $.post(
-        "rettifica",
-        { res: item,a1:"js"},
+        "elimina",
+        { a1: item,a2:"js"},
         function (result) {
 
         $("#kg").val(result[0].q);

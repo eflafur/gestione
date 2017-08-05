@@ -10,10 +10,10 @@
  <br/><br/>
 
  <div class="row">
-  <form class="form-horizontal" action="entrata" method="post">   
+  <!--<form class="form-horizontal" action="entrata" method="post">-->
    <div class="col-md-4">  
     <div class="input-group">
-     <span class="input-group-addon">Codice </span>    
+     <span class="input-group-addon">Codice </span> 
      <select class="form-control" name="a1" id="codice">
        {% for entry in items %}
            <option value="{{ entry.cod}}">{{ entry.cod}}</option>
@@ -21,35 +21,39 @@
      </select>
     </div>
    </div>
-   <br/><br/>       
+  </div>
+   <br/>      
  
+ <div class="row">
    <div class="col-md-3"> 
-    <div class="input-group" >
+    <div class="input-group" id="cldt2">
      <span class="input-group-addon">Kilogrammi</span>
      <input type="number" id="qnt" class="form-control" name="a2" placeholder="KG" min="0">
     </div>
    </div> 
-    <br/><br/>
+  </div>
+    <br/>
    
+  <div class="row">
    <div class="col-md-3"> 
-    <div class="input-group">
+    <div class="input-group" id="idLKP1">
      <span class="input-group-addon">Bolla</span>
      <input type="text" id="bolla" class="form-control" name="a3" placeholder="Bolla" maxlength="20" min="3">
     </div>
    </div>
   </div>
-  <br/>
+  <br/> 
 
    <div class="row">
         <div class="col-md-3"> 
-            <button type="submit" class="btn btn-primary" id="btn2">Insert</button>  
+            <button type="submit" class="btn btn-primary" id="btn1">Insert</button>  
         </div>
     </div>
-        </form>
+        <!--</form>-->
 </div>
   
 {%endblock%}
 
 {%block script%}
-  <script src="{% static 'gestione/modify/Modifica.js' %}" ></script>
+  <script src="{% static 'Magazzino/Creazione/entrata.js' %}" ></script>
 {% endblock %}

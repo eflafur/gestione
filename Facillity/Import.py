@@ -14,7 +14,7 @@ class getTable:
         f=open("/home/jafu/siti","r")
         obj=CreateTable.Siti()
         while(1==1): 
-            line=f.readline()
+            line=f.readline().
             if(line!=""):
                 res=re.sub('[\t]',";",line)
                 res1=re.sub('[\n]',"",res)

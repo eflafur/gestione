@@ -2,10 +2,8 @@ import django
 django.setup()
 from gestione.models import Carico
 from django.db.models import Q
-
     
 class ModProd:
-
     def Change(self,line):
         self.row=line
         val=0
@@ -40,7 +38,7 @@ class ModProd:
             p.save()
         return "okey"
     
-    def DelBolla(self,var):
-        rec=Carico.objects.get(bolla=var)
+    def DelBolla(self,line):
+        rec=Carico.objects.filter(Q(bolla=line[0]), Q(idcod__produttore__azienda=line[1]))
         rec.delete()
         return 1
