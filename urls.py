@@ -27,6 +27,9 @@ urlpatterns = [
     url('entrata',Mviews.CaricoMerci),
     url('elimina',Mviews.EliminaBolla),
     url('lkfornitore',Mviews.LKCaricoFornitore),
+    url('lkprodotto',Mviews.LKCaricoProdotto),
+    url('gioco',Mviews.Gioco),
+
 #    url('lkprodotto',Mviews.LKCaricoProdotto),
 
     #URL DI FATTURAZIONE

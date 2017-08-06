@@ -26,10 +26,13 @@ def CaricoMerci(request):
     context={}
     if(request.method=="POST"):
         message=request.POST
+        line=[]
         if((message["a1"]!="") & (message["a2"]!="")  & (message["a3"]!="")):
             obj1=MCreateTable.CreateData()
             res=obj1.Entrata(message)
-            return JsonResponse(res,safe=False)
+            line.append(message["a1"])
+            line.append(res)
+            return JsonResponse(line,safe=False)
         #if(res==2):
             #var= message["a1"].split("-")
             #context={"avviso":"bolla esistente per il fornitore: "+ var[0],"azione":"entrata"}
@@ -62,7 +65,60 @@ def LKCaricoFornitore(request):
         mod=Modifica.ModProd()
         prod=mod.GetProduttori()
         context={"items":prod}
-    return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)      
+    return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)   
+
+def LKCaricoProdotto(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    if(request.method=="POST"):
+        message=request.POST
+        obj7=MGetTable.GetData()
+        res=obj7.GetIdCodbyProdotto(message)     
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        el=CreateTable.GetSett()
+        res=el.GetGenere() 
+        context={"items":res}
+    return render(request,"Magazzino/Consultazione/LKcaricoprodotto.html",context)
+
+
+# per la selezione anche dell'articolo*****
+#def LKCaricoProdotto(request):
+    #if(login==0):
+        #context={}
+        #return render(request,"Validazione/login.html",context)     
+    #global H4
+    #context={}
+    #if(request.method=="POST"):
+        #message=request.POST
+        #if(message["s1"]=="insert"):
+            #H4=1
+            #obj6=CreateTable.GetSett()
+            #a=message["var"]
+            #res=obj6.GetSettore(a)     
+            #return JsonResponse(res,safe=False)  
+        #elif(message["s1"]=="table"):
+            #obj7=MGetTable.GetData()
+            #res=obj7.GetIdCodbyProdotto(message)     
+            #return JsonResponse(res,safe=False)        
+        #else: 
+            #if(H4==1):
+                #el=CreateTable.Sett()
+                #res=el.Delete(message)
+                #H4=0
+            #el=CreateTable.GetSett()
+            #res=el.GetGenere() 
+            #context={"items":res}
+            #return render(request,"Magazzino/Consultazione/LKcaricoprodotto.html",context)
+    #if(request.method=="GET"):
+        #el=CreateTable.GetSett()
+        #res=el.GetGenere() 
+        #context={"items":res}
+    #return render(request,"Magazzino/Consultazione/LKcaricoprodotto.html",context)
+
+
+
 
 def EliminaBolla(request):
     if(login==0):
@@ -90,3 +146,41 @@ def EliminaBolla(request):
         res=obj3.GetCarico()
         context={"items":res}
         return render(request,"Magazzino/Modifica/eliminabolla.html",context)
+
+
+def Gioco(request):
+    res=""
+    res1=""
+        
+    global H1
+    context={}
+    if(request.method=="POST"):
+        message=request.POST
+        if(message["a2"]=="insert"):
+            H1=1
+            el=CreateTable.GetProd()
+            a=message["vary"]
+            res=el.GetCitta(a)            
+            return JsonResponse(res,safe=False)
+        elif(message['a2']!=""):
+            if(H1!=1):
+                context={}
+                return render(request,"gestione/safe1.html",context)                 
+            el=CreateTable.Produt()
+            res=el.put(message)
+            H1=0
+            if(res==2):
+                H1=0
+                context={}
+                return render(request,"gestione/safe.html",context)            
+        el=CreateTable.GetProd()
+        res1=el.GetArea()
+        prod=el.GetProduttori()
+        context={"items":res,"items1":res1,"items3":prod}
+        return render(request,"Magazzino/gioco.html",context)            
+    if(request.method=="GET"):
+        el=CreateTable.GetProd()
+        res1=el.GetArea()
+        prod=el.GetProduttori()
+        context={"items1":res1,"items3":prod}
+    return render(request,"Magazzino/gioco.html",context)

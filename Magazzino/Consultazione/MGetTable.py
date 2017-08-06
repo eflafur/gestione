@@ -14,4 +14,9 @@ class GetData:
     def GetBolla(self,line):
         rec=Carico.objects.filter(Q(bolla=line[0]), Q(idcod__produttore__azienda=line[1])).values("idcod__cod","q","data")
         data=list(rec)
+        return data 
+    def GetIdCodbyProdotto(self,message):
+        rec=Carico.objects.filter(Q(idcod__genere__nome=message["prd"]),Q(data__gte=message["data"])).values("idcod__cod",
+                                                                        "q","bolla","data").order_by("-idcod__cod")
+        data=list(rec)
         return data    

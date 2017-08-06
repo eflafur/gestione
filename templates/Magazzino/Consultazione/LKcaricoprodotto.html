@@ -1,0 +1,65 @@
+
+{% extends 'gestione/layout.html'%}
+{% load static %}
+{%block insert%}
+
+<!--{% for el in item %}-->
+ <!--<p> {{el}} </p>-->
+<!--{% endfor %}-->
+
+<!--<ul>-->
+    <!--{% for key,value  in item.items %}           -->
+            <!--<li> {{key}}: {{value}} </li>-->
+    <!--{% endfor %}    -->
+<!--</ul>-->
+
+ <div class="container">
+    <div class="row">
+        <div class="col-md-3"><h2>Ricerca  Articolo</h2>    
+            <select class="form-control" name="s1" id="slc1">
+                {% for entry in items %}
+                    <option value="{{ entry.nome }}">{{ entry.nome}}</option>
+                {% endfor %}
+            </select>
+        </div>
+         <div class=" col-md-6 col-md-offset-1" id="idLKP" >
+            <table id="mytable"  class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Fornitore</th>
+                        <th>Articolo</th>
+                        <th>Quantita</th>
+                        <th>Bolla</th>
+                        <th>Data Carico</th>
+                    </tr>
+                </thead>
+                <tbody id="tb4"></tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+ <!--per la selezionde dell'articolo-->
+    <!--<div class="row">-->
+        <!--<div class="col-md-3">-->
+            <!--<select class="form-control" name="s2" id="slc2">-->
+            <!--</select>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <div class="row">   
+        <div class="col-md-2">     
+            <div class="input-group" id="cldt2">
+                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Magazzino/Consultazione/LKcaricoprodotto.js' %}" ></script>
+{% endblock %}
+

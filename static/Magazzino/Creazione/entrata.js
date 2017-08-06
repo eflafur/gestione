@@ -5,7 +5,6 @@ $(document).ready(function(){
     });
     $("#qnt").keypress(function(){
         $("#idLKP1").show();
-        
     });
     $("#bolla").click(function(){
         a=$("#qnt").val()
@@ -36,7 +35,6 @@ $(document).ready(function(){
         }
         else if (b!=""){
             Read();
-
                 $("#qnt").val("");
                 $("#bolla").val("");
                 $("#cldt2").hide();
@@ -44,6 +42,7 @@ $(document).ready(function(){
                 $("#btn1").hide();
                 $("#codice option:first").attr("selected", true);
         }
+        return;
     });
 });
 
@@ -53,8 +52,12 @@ function Read(){
         {a2:$("#qnt").val(),a1:$("#codice").val(),a3:$("#bolla").val()},
     
     function (result){
-        if(result==2){
-            alert("duplcazione bolla")
+        var arr= new Array();
+        if(result[1]==2){
+            var data=result[0]
+            arr=result[0].split('-');
+            lll=arr[0]
+            alert("duplcazione bolla per l'utente: " + arr[0])
         }
     });
         return;
