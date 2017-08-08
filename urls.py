@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from . import views
 from Magazzino import Mviews
-#from Fatturazione import Fviews
+from Fatturazione import Fviews
 
 urlpatterns = [
     url('logout',views.Logout),
@@ -28,14 +28,15 @@ urlpatterns = [
     url('elimina',Mviews.EliminaBolla),
     url('lkfornitore',Mviews.LKCaricoFornitore),
     url('lkprodotto',Mviews.LKCaricoProdotto),
+    url('lktotale',Mviews.LKCaricoTotale),
     url('gioco',Mviews.Gioco),
 
 #    url('lkprodotto',Mviews.LKCaricoProdotto),
 
     #URL DI FATTURAZIONE
-    #url('fatt',Fviews.FBase),
-    #url('ca',Fviews.CreaAnagrafica),
-    #url('delcliente',Fviews.DelCliente),
-    #url('modana',Fviews.ModificaAnagrafica),
+    url('fatt',Fviews.FBase),
+    url('ca',Fviews.CreaAnagrafica),
+    url('delcliente',Fviews.DelCliente),
+    url('modana',Fviews.ModificaAnagrafica),
     
 ]

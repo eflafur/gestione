@@ -22,17 +22,22 @@ function Put(item,date) {
         "lkfornitore",
         { res: item,res1:date},
         function (result) {
-        label="";
-
-        for (i = 0; i < result.length; i++) {
-            label = label + '<tr>';
-            label = label + '<td>' + result[i].idcod__cod+ '</td>';
-            label = label + '<td>' + result[i].q+ '</td>';
-            label = label + '<td>' + result[i].bolla+ '</td>';
-            label = label + '<td>' + result[i].data+ '</td>';
-            label = label + '</tr>';
-        }
-        $("#tb3").html(label);
-    });
+        var sum=0;
+            label="";
+            for (i = 0; i < result.length; i++) {
+                sum=sum+result[i].q;
+                label = label + '<tr>';
+                label = label + '<td>' + result[i].idcod__cod+ '</td>';
+                label = label + '<td>' + result[i].q+ '</td>';
+                label = label + '<td>' + result[i].bolla+ '</td>';
+                label = label + '<td>' + result[i].data+ '</td>';
+                label = label + '</tr>';
+            }
+            label=label + '<tr><td>TOT</td><td>'+sum+ '</td></tr>';
+            $("#tb3").html(label);  
+             var $a=$("#tb3 tr:last-child");
+            var $b= $a.find("td:last");  //.css("font-size","30px");
+            $b.css("color", "blue");
+        });
     return;
 };

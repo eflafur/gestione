@@ -1,10 +1,12 @@
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-       $("#reg").click(function(){
-      var a=$("#reg option:selected").text();
-     Put(a);
-    });
-    
+       var res=$("#reg").click(function(){
+            $("#reg option:selected").text();
+            Put(a);
+            alert (res);
+        });
+
+        
           //  $('a[href]').hide();
             //$("div").css("font-size","10px");
             //$("#menu1 li:last-child").css("font-size","30px");
@@ -16,7 +18,7 @@ $(document).ready(function(){
             // $("#dv1").find('p').hide();
              // $("#reg").children().hide();
               //per ID e Class
-             $(".li1").next().css("background-color", "blue");
+            // $(".li1").next().css("background-color", "blue");
             //$("#li1").next().css("background-color", "blue");
     //ritorna tutti gli elementi dello stesso livello ad esclusione dell'elemento corrente
           //  $(".li1").siblings().css("background-color", "blue");
@@ -24,10 +26,46 @@ $(document).ready(function(){
              //$(".li1").siblings().each(function(index){
                 //Write(index);
              //});
-              $("#menu2 li").each(function(index){
-                Write(index);
-             });
+                //$("#menu2 li").each(function(index){
+                    //Write(index);
+                //});
+                
+                //$('#idLKP11 tr').each(function() {
+                    //var customerId = $(this).find("td:first").html(); 
+                    //$("pp").val(customerId);
+                    //alert (customerId);
+                //});
+                
+                LightTd();
+                LightLi();
+                
             });
+
+function LightTd(){
+    var a=$("#mytable tr:nth-child(1)");
+    var b=a.next('tr');
+    var c= b.find("td:last");
+    c.css("font-size","30px");
+};          
+function LightLi(){
+    //var a=$("#menu2").children();
+    //var b= a.find("li:not(.li1)");
+    //b.css("font-size","30px");
+    
+    //var a=$("#menu2").children();
+    //var b= a.find("ul:last-child");
+    //var c=a.find("li:last-child");
+    //var d=c.parent();
+    //d.css("font-size","30px");
+    
+    var a=$("#menu2").children();
+    var b= a.find("li:not(.li1)");
+    var c=b.first();
+    c.css("font-size","30px");
+    
+};          
+          
+
           
 function Write(index){
    label="ciccio della bruma lariolacci";

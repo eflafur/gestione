@@ -21,7 +21,7 @@ class LKPData:
         return data    
     def getbyMargin(self,line):
         self.row=line
-        p=Produttore.objects.filter(Q(margine__gte=line)).order_by("margine").values("azienda","margine","regione","citta","tel")
+        p=Produttore.objects.filter(Q(margine__gte=line)).order_by("-margine").values("azienda","margine","regione","citta","tel")
         if (p==""):
             return (2)
         data=list(p)

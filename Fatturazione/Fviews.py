@@ -53,7 +53,7 @@ def CreaAnagrafica(request):
         obj=CreateTable.GetProd()
         res1=obj.GetArea()        
         context={"items":res,"items1":res1}
-    return render(request,"fatturazione/Creazione/FInsert.html",context)
+        return render(request,"fatturazione/Creazione/FInsert.html",context)
 
 def ModificaAnagrafica(request):
     if(login==0):

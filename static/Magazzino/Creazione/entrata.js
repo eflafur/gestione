@@ -1,7 +1,9 @@
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#codice").focus();
     $("#codice").click(function(){
         $("#cldt2").show();
+        $("#qnt").focus();
     });
     $("#qnt").keypress(function(){
         $("#idLKP1").show();

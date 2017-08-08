@@ -79,7 +79,7 @@ class Cliente(models.Model):
 	citta=models.CharField(max_length=20,null=True)
 	azienda=models.CharField(max_length=50,unique=True,blank=True,default=" ")
 	indirizzo=models.CharField(max_length=60,null=True,blank=True,default=" ")
-	acquisizione=models.DateField(default=date.today)
+	acquisizione=models.DateField(default=date.today,)
 	email=models.EmailField(null=True,blank=True)
 	tel=models.CharField(max_length=15,null=True,blank=True,default=" ")
 	trpag=models.IntegerField(null=True,blank=True,default=0)

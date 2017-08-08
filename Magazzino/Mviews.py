@@ -65,7 +65,7 @@ def LKCaricoFornitore(request):
         mod=Modifica.ModProd()
         prod=mod.GetProduttori()
         context={"items":prod}
-    return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)   
+        return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)   
 
 def LKCaricoProdotto(request):
     if(login==0):
@@ -80,7 +80,51 @@ def LKCaricoProdotto(request):
         el=CreateTable.GetSett()
         res=el.GetGenere() 
         context={"items":res}
-    return render(request,"Magazzino/Consultazione/LKcaricoprodotto.html",context)
+        return render(request,"Magazzino/Consultazione/LKcaricoprodotto.html",context)
+
+def LKCaricoTotale(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    if(request.method=="POST"):
+        message=request.POST
+        obj7=MGetTable.GetData()
+        res=obj7.GetCaricoTotale(message)     
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        item=" "
+        context={item:" "}
+        return render(request,"Magazzino/Consultazione/LKcaricototale.html",context)
+
+
+def EliminaBolla(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
+    global H1
+    context={}
+    if(request.method=="POST"):
+        message=request.POST
+        res=re.sub('[" "]',"",message["a1"])
+        var=res.split(":")
+        if((message["a2"]=="js")):
+            obj1=MGetTable.GetData()
+            res=obj1.GetBolla(var)
+            return JsonResponse(res,safe=False)
+        elif ((message["a2"]!="js")):
+            obj5=MModifica.ModProd()
+            res=obj5.DelBolla(var)
+        obj3=MGetTable.GetData()
+        res=obj3.GetCarico()
+        context={"items":res}
+        return render(request,"Magazzino/Modifica/eliminabolla.html",context)
+    if(request.method=="GET"):
+        obj3=MGetTable.GetData()
+        res=obj3.GetCarico()
+        context={"items":res}
+        return render(request,"Magazzino/Modifica/eliminabolla.html",context)
+    
+   
 
 
 # per la selezione anche dell'articolo*****
@@ -120,32 +164,6 @@ def LKCaricoProdotto(request):
 
 
 
-def EliminaBolla(request):
-    if(login==0):
-        context={}
-        return render(request,"Validazione/login.html",context)         
-    global H1
-    context={}
-    if(request.method=="POST"):
-        message=request.POST
-        res=re.sub('[" "]',"",message["a1"])
-        var=res.split("-")
-        if((message["a2"]=="js")):
-            obj1=MGetTable.GetData()
-            res=obj1.GetBolla(var)
-            return JsonResponse(res,safe=False)
-        elif ((message["a2"]!="js")):
-            obj5=MModifica.ModProd()
-            res=obj5.DelBolla(var)
-        obj3=MGetTable.GetData()
-        res=obj3.GetCarico()
-        context={"items":res}
-        return render(request,"Magazzino/Modifica/eliminabolla.html",context)
-    if(request.method=="GET"):
-        obj3=MGetTable.GetData()
-        res=obj3.GetCarico()
-        context={"items":res}
-        return render(request,"Magazzino/Modifica/eliminabolla.html",context)
 
 
 def Gioco(request):

@@ -15,35 +15,17 @@
 
  <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2"><h2>Elimina Fornitore</h2> </div>      
+        <div class="col-md-8 col-md-offset-2"><h2>Carico Totale</h2> </div>      
     </div>
     <br/><br/>
 
  
     <div class="row">
-        <div class="col-sm-3">    
-         <span class="input-group-addon">Fornitore </span>   
-            <select class="form-control" name="s1" id="slc1">
-                {% for entry in items %}
-                    <option value="{{ entry.nome }}">{{ entry.nome}}</option>
-                {% endfor %}
-            </select>
-        </div>
         <div class="col-md-2">     
-            <div class="input-group" id="cldt2">
+            <div class="input-group" id="cldt22">
                 <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
             </div>   
         </div>
-
-
- <!--per la selezionde dell'articolo-->
-    <!--<div class="row">-->
-        <!--<div class="col-md-3">-->
-            <!--<select class="form-control" name="s2" id="slc2">-->
-            <!--</select>-->
-        <!--</div>-->
-    <!--</div>-->
-
 
          <div class=" col-md-6 col-md-offset-1" id="idLKP" >
             <table id="mytable"  class="table table-hover">
@@ -56,7 +38,7 @@
                         <th>Data Carico</th>
                     </tr>
                 </thead>
-                <tbody class="tbl" id="tb4"></tbody>
+                <tbody class="tbl" id="tb5"></tbody>
             </table>
         </div>
     </div>
@@ -65,6 +47,6 @@
 {%endblock%}
 
 {%block script%}
-  <script src="{% static 'Magazzino/Consultazione/LKcaricoprodotto.js' %}" ></script>
+  <script src="{% static 'Magazzino/Consultazione/LKcaricototale.js' %}" ></script>
 {% endblock %}
 
