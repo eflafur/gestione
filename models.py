@@ -88,8 +88,13 @@ class Cliente(models.Model):
 		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)
 
 
-
-
+class Scarico(models.Model):
+	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
+	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
+	q=models.IntegerField(null=True,blank=True,default=0)
+	prezzo=models.DecimalField(decimal_places=2,null=True,blank=True,default=0)
+	data=models.DateField(default=date.today)
+	fattura=models.TextField(max_length=10,null=True,blank=True)
 
 
 
