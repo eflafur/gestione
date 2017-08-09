@@ -5,14 +5,36 @@
 
 <div class="container">
  <div class="row">
-  <div class="col-md-8 col-md-offset-2"><h2>Modifica Fornitore</h2> </div>      
+  <div class="col-md-8 col-md-offset-2"><h2>Carico Merce</h2> </div>      
  </div>
  <br/><br/>
+ 
+  <div class="row">
+   <div class="col-md-3"> 
+    <div class="input-group" id="bla">
+     <span class="input-group-addon">Bolla</span>
+     <input type="text" id="bolla" class="form-control" name="a3" placeholder="Bolla" maxlength="20" min="3">
+    </div>
+   </div>
+   <div class="col-md-3"> 
+       <button type="submit" class="btn btn-primary" id="btn2">Fine </button>  
+   </div>
+  </div>
+  <br/> 
+  
+  <div class="row">
+   <div class="col-md-3"> 
+    <div class="input-group" id="cldt2">
+     <span class="input-group-addon">Kilogrammi</span>
+     <input type="number" id="qnt" class="form-control" name="a2" placeholder="KG" min="0">
+    </div>
+   </div> 
+  </div>
+  </br>
 
  <div class="row">
-  <!--<form class="form-horizontal" action="entrata" method="post">-->
    <div class="col-md-4">  
-    <div class="input-group">
+    <div class="input-group" id="idLKP">
      <span class="input-group-addon">Codice </span> 
      <select class="form-control" name="a1" id="codice">
        {% for entry in items %}
@@ -22,34 +44,6 @@
     </div>
    </div>
   </div>
-   <br/>      
- 
- <div class="row">
-   <div class="col-md-3"> 
-    <div class="input-group" id="cldt2">
-     <span class="input-group-addon">Kilogrammi</span>
-     <input type="number" id="qnt" class="form-control" name="a2" placeholder="KG" min="0">
-    </div>
-   </div> 
-  </div>
-    <br/>
-   
-  <div class="row">
-   <div class="col-md-3"> 
-    <div class="input-group" id="idLKP1">
-     <span class="input-group-addon">Bolla</span>
-     <input type="text" id="bolla" class="form-control" name="a3" placeholder="Bolla" maxlength="20" min="3">
-    </div>
-   </div>
-  </div>
-  <br/> 
-
-   <div class="row">
-        <div class="col-md-3"> 
-            <button type="submit" class="btn btn-primary" id="btn1">Insert</button>  
-        </div>
-    </div>
-        <!--</form>-->
 </div>
   
 {%endblock%}

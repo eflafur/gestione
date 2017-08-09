@@ -4,6 +4,7 @@ from datetime import date,datetime
 
 class Genere(models.Model):
 	nome=models.CharField(max_length=50)
+	iva=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	def __str__(self):
 		return "%s" % (self.nome)
 
@@ -92,7 +93,7 @@ class Scarico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
 	q=models.IntegerField(null=True,blank=True,default=0)
-	prezzo=models.DecimalField(decimal_places=2,null=True,blank=True,default=0)
+	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fattura=models.TextField(max_length=10,null=True,blank=True)
 
