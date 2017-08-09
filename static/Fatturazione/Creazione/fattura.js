@@ -1,54 +1,54 @@
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    $("#bla").focus();
+    $("#codice").focus();
 
-     $("#bolla").keypress(function(){
-        $("#cldt2").show();
-    });
-    
-    $("#qnt").keypress(function(){
-        $("#idLKP").show();
-    });
-    
      $("#codice").click(function(){
-        var bl=$("#bolla").val();
-        var qt=$("#qnt").val();
-        if(bl==""){
-            alert("inserire bolla")
-             $("#bolla").focus();
-        }
-        else if (qt==""){
-            alert("inserire quanatita")
-             $("#qnt").focus();
-        }
-        else 
-            Read();   
-            $("#qnt").val("");
-            $("#idLKP").hide();
+        $("#ps").show();
+        $("#peso").focus();
     });
     
-     $("#btn2").click(function(){
-        $("#bolla").val("");
-        $("#qnt").val("");
-        $("#cldt2").hide();
-        $("#idLKP").hide();
+    $("#peso").keypress(function(){
+        $("#prz").show();
+    });
+    
+    $("#prezzo").keypress(function(){
+        $("#btadd").show();
+    });
+    
+     //$("#codice").click(function(){
+        //var bl=$("#bolla").val();
+        //var qt=$("#qnt").val();
+        //if(bl==""){
+            //alert("inserire bolla")
+             //$("#bolla").focus();
+        //}
+        //else if (qt==""){
+            //alert("inserire quanatita")
+             //$("#qnt").focus();
+        //}
+        //else 
+            //Read();   
+            //$("#qnt").val("");
+            //$("#idLKP").hide();
+    //});
+    
+     $("#btadd").click(function(){
+        $("#peso").val("");
+        $("#prezzo").val("");
+        $("#ps").hide();
+        $("#prz").hide();
+        $("#btadd").hide();
         $("#codice option:eq(1)").selected();
      });
 });
 
 function Read(){
     $.post(
-        "entrata",
+        "fattura",
         {a2:$("#qnt").val(),a1:$("#codice").val(),a3:$("#bolla").val()},
     
     function (result){
-        //var arr= new Array();
-        //if(result[1]==2){
-            //var data=result[0]
-            //arr=result[0].split('-');
-            //lll=arr[0]
-            //alert("duplcazione bolla per l'utente: " + arr[0])
-        //}
+
     });
         return;
 };

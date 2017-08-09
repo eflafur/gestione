@@ -62,6 +62,9 @@ def LKCaricoFornitore(request):
         context={"items":prod}
         return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)    
     if(request.method=="GET"):
+    
+        obj1=MCreateTable.CreateData()
+        obj1.Genere()        
         mod=Modifica.ModProd()
         prod=mod.GetProduttori()
         context={"items":prod}
@@ -77,6 +80,7 @@ def LKCaricoProdotto(request):
         res=obj7.GetIdCodbyProdotto(message)     
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
+# inserimento IVA causa shell non funziona
         el=CreateTable.GetSett()
         res=el.GetGenere() 
         context={"items":res}

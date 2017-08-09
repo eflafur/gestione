@@ -6,6 +6,12 @@ $(document).ready(function(){
         $("#fatturato").val("0");
 
     $("#reg").click(function(){
+        a=$("#dl").val();
+        if (a==""){
+            alert("inserire CLiente")
+            $("#dl").focus();
+            return 
+        }
       var a=$("#reg option:selected").text();
      Put(a);
     });

@@ -1,4 +1,4 @@
-from gestione.models import IDcod,Carico
+from gestione.models import IDcod,Carico,Genere
 from django.db.models import Q
 import re
 import sys
@@ -24,3 +24,9 @@ class CreateData:
             rec=Carico(q=line["a2"],bolla=line["a3"],idcod=cod)
             rec.save()
         return
+    
+#inserimento IVA causa shell non funziona
+    def Genere(self):
+        g=Genere.objects.get(id=16)
+        g.iva=0.12
+        g.save()

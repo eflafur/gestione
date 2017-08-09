@@ -34,9 +34,10 @@ urlpatterns = [
 #    url('lkprodotto',Mviews.LKCaricoProdotto),
 
     #URL DI FATTURAZIONE
+    url('fattura',Fviews.Fattura),
     url('fatt',Fviews.FBase),
     url('ca',Fviews.CreaAnagrafica),
     url('delcliente',Fviews.DelCliente),
     url('modana',Fviews.ModificaAnagrafica),
-    
+
 ]

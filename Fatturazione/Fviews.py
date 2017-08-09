@@ -141,7 +141,34 @@ def DelCliente(request):
         context={"items":res}
     return render(request,"fatturazione/Modifica/FDelFornitore.html",context)  
 
-
+def Fattura(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
+    global H1
+    context={}
+    if(request.method=="POST"):
+        message=request.POST
+        line=[]
+        if((message["a1"]!="") & (message["a2"]!="")  & (message["a3"]!="")):
+            obj1=MCreateTable.CreateData()
+            res=obj1.Entrata(message)
+            line.append(message["a1"])
+            line.append(res)
+            return JsonResponse(line,safe=False)
+        #if(res==2):
+            #var= message["a1"].split("-")
+            #context={"avviso":"bolla esistente per il fornitore: "+ var[0],"azione":"entrata"}
+            #return render(request,"gestione/safe1.html",context) 
+        obj=GetProduct.LKPData()
+        res=obj.GetIDcod("ciao")
+        context={"items":res}
+        return render(request,"fatturazione/Creazione/fattura.html",context)  
+    if(request.method=="GET"):
+        obj=GetProduct.LKPData()
+        res=obj.GetIDcod("ciao")
+        context={"items":res}
+        return render(request,"fatturazione/Creazione/fattura.html",context)    
 
 
 
