@@ -150,7 +150,7 @@ def Fattura(request):
     if(request.method=="POST"):
         message=request.POST
         line=[]
-        if((message["a1"]!="") & (message["a2"]!="")  & (message["a3"]!="")):
+        if((message["a1"]!="")):
             obj1=MCreateTable.CreateData()
             res=obj1.Entrata(message)
             line.append(message["a1"])
@@ -167,7 +167,9 @@ def Fattura(request):
     if(request.method=="GET"):
         obj=GetProduct.LKPData()
         res=obj.GetIDcod("ciao")
-        context={"items":res}
+        objf=FGetTable.GetData()
+        res1=objf.GetCliente()
+        context={"items":res,"itemsf":res1}
         return render(request,"fatturazione/Creazione/fattura.html",context)    
 
 

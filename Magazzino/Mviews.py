@@ -62,9 +62,6 @@ def LKCaricoFornitore(request):
         context={"items":prod}
         return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)    
     if(request.method=="GET"):
-    
-        obj1=MCreateTable.CreateData()
-        obj1.Genere()        
         mod=Modifica.ModProd()
         prod=mod.GetProduttori()
         context={"items":prod}

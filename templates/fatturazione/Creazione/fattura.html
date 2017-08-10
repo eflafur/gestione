@@ -4,14 +4,38 @@
 {%block insert%}
 
 <div class="container">
- <div class="row">
-  <div class="col-md-8 col-md-offset-2"><h2>Carico Merce</h2> </div>      
- </div>
- <br/><br/>
+ <!--<div class="row">-->
+  <!--<div class="col-md-8 col-md-offset-2"><h2>Carico Merce</h2> </div>      -->
+ <!--</div>-->
+ <!--<br/><br/>-->
  
  
   <div class="row">
-   <div class="col-md-4">  
+     <div class="col-md-4">  
+    <div class="input-group" id="cln">
+     <span class="input-group-addon">Cliente </span> 
+     <select class="form-control" name="cln" id="cliente">
+       {% for entry in itemsf %}
+           <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+       {% endfor %}
+     </select>
+    </div>
+   </div>
+ 
+      <div class="col-md-1"> 
+       <button type="submit" class="btn btn-primary" id="btsps">Sospesa </button>  
+   </div>
+    <div class="col-md-1"> 
+       <button type="submit" class="btn btn-primary" id="btems">Emissione</button>  
+   </div>
+    <div class="col-md-1"> 
+       <button type="submit" class="btn btn-primary" id="btanl">Annulla</button>  
+   </div>
+  </div>
+  </br>
+  
+  <div class="row">
+    <div class="col-md-4">  
     <div class="input-group" id="cod">
      <span class="input-group-addon">Codice </span> 
      <select class="form-control" name="a1" id="codice">
@@ -21,14 +45,23 @@
      </select>
     </div>
    </div>
-      <div class="col-md-1"> 
-       <button type="submit" class="btn btn-primary" id="btfatt">Sospesa </button>  
-   </div>
-    <div class="col-md-1"> 
-       <button type="submit" class="btn btn-primary" id="btdraft">Emissione</button>  
-   </div>
-  </div>
-  </br>
+   
+    
+         <div class=" col-md-6 col-md-offset-5" id="tbf" >
+            <table id="mytable"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Codice</th>
+                        <th>Peso</th>
+                        <th>Prezzo</th>
+                    </tr>
+                </thead>
+                <tbody id="tb3"></tbody>
+            </table>
+        </div>
+   
+ </div>
+ </br>
   
    <div class="row">
    <div class="col-md-3"> 
@@ -41,7 +74,7 @@
  </br>
  
   <div class="row">
-   <div class="col-md-3"> 
+   <div class="col-md-3 "> 
     <div class="input-group" id="prz">
      <span class="input-group-addon">Prezzo</span>
      <input type="number" id="prezzo" class="form-control" name="a3" min="0">
@@ -50,13 +83,16 @@
   </div>
   </br>
   
- <div class="row">
-   <div class="col-md-1"> 
+   <div class="row">
+     <div class="col-md-1 "> 
        <button type="submit" class="btn btn-primary" id="btadd">Aggiungi </button>  
    </div>
+  </div>
  </div>
-  
 </div>
+  
+ 
+  
   
 {%endblock%}
 

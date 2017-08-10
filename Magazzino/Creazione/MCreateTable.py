@@ -24,9 +24,3 @@ class CreateData:
             rec=Carico(q=line["a2"],bolla=line["a3"],idcod=cod)
             rec.save()
         return
-    
-#inserimento IVA causa shell non funziona
-    def Genere(self):
-        g=Genere.objects.get(id=16)
-        g.iva=0.12
-        g.save()

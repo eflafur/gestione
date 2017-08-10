@@ -11,3 +11,7 @@ class GetData:
             c=Cliente.objects.all()
         data=list(c)
         return data
+    def GetCliente(self):
+        recs=Cliente.objects.all();
+        data=list(recs)
+        return data
