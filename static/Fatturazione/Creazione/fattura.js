@@ -72,8 +72,6 @@ $(document).ready(function(){
             alert ("inserire prezzo")
             $("#prezzo").focus()
         }
-        
-
         else {
         //versione con array
             //ar1[i]=$("#codice").val();
@@ -81,6 +79,7 @@ $(document).ready(function(){
             //ar3[i]=$("#prezzo").val();
             //i++;
             //Fill(ar1,ar2,ar3);
+  
             var obj={}
             obj['cod'] =$("#codice").val();
             obj['ps'] =$("#peso").val();
@@ -97,8 +96,14 @@ $(document).ready(function(){
             $("#cod").focus();
             $("#cliente").attr('disabled',true);
         }
-        return
-     });
+        return;
+    });
+
+      $('#tbfb').on('click','a',function(){
+        o=$(this).text();   
+        alert (o );
+    });
+    return;
 });
 
 function Fill(res){
@@ -108,9 +113,10 @@ function Fill(res){
         label = label + '<td>' + res[i].cod+ '</td>';
         label = label + '<td>' + res[i].ps+ '</td>';
         label = label + '<td>' + res[i].prz+ '</td>';
+        label = label + '<td> <a href="#" value="ded" ><p>'+i+'</p></a></td>';
         label = label + '</tr>';
     }
-    $("#tb3").html(label);  
+    $("#tbfb").html(label);  
     return;
 };
 

@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
        var res=$("#reg").click(function(){
@@ -36,10 +37,51 @@ $(document).ready(function(){
                     //alert (customerId);
                 //});
                 
-                LightTd();
-                LightLi();
+                //LightTd();
+                //LightLi();
                 
+                //$("#tb4 a").click(function(){
+                    //o=$(this).text();   
+                    //alert (o );
+                //});
+                
+                $("#btadd").click(function(){
+                    Fill("ciao");
+                });
+                  
+                //$("#ulfb a").click(function(){
+                $('#tbfb').on('click','a',function(){
+                    o=$(this).text();   
+                    alert (o );
+                });
             });
+            
+function Fillul(res){
+  var label="";
+  label=label +'<ul>';
+    for (i = 0; i < 3; i++) {
+        label = label + '<li> aa'+i+' <a href="#"  >'+i+'</a> </li>';
+    }
+    label = label + '</ul>';
+    $("#ulfb").html(label);  
+    return;
+};                        
+            
+            
+        
+function Fill(res){
+  var label="";
+    for (i = 0; i < 3; i++) {
+        label = label + '<tr>';
+        label = label + '<td> aa'+i+' </td>';
+        label = label + '<td> bb'+i+' </td>';
+        label = label + '<td> <a href="#" value="ded" ><p>'+i+'</p></a></td>';
+        label = label + '</tr>';
+    }
+    $("#tbfb").html(label);  
+    return;
+};            
+            
 
 function LightTd(){
     var a=$("#mytable tr:nth-child(1)");
