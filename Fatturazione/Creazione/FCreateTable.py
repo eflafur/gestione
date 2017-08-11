@@ -1,6 +1,6 @@
 import django
 django.setup()
-from gestione.models import Cliente,Scarico,IDcod
+from gestione.models import Cliente,Scarico,IDcod,Sospese
 from django.db.models import Q
 
 class Produt:
@@ -32,3 +32,16 @@ class Produt:
             cod=IDcod.objects.get(cod=item["cod"])
             rec=Scarico(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],fattura=fatt)
             rec.save()
+        return
+
+    def ScriviSospesa(self,line):
+        s=Sospese.objects.latest("id")
+        f=(s.fatturas).split("-")
+        r=int(f[1])+1
+        fatt=f[0]+"-"+str(r)
+        for item in line:
+            c=Cliente.objects.get(azienda=item["cln"])
+            cod=IDcod.objects.get(cod=item["cod"])
+            rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],fatturas=fatt)
+            rec.save()
+        return

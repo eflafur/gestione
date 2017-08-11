@@ -12,36 +12,36 @@
    
    <input type="text" id="pp">
    
-   <!--<div class="row">-->
-      <!--<div class="col-xs-2 col-md-3">-->
-      <!--<form class="form-group" action="produttore" method="post">-->
-      <!--<div class="input-group">-->
-         <!--<span class="input-group-addon">Azienda</span>-->
-          <!--<input type="text" id="dl" class="form-control" name="a2" list="cityname">-->
-           <!--<datalist  id="cityname">-->
-            <!--{% for entry in items3 %}-->
-                <!--<option value="{{ entry.azienda }}">{{ entry.azienda}}</option>-->
-            <!--{% endfor %}-->
-          <!--</datalist>-->
-       <!--</div>-->
-       <!--<br/><br/>-->
+   <div class="row">
+      <div class="col-xs-2 col-md-3">
+      <form class="form-group" action="produttore" method="post">
+      <div class="input-group">
+         <span class="input-group-addon">Azienda</span>
+          <input type="text" id="dl" class="form-control" name="a2" list="cityname">
+           <datalist  id="cityname">
+            {% for entry in items3 %}
+                <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
+            {% endfor %}
+          </datalist>
+       </div>
+       <br/><br/>
         
-         <!--<div class="input-group">-->
-         <!--<span class="input-group-addon">Regione</span>-->
-            <!--<select class="form-control" name="a5" id="reg">-->
-                <!--{% for entry in items1 %}-->
-                    <!--<option value="{{ entry.regione }}">{{ entry.regione}}</option>-->
-                <!--{% endfor %}-->
-            <!--</select>-->
-       <!--</div>-->
-       <!--<br/><br/>-->
+         <div class="input-group">
+         <span class="input-group-addon">Regione</span>
+            <select class="form-control" name="a5" id="reg">
+                {% for entry in items1 %}
+                    <option value="{{ entry.regione }}">{{ entry.regione}}</option>
+                {% endfor %}
+            </select>
+       </div>
+       <br/><br/>
 
-        <!--<div class="input-group">-->
-         <!--<span class="input-group-addon">Citta</span>-->
-        <!--<select class="form-control" name="a4" id="ct" >-->
-        <!--</select>-->
-        <!--</div>-->
-        <!--<br/><br/>-->
+        <div class="input-group">
+         <span class="input-group-addon">Citta</span>
+        <select class="form-control" name="a4" id="ct" >
+        </select>
+        </div>
+        <br/><br/>
         
         
         <!--<div class="row">-->

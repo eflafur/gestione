@@ -2,10 +2,12 @@ var ar1= [];
 var ar2= [];
 var ar3= [];
 var i=0;
+var cliente;
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-   
+ //   cliente=$("#cliente option:selected").text();
+
     $("#cln").focus();
     
     $("#cliente").click(function(){
@@ -29,7 +31,8 @@ $(document).ready(function(){
     });
     
     $("#btsps").click(function(){
-        Invia(ar1);
+     //   $("#cliente option:selected").html(cliente);
+        Invia(ar1,'S');
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();
@@ -37,10 +40,13 @@ $(document).ready(function(){
         $("#ps").hide();
         $("#prz").hide();
         $("#btadd").hide();
+
     });
     
     $("#btems").click(function(){
-        Invia(ar1);
+     //   $("#cliente option:selected").html(cliente);
+        Invia(ar1,'I');
+        ar1.length=0
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();
@@ -51,6 +57,7 @@ $(document).ready(function(){
     });
     
     $("#btanl").click(function(){
+        //$("#cliente option:selected").html(cliente);
         ar1.length=0
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
@@ -128,12 +135,14 @@ function Fill(res){
     return;
 };
 
-
-
-function Invia(ar){
+function Invia(ar,azione){
+    if (azione=="I")
+        act="invio";
+    else if (azione=="S")
+        act="sospesa";
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:"invio"},
+      {res:JSON.stringify(ar1),azione:act},
         //{
             //json_data: JSON.stringify(ar1),
             //"type": 'clone',
@@ -144,7 +153,6 @@ function Invia(ar){
     });
     return;
 };
-
 
 function DeleteRow(row){
     ar1.splice(row-1,1);

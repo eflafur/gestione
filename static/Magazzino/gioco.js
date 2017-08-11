@@ -1,12 +1,20 @@
 
+var regione;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-       var res=$("#reg").click(function(){
-            $("#reg option:selected").text();
-            Put(a);
-            alert (res);
+        regione=$("#reg option:selected").text();
+        $("#reg").click(function(){
+            opt=$("#reg option:selected").text();
+            alert (regione);
+            Put(opt);
+
         });
 
+    $("#btl").click(function(){
+            citta=$("#ct option:selected").text();
+            alert (citta);
+            $("#reg option:selected").html(regione);
+        });
         
           //  $('a[href]').hide();
             //$("div").css("font-size","10px");
@@ -55,9 +63,9 @@ $(document).ready(function(){
                     alert (o );
                 });
                 
-                $("#btl").click(function(){
-                    Test("ciao");
-                });
+                //$("#btl").click(function(){
+                    //Test("ciao");
+                //});
             });
             
             

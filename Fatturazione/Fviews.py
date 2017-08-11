@@ -150,11 +150,14 @@ def Fattura(request):
     context={}
     if(request.method=="POST"):
         message=request.POST
+        lst = json.loads(message['res'])
+        objf=FCreateTable.Produt()        
         if((message["azione"]=="invio")):
-            lst = json.loads(message['res'])
-            objf=FCreateTable.Produt()
-            res=objf.ScriviFattura(lst)
-            return JsonResponse(res,safe=False)
+            objf.ScriviFattura(lst)
+        elif ((message["azione"]=="sospesa")):
+            objf.ScriviSospesa(lst)
+        res=""
+        return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         obj=GetProduct.LKPData()
         res=obj.GetIDcod("ciao")
@@ -162,15 +165,6 @@ def Fattura(request):
         res1=objf.GetCliente()
         context={"items":res,"itemsf":res1}
         return render(request,"fatturazione/Creazione/fattura.html",context)    
-
-
-
-
-#def Fattura(request):
-    #if request.method == 'POST':       
-        #ret = request.POST
-        #type = ret['type']
-        #list = json.loads(ret['json_data'])
 
 
 

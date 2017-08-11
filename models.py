@@ -98,5 +98,13 @@ class Scarico(models.Model):
 	fattura=models.TextField(max_length=10,null=True,blank=True)
 
 
+class Sospese(models.Model):
+	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
+	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
+	q=models.IntegerField(null=True,blank=True,default=0)
+	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
+	data=models.DateField(default=date.today)
+	fatturas=models.TextField(max_length=10,null=True,blank=True)
+
 
 
