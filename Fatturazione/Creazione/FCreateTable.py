@@ -1,6 +1,6 @@
 import django
 django.setup()
-from gestione.models import Cliente, Area,Sito
+from gestione.models import Cliente,Scarico,IDcod
 from django.db.models import Q
 
 class Produt:
@@ -21,3 +21,14 @@ class Produt:
             tel=self.row["a8"],
         )
         return (1)
+    
+    def ScriviFattura(self,line):
+        s=Scarico.objects.latest("id")
+        f=(s.fattura).split("-")
+        r=int(f[1])+1
+        fatt=f[0]+"-"+str(r)
+        for item in line:
+            c=Cliente.objects.get(azienda=item["cln"])
+            cod=IDcod.objects.get(cod=item["cod"])
+            rec=Scarico(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],fattura=fatt)
+            rec.save()

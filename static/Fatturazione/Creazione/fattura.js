@@ -40,17 +40,6 @@ $(document).ready(function(){
     });
     
     $("#btems").click(function(){
-        $("#tbf").hide("");
-        $("#cliente").attr('disabled',false);
-        $("#cliente").focus();
-        $("#cod").hide("");
-        $("#ps").hide();
-        $("#prz").hide();  
-        $("#btadd").hide();
-    });
-    
-       $("#btanl").click(function(){
-        ar1.length=0
         Invia(ar1);
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
@@ -61,7 +50,18 @@ $(document).ready(function(){
         $("#btadd").hide();
     });
     
-     $("#btadd").click(function(){
+    $("#btanl").click(function(){
+        ar1.length=0
+        $("#tbf").hide("");
+        $("#cliente").attr('disabled',false);
+        $("#cliente").focus();
+        $("#cod").hide("");
+        $("#ps").hide();
+        $("#prz").hide();  
+        $("#btadd").hide();
+    });
+    
+    $("#btadd").click(function(){
         a=$("#peso").val();
         b=$("#prezzo").val();
         if(a==""){
@@ -81,11 +81,12 @@ $(document).ready(function(){
             //Fill(ar1,ar2,ar3);
   
             var obj={}
+            obj['cln'] =$("#cliente").val();
             obj['cod'] =$("#codice").val();
             obj['ps'] =$("#peso").val();
             obj['prz'] =$("#prezzo").val();
-            ar1[i]=obj;
-            i=1+i;
+            ar1.push(obj);
+            //i=1+i;
             Fill(ar1);
             $("#tbf").show("");
             $("#peso").val("");
@@ -99,33 +100,60 @@ $(document).ready(function(){
         return;
     });
 
-      $('#tbfb').on('click','a',function(){
-        o=$(this).text();   
-        alert (o );
+    $('#tbfb').on('click','a',function(){
+        var arr= [];
+        arr=$(this).text().split('-');   
+        if(arr[1]=='E')
+            DeleteRow(arr[0]);
+        else if(arr[1]=='A')
+            AddRow(arr[0]);
     });
     return;
 });
 
 function Fill(res){
     var label="";
+    var k=0;
     for (i = 0; i < res.length; i++) {
+        k=i+1;
         label = label + '<tr>';
         label = label + '<td>' + res[i].cod+ '</td>';
         label = label + '<td>' + res[i].ps+ '</td>';
         label = label + '<td>' + res[i].prz+ '</td>';
-        label = label + '<td> <a href="#" value="ded" ><p>'+i+'</p></a></td>';
+        label = label + '<td> <a href="#" value="ded" ><p>'+k+'-A'+'</p></a></td>';
+        label = label + '<td> <a href="#" value="ded" ><p>'+k+'-E'+'</p></a></td>';
         label = label + '</tr>';
     }
     $("#tbfb").html(label);  
     return;
 };
 
+
+
 function Invia(ar){
     $.post(
         "fattura",
-        {a2:ar},
+      {res:JSON.stringify(ar1),azione:"invio"},
+        //{
+            //json_data: JSON.stringify(ar1),
+            //"type": 'clone',
+    //  "csrfmiddlewaretoken": $csrf_token
+        //},  
     function (result){
 
     });
     return;
+};
+
+
+function DeleteRow(row){
+    ar1.splice(row-1,1);
+    Fill(ar1);
+};
+
+function AddRow(row){
+    t=ar1[row-1].cod;
+//    $("#codice option[value=t").prop("selected", true);
+    $("#codice").val(t);
+    $("#ps").show();
 };

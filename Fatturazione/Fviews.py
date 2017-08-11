@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 import CreateTable,Modifica,GetProduct,validazione,FCreateTable,FGetTable,FModifica
+import json
 
 artic11=""
 MPaz=" "
@@ -141,29 +142,19 @@ def DelCliente(request):
         context={"items":res}
     return render(request,"fatturazione/Modifica/FDelFornitore.html",context)  
 
+
 def Fattura(request):
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)         
-    global H1
     context={}
     if(request.method=="POST"):
         message=request.POST
-        line=[]
-        if((message["a1"]!="")):
-            obj1=MCreateTable.CreateData()
-            res=obj1.Entrata(message)
-            line.append(message["a1"])
-            line.append(res)
-            return JsonResponse(line,safe=False)
-        #if(res==2):
-            #var= message["a1"].split("-")
-            #context={"avviso":"bolla esistente per il fornitore: "+ var[0],"azione":"entrata"}
-            #return render(request,"gestione/safe1.html",context) 
-        obj=GetProduct.LKPData()
-        res=obj.GetIDcod("ciao")
-        context={"items":res}
-        return render(request,"fatturazione/Creazione/fattura.html",context)  
+        if((message["azione"]=="invio")):
+            lst = json.loads(message['res'])
+            objf=FCreateTable.Produt()
+            res=objf.ScriviFattura(lst)
+            return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         obj=GetProduct.LKPData()
         res=obj.GetIDcod("ciao")
@@ -175,7 +166,11 @@ def Fattura(request):
 
 
 
-
+#def Fattura(request):
+    #if request.method == 'POST':       
+        #ret = request.POST
+        #type = ret['type']
+        #list = json.loads(ret['json_data'])
 
 
 

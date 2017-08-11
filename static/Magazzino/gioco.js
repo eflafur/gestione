@@ -54,8 +54,21 @@ $(document).ready(function(){
                     o=$(this).text();   
                     alert (o );
                 });
+                
+                $("#btl").click(function(){
+                    Test("ciao");
+                });
             });
             
+            
+function Test(el){
+    var obj = jQuery.parseJSON( '[{ "name": "John","cod":"23" },{ "name": "pat","cod":"32" }]' );
+   var a=obj[1].cod;
+   var b=JSON.stringify(obj);
+   
+};            
+
+
 function Fillul(res){
   var label="";
   label=label +'<ul>';
