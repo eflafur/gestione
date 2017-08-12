@@ -53,19 +53,25 @@ $(document).ready(function(){
                     //alert (o );
                 //});
                 
-                $("#btadd").click(function(){
-                    Fill("ciao");
-                });
+              
                   
                 //$("#ulfb a").click(function(){
-                $('#tbfb').on('click','a',function(){
-                    o=$(this).text();   
-                    alert (o );
-                });
+                //$('#tbfb').on('click','a',function(){
+                    //o=$(this).text();   
+                    //alert (o );
+                //});
                 
                 //$("#btl").click(function(){
                     //Test("ciao");
                 //});
+                
+                  $("#btadd").click(function(){
+                    Fill("ciao");
+                    res=$("#tbfb tr:first-child").next();
+                    res1=res.find("td").first();
+                    res1.css("background-color", "black");
+                });
+                
             });
             
             

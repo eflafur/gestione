@@ -45,3 +45,7 @@ class Produt:
             rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],fatturas=fatt)
             rec.save()
         return
+    def GetSospesa(self,message):
+        recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","fatturas","data","prezzo","cliente")
+        data=list(recls)
+        return data

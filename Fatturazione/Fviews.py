@@ -152,9 +152,9 @@ def Fattura(request):
         message=request.POST
         lst = json.loads(message['res'])
         objf=FCreateTable.Produt()        
-        if((message["azione"]=="invio")):
+        if(message["azione"]=="invio"):
             objf.ScriviFattura(lst)
-        elif ((message["azione"]=="sospesa")):
+        elif (message["azione"]=="sospesa"):
             objf.ScriviSospesa(lst)
         res=""
         return JsonResponse(res,safe=False)
@@ -166,7 +166,21 @@ def Fattura(request):
         context={"items":res,"itemsf":res1}
         return render(request,"fatturazione/Creazione/fattura.html",context)    
 
-
+def Sospesa(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    if(request.method=="POST"):
+        message=request.POST
+        if(message["azione"]=="reopen"):
+            res="ciao"
+            return JsonResponse(res,safe=False) 
+        objf=FCreateTable.Produt()
+        res=objf.GetSospesa(message);
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        context={"items":""}
+        return render(request,"fatturazione/Modifica/Fsospese.html",context)
 
 
 

@@ -33,6 +33,7 @@ $(document).ready(function(){
     $("#btsps").click(function(){
      //   $("#cliente option:selected").html(cliente);
         Invia(ar1,'S');
+        ar1.length=0
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();

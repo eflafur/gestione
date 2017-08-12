@@ -35,6 +35,7 @@ urlpatterns = [
 
     #URL DI FATTURAZIONE
     url('fattura',Fviews.Fattura),
+    url('sospesa',Fviews.Sospesa),
     url('fatt',Fviews.FBase),
     url('ca',Fviews.CreaAnagrafica),
     url('delcliente',Fviews.DelCliente),

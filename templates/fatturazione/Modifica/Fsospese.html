@@ -1,0 +1,42 @@
+{% extends 'fatturazione/FLayout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container">
+   <div class="row">
+        <div class="col-md-8 col-md-offset-2"><h2>Elimina Fornitore</h2> </div>      
+    </div>
+    <br/><br/>
+
+    <div class="row">
+
+        <div class="col-md-3">     
+            <div class="input-group" id="jj">
+                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>
+  
+        <div class=" col-md-9" id="tbf" >
+            <table id="tablef"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Num</th>
+                        <th>Cliente</th>
+                        <th>Cod</th>
+                        <th>Quantita</th>
+                        <th>Prezzo</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="tb6"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Fatturazione/Modifica/Fsospese.js' %}" ></script>
+{% endblock %}
