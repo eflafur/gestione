@@ -1,8 +1,8 @@
 from django.conf.urls import url
 
 from . import views
-from Magazzino import Mviews
-from Fatturazione import Fviews
+#from Magazzino import Mviews
+#from Fatturazione import Fviews
 
 urlpatterns = [
     url('logout',views.Logout),
@@ -23,22 +23,22 @@ urlpatterns = [
     url('base',views.Base),
     url(r'^$',views.Login),
     
-    #MAGAZZINO
-    url('entrata',Mviews.CaricoMerci),
-    url('elimina',Mviews.EliminaBolla),
-    url('lkfornitore',Mviews.LKCaricoFornitore),
-    url('lkprodotto',Mviews.LKCaricoProdotto),
-    url('lktotale',Mviews.LKCaricoTotale),
-    url('gioco',Mviews.Gioco),
+    ##MAGAZZINO
+    #url('entrata',Mviews.CaricoMerci),
+    #url('elimina',Mviews.EliminaBolla),
+    #url('lkfornitore',Mviews.LKCaricoFornitore),
+    #url('lkprodotto',Mviews.LKCaricoProdotto),
+    #url('lktotale',Mviews.LKCaricoTotale),
+    #url('gioco',Mviews.Gioco),
 
-#    url('lkprodotto',Mviews.LKCaricoProdotto),
+##    url('lkprodotto',Mviews.LKCaricoProdotto),
 
-    #URL DI FATTURAZIONE
-    url('fattura',Fviews.Fattura),
-    url('sospesa',Fviews.Sospesa),
-    url('fatt',Fviews.FBase),
-    url('ca',Fviews.CreaAnagrafica),
-    url('delcliente',Fviews.DelCliente),
-    url('modana',Fviews.ModificaAnagrafica),
+    ##URL DI FATTURAZIONE
+    #url('fattura',Fviews.Fattura),
+    #url('sospesa',Fviews.Sospesa),
+    #url('fatt',Fviews.FBase),
+    #url('ca',Fviews.CreaAnagrafica),
+    #url('delcliente',Fviews.DelCliente),
+    #url('modana',Fviews.ModificaAnagrafica),
 
 ]

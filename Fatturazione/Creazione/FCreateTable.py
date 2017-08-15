@@ -45,7 +45,40 @@ class Produt:
             rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],fatturas=fatt)
             rec.save()
         return
+    
+#evidenzia tutte le righe della sopsesa *1    
+    #def GetSospesa(self,message):
+        #recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","fatturas","data","prezzo","cliente__azienda")
+        #data=list(recls)
+        #return data
+    
     def GetSospesa(self,message):
-        recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","fatturas","data","prezzo","cliente")
+        before=" "
+        i=0
+        ll=[]
+        ss=[]
+        recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
         data=list(recls)
-        return data
+        
+        for el in data:
+            iva=el["idcod__genere__iva"]+1
+            if(el["fatturas"]!=before):
+                if(before!=" "):
+                    ll.append(somma)
+                somma=0
+                somma=somma+el["prezzo"]*el["q"]*iva
+            else:
+                somma=somma+el["prezzo"]*el["q"]*iva
+            before=el["fatturas"]
+        
+        ll.append(somma)
+        before=" "
+        i=0
+        
+        for item in recls:
+            if (item["fatturas"]!=before):
+                item["valore"]=ll[i]
+                ss.append(item)
+                i=i+1
+            before=item["fatturas"]
+        return ss    

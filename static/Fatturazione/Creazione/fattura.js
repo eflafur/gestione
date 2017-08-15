@@ -7,7 +7,13 @@ var cliente;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
  //   cliente=$("#cliente option:selected").text();
-
+      // ln=$("#cliente option").length;
+      //$("p:contains('sos')").css("color", "blue");
+    pvl=$("#psps").text();
+    if(pvl!=" "){
+        GetSospesa(pvl);
+    }  
+    
     $("#cln").focus();
     
     $("#cliente").click(function(){
@@ -32,7 +38,7 @@ $(document).ready(function(){
     
     $("#btsps").click(function(){
      //   $("#cliente option:selected").html(cliente);
-        Invia(ar1,'S');
+        Invia('S');
         ar1.length=0
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
@@ -46,7 +52,7 @@ $(document).ready(function(){
     
     $("#btems").click(function(){
      //   $("#cliente option:selected").html(cliente);
-        Invia(ar1,'I');
+        Invia('I');
         ar1.length=0
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
@@ -90,12 +96,12 @@ $(document).ready(function(){
   
             var obj={}
             obj['cln'] =$("#cliente").val();
-            obj['cod'] =$("#codice").val();
+            obj['cod'] =$("#codice option:selected").text();
             obj['ps'] =$("#peso").val();
             obj['prz'] =$("#prezzo").val();
+            obj["iva"]=parseFloat($("#codice option:selected").val())+1;
             ar1.push(obj);
-            //i=1+i;
-            Fill(ar1);
+            Fill("f");
             $("#tbf").show("");
             $("#peso").val("");
             $("#prezzo").val("");
@@ -116,27 +122,33 @@ $(document).ready(function(){
         else if(arr[1]=='A')
             AddRow(arr[0]);
     });
+    
     return;
 });
 
-function Fill(res){
+
+function Fill(crt){
     var label="";
     var k=0;
-    for (i = 0; i < res.length; i++) {
-        k=i+1;
+    var sum=0;
+    for (i = 0; i < ar1.length; i++) {
+        k=k+1
+        sum=sum+ar1[i].prz*ar1[i].ps*ar1[i].iva;
         label = label + '<tr>';
-        label = label + '<td>' + res[i].cod+ '</td>';
-        label = label + '<td>' + res[i].ps+ '</td>';
-        label = label + '<td>' + res[i].prz+ '</td>';
-        label = label + '<td> <a href="#" value="ded" ><p>'+k+'-A'+'</p></a></td>';
-        label = label + '<td> <a href="#" value="ded" ><p>'+k+'-E'+'</p></a></td>';
+        label = label + '<td>' + ar1[i].cod+ '</td>';
+        label = label + '<td>' + ar1[i].ps+ '</td>';
+        label = label + '<td>' + ar1[i].prz+ '</td>';
+        label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
+        label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
         label = label + '</tr>';
     }
-    $("#tbfb").html(label);  
+    label=label + '<tr><td>TOT</td><td></td><td>'+sum+ '</td></tr>';
+    $("#tbfb").html(label);
+    $("#tbfb tr:last").find("td:last").css("color","blue");
     return;
 };
 
-function Invia(ar,azione){
+function Invia(azione){
     if (azione=="I")
         act="invio";
     else if (azione=="S")
@@ -144,11 +156,6 @@ function Invia(ar,azione){
     $.post(
         "fattura",
       {res:JSON.stringify(ar1),azione:act},
-        //{
-            //json_data: JSON.stringify(ar1),
-            //"type": 'clone',
-    //  "csrfmiddlewaretoken": $csrf_token
-        //},  
     function (result){
 
     });
@@ -162,7 +169,28 @@ function DeleteRow(row){
 
 function AddRow(row){
     t=ar1[row-1].cod;
-//    $("#codice option[value=t").prop("selected", true);
-    $("#codice").val(t);
+    $("#codice option:selected").text(t);
+    //$("#codice option[value=t").prop("selected", true);
+  //  $("#codice").html(t);
     $("#ps").show();
+};
+
+function GetSospesa(pvl){
+    $.post(
+        "fattura",
+        {item:pvl,azione:"reazione"},
+        function(res){
+
+            for (i=0;i<res.length;i++){
+                var obj1={}  
+                obj1['cod'] =res[i].idcod__cod;
+                obj1['ps'] =res[i].q;
+                obj1['prz'] =res[i].prezzo;
+                obj1["iva"]=parseFloat(res[i].idcod__genere__iva)+1
+                ar1.push(obj1);
+            }
+        Fill("s");
+        $("#cod").show("");
+        $("#tbf").show("");
+        });
 };

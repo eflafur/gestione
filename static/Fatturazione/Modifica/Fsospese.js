@@ -10,56 +10,74 @@ $(document).ready(function(){
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",//autoSize:true,appendText: "(yyyy-mm-dd)",// 
         onSelect: function (date) {
             GetTable(date);
-                $("#tbf").show();
+                $("#tbf1").show();
         }
     });
     
     $("#tablef").on('click','a',function(){
         a=$(this).text();
-        GetSospese(a);
+        window.location.replace("fattura?nome="+a+"&azione=sps");
     });
     
 });
 
+//evidenzia tutte le righe della sospesa *1
+//function GetTable(date){
+    //$.post(
+        //"sospesa",
+        //{data:date,azione:"tabella"},
+        //function(res){
+            //var label="";
+            //var sum=0
+            //var before=" "
+            //var prd=0;
+            //for (i=0;i<res.length;i++){
+                //if(res[i].fatturas!=before){
+                    //if(i!=0)
+                        //label=label + '<td>' + sum + '</td>';
+                    //prd=parseFloat(res[i].prezzo)*parseFloat(res[i].q)
+                    //sum=prd;                
+                    //label=label + '<td><a href="#">' + res[i].fatturas + '</a></td>';
+                    //label=label + '<td>' + res[i].cliente__azienda + '</td>';
+                    //label=label + '<td>' + res[i].data + '</td>';
+
+                //}
+                //else{
+                    //prd=parseFloat(res[i].prezzo)*parseFloat(res[i].q)
+                    //sum=sum+prd;
+                //}
+                //before=res[i].fatturas;
+            //}
+            //$("#tb6").html(label);  
+            //$("#idLKP").show();
+        //});
+        //return
+//};
 function GetTable(date){
     $.post(
         "sospesa",
         {data:date,azione:"tabella"},
         function(res){
-            var arr=new Array();
             var label="";
-            var sum=0
             for (i=0;i<res.length;i++){
-                arr=""
-                arr=(res[i].idcod__cod).split("-");
-                sum=sum+parseInt(res[i].prezzo);
                 label=label + '<tr>';
                 label=label + '<td><a href="#">' + res[i].fatturas + '</a></td>';
-                label=label + '<td>' + arr[0] + '</td>';
-                label=label + '<td>' + res[i].idcod__cod + '</td>';
-                label=label + '<td>' + res[i].q + '</td>';
-                label=label + '<td>' +res[i].prezzo + '</td>';
+                label=label + '<td>' + res[i].cliente__azienda + '</td>';
+                label=label + '<td>' + res[i].valore+ '</td>';
                 label=label + '<td>' +res[i].data + '</td>';
                 label=label + '</tr>';
+                before=res[i].fatturas;
             }
-            label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td>'+sum+ '</td></tr>';
             $("#tb6").html(label);  
             $("#idLKP").show();
-            var $a=$("#tb6 tr:last-child");
-            var $b= $a.find("td:last");  //.css("font-size","30px");
-            $b.css("color", "blue");
         });
         return
 };
 
 
+
+
+
 function GetSospese(num){
-    $.post(
-    "sospesa",
-        {item:num,azione:"reopen"},
-        function(res){
-            window.location.replace("fattura");
-       
-        });
-    
+    window.location.replace("fattura?name="+ "poli");
 };

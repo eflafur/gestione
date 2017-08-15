@@ -7,9 +7,11 @@ $(document).ready(function(){
             opt=$("#reg option:selected").text();
             alert (regione);
             Put(opt);
-
         });
 
+    var num="380.24";    
+    var iNum = parseFloat(num);
+    var g=iNum;
     $("#btl").click(function(){
             citta=$("#ct option:selected").text();
             alert (citta);

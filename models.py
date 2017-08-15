@@ -20,7 +20,7 @@ class Settore(models.Model):
 	articolo=models.CharField(max_length=50,null=True)
 	def __str__(self):
 		return "%s" % (self.articolo)
-	
+
 class Specifica(models.Model):
 	settore=models.ManyToManyField(Settore)
 	nome=models.CharField(max_length=30,unique=True,null=True,blank=True)
@@ -44,7 +44,7 @@ class Produttore(models.Model):
 	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")
 	def __str__(self):
 		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)
-	
+
 class IDcod(models.Model):
 	cod=models.CharField(max_length=40,null=True)
 	genere=models.ForeignKey(Genere,on_delete=models.CASCADE,null=True)
@@ -53,12 +53,12 @@ class IDcod(models.Model):
 	produttore=models.ForeignKey(Produttore,on_delete=models.CASCADE,null=True)
 	def __str__(self):
 		return "%s" % (self.cod)	
-	
+
 class Area(models.Model):
 	regione=models.CharField(max_length=30)
 	def __str__(self):
 		return "%s" % (self.regione)	
-	
+
 class Sito(models.Model):
 	area=models.ForeignKey(Area,on_delete=models.CASCADE,null=True)
 	citta=models.CharField(max_length=20,null=True)
@@ -66,13 +66,13 @@ class Sito(models.Model):
 	comune=models.CharField(max_length=30,null=True)
 	def __str__(self):
 		return "%s" % (self.citta)
-	
+
 class Carico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
-	q=models.IntegerField(null=True,blank=True,default=0)
+	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
-	
+
 #FATTURAZIONE
 
 class Cliente(models.Model):
@@ -92,7 +92,7 @@ class Cliente(models.Model):
 class Scarico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
-	q=models.IntegerField(null=True,blank=True,default=0)
+	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fattura=models.TextField(max_length=10,null=True,blank=True)
@@ -101,10 +101,7 @@ class Scarico(models.Model):
 class Sospese(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
-	q=models.IntegerField(null=True,blank=True,default=0)
+	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fatturas=models.TextField(max_length=10,null=True,blank=True)
-
-
-

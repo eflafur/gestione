@@ -43,7 +43,7 @@ def CaricoMerci(request):
         return render(request,"Magazzino/Creazione/entrata.html",context)  
     if(request.method=="GET"):
         obj=GetProduct.LKPData()
-        res=obj.GetIDcod("ciao")
+        res=obj.GetIDcod()
         context={"items":res}
         return render(request,"Magazzino/Creazione/entrata.html",context)
     

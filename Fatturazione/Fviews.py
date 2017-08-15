@@ -15,7 +15,7 @@ H1=0
 H2=0
 H3=0
 H4=0
-
+nm=""
 def CreaAnagrafica(request):
     if(login==0):
         context={}
@@ -146,22 +146,37 @@ def DelCliente(request):
 def Fattura(request):
     if(login==0):
         context={}
-        return render(request,"Validazione/login.html",context)         
+        return render(request,"Validazione/login.html",context)        
+    global nm
+    res=""
     context={}
     if(request.method=="POST"):
         message=request.POST
-        lst = json.loads(message['res'])
         objf=FCreateTable.Produt()        
         if(message["azione"]=="invio"):
+            lst = json.loads(message['res'])
             objf.ScriviFattura(lst)
         elif (message["azione"]=="sospesa"):
+            lst = json.loads(message['res'])
             objf.ScriviSospesa(lst)
-        res=""
+        elif (message["azione"]=="reazione"):
+            objf=FGetTable.GetData()
+            res=objf.GetClienteByNumSospese(nm)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
+        message=request.GET
         obj=GetProduct.LKPData()
-        res=obj.GetIDcod("ciao")
+        res=obj.GetIDcod()
         objf=FGetTable.GetData()
+        if(request.GET.get("azione")):
+            dc={} 
+            ls=[]
+            nm=message["nome"]
+            res1=objf.GetClienteByNumSospese(nm)
+            dc["azienda"]=res1[0]["cliente__azienda"]
+            ls.append(dc)
+            context={"items":res,"itemsf":ls,"el":nm}
+            return render(request,"fatturazione/Creazione/fattura.html",context)    
         res1=objf.GetCliente()
         context={"items":res,"itemsf":res1}
         return render(request,"fatturazione/Creazione/fattura.html",context)    
@@ -173,7 +188,6 @@ def Sospesa(request):
     if(request.method=="POST"):
         message=request.POST
         if(message["azione"]=="reopen"):
-            res="ciao"
             return JsonResponse(res,safe=False) 
         objf=FCreateTable.Produt()
         res=objf.GetSospesa(message);

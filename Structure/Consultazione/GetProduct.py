@@ -80,7 +80,7 @@ class LKPData:
         s=Specifica.objects.all().values("nome")
         data=list(s)
         return data
-    def GetIDcod(self,art):
-        s=IDcod.objects.all().values("cod").order_by("produttore__azienda","genere__nome","settore__articolo")
+    def GetIDcod(self):
+        s=IDcod.objects.all().values("cod","genere__iva").order_by("produttore__azienda")
         data=list(s)
         return data

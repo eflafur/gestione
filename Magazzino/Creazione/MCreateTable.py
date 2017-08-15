@@ -1,5 +1,6 @@
 from gestione.models import IDcod,Carico,Genere
 from django.db.models import Q
+from decimal import Decimal
 import re
 import sys
 import io
@@ -10,7 +11,7 @@ class CreateData:
         p=Carico.objects.filter(Q(bolla=line["a3"]),Q(idcod__cod=line["a1"])).values("q")
         p1=Carico.objects.filter(Q(bolla=line["a3"]),Q(idcod__produttore__azienda= seg[0])).values("data")
         if(p):
-            tot=p[0]["q"]+int(line["a2"])
+            tot=p[0]["q"]+Decimal(line["a2"])
             p.update(q=tot)
             return 2
         elif(p1):

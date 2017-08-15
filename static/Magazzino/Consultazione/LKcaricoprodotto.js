@@ -65,7 +65,7 @@ function GetTable(pr,date){
             for (i=0;i<res.length;i++){
                 arr=""
                 arr=(res[i].idcod__cod).split("-");
-                sum=sum+res[i].q;
+                sum=sum+parseFloat(res[i].q);
                 label=label + '<tr>';
                 label=label + '<td>' + arr[0] + '</td>';
                 label=label + '<td>' + arr[2] + '</td>';

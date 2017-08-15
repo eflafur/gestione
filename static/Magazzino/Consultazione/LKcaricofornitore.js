@@ -4,8 +4,7 @@ $(document).ready(function(){
         //var a=$("#lkfrn option:selected").text();
         $("#cldt2").show();
         $("#dt2").val("");
-        //Put(a);
-//        $("#idLKP").show();
+        $("#idLKP").hide();
     });
     
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",//autoSize:true,appendText: "(yyyy-mm-dd)",// 
@@ -25,7 +24,7 @@ function Put(item,date) {
         var sum=0;
             label="";
             for (i = 0; i < result.length; i++) {
-                sum=sum+result[i].q;
+                sum=sum+parseFloat(result[i].q);
                 label = label + '<tr>';
                 label = label + '<td>' + result[i].idcod__cod+ '</td>';
                 label = label + '<td>' + result[i].q+ '</td>';

@@ -40,7 +40,7 @@
      <span class="input-group-addon">Codice </span> 
      <select class="form-control" name="a1" id="codice">
        {% for entry in items %}
-           <option value="{{ entry.cod}}">{{ entry.cod}}</option>
+           <option value="{{ entry.genere__iva}}">{{ entry.cod}} </option>
        {% endfor %}
      </select>
     </div>
@@ -90,10 +90,13 @@
    </div>
   </div>
  </div>
+ 
+ <p id="psps"> {{el}}</p>
+ 
+ 
 </div>
   
- 
-  
+
   
 {%endblock%}
 

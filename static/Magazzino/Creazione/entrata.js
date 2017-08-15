@@ -13,6 +13,7 @@ $(document).ready(function(){
      $("#codice").click(function(){
         var bl=$("#bolla").val();
         var qt=$("#qnt").val();
+        $("#idLKP").hide();
         if(bl==""){
             alert("inserire bolla")
              $("#bolla").focus();
