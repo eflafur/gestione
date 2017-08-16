@@ -1,4 +1,4 @@
-from gestione.models import Cliente, Area,Sito,Sospese
+from gestione.models import Cliente, Area,Sito,Sospese,Scarico
 from django.db.models import Q
 
 
@@ -20,3 +20,8 @@ class GetData:
         rec=Sospese.objects.filter(fatturas=nome).values("cliente__azienda","data","fatturas","q","prezzo","idcod__cod","idcod__genere__iva")
         data=list(rec)
         return data   
+    def GetClienteByNumFatture(self,nome):
+        rec=""
+        rec=Scarico.objects.filter(fattura=nome).values("cliente__azienda","data","fattura","q","prezzo","idcod__cod","idcod__genere__iva")
+        data=list(rec)
+        return data       

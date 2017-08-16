@@ -3,13 +3,14 @@ var ar2= [];
 var ar3= [];
 var i=0;
 var cliente;
-
+var pvl=$("#psps").text();
+    
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
  //   cliente=$("#cliente option:selected").text();
       // ln=$("#cliente option").length;
       //$("p:contains('sos')").css("color", "blue");
-    pvl=$("#psps").text();
+
     if(pvl!=" "){
         GetSospesa(pvl);
     }  
@@ -21,6 +22,8 @@ $(document).ready(function(){
         $("#codice").focus();
         $("#peso").val("");
         $("#prezzo").val("");
+        $("#ps").hide();
+        $("#prz").hide();
     });
     
      $("#codice").click(function(){
@@ -37,7 +40,6 @@ $(document).ready(function(){
     });
     
     $("#btsps").click(function(){
-     //   $("#cliente option:selected").html(cliente);
         Invia('S');
         ar1.length=0
         $("#tbf").hide("");
@@ -51,7 +53,6 @@ $(document).ready(function(){
     });
     
     $("#btems").click(function(){
-     //   $("#cliente option:selected").html(cliente);
         Invia('I');
         ar1.length=0
         $("#tbf").hide("");
@@ -64,7 +65,6 @@ $(document).ready(function(){
     });
     
     $("#btanl").click(function(){
-        //$("#cliente option:selected").html(cliente);
         ar1.length=0
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
@@ -148,14 +148,10 @@ function Fill(crt){
     return;
 };
 
-function Invia(azione){
-    if (azione=="I")
-        act="invio";
-    else if (azione=="S")
-        act="sospesa";
+function Invia(act){
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act},
+      {res:JSON.stringify(ar1),azione:act,res1:pvl},
     function (result){
 
     });
@@ -170,8 +166,6 @@ function DeleteRow(row){
 function AddRow(row){
     t=ar1[row-1].cod;
     $("#codice option:selected").text(t);
-    //$("#codice option[value=t").prop("selected", true);
-  //  $("#codice").html(t);
     $("#ps").show();
 };
 
@@ -180,9 +174,9 @@ function GetSospesa(pvl){
         "fattura",
         {item:pvl,azione:"reazione"},
         function(res){
-
             for (i=0;i<res.length;i++){
                 var obj1={}  
+                obj1['cln'] =$("#cliente").val();
                 obj1['cod'] =res[i].idcod__cod;
                 obj1['ps'] =res[i].q;
                 obj1['prz'] =res[i].prezzo;

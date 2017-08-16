@@ -153,12 +153,12 @@ def Fattura(request):
     if(request.method=="POST"):
         message=request.POST
         objf=FCreateTable.Produt()        
-        if(message["azione"]=="invio"):
+        if(message["azione"]=="I"):
             lst = json.loads(message['res'])
-            objf.ScriviFattura(lst)
-        elif (message["azione"]=="sospesa"):
+            objf.ScriviFattura(lst,nm)
+        elif (message["azione"]=="S"):
             lst = json.loads(message['res'])
-            objf.ScriviSospesa(lst)
+            objf.ScriviSospesa(lst,nm)
         elif (message["azione"]=="reazione"):
             objf=FGetTable.GetData()
             res=objf.GetClienteByNumSospese(nm)
@@ -172,7 +172,10 @@ def Fattura(request):
             dc={} 
             ls=[]
             nm=message["nome"]
-            res1=objf.GetClienteByNumSospese(nm)
+            if(message["azione"]=="sps"):
+                res1=objf.GetClienteByNumSospese(nm)
+            #elif (message["azione"]=="ftr"):
+                #res1=objf.GetClienteByNumFatture(nm)
             dc["azienda"]=res1[0]["cliente__azienda"]
             ls.append(dc)
             context={"items":res,"itemsf":ls,"el":nm}
@@ -187,10 +190,60 @@ def Sospesa(request):
         return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
+        #if(message["azione"]=="reopen"):
+            #return JsonResponse(res,safe=False) 
+        objf=FCreateTable.Produt()
+        res=objf.GetSospesa(message);
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        context={"items":""}
+        return render(request,"fatturazione/Modifica/Fsospese.html",context)
+
+def SospesabyCliente(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)   
+    if(request.method=="POST"):
+        message=request.POST
+        objf=FCreateTable.Produt()
+        res=objf.GetSospesa(message);        
+        return JsonResponse(res,safe=False)
+    if(request.method=="GET"):
+        objf=FGetTable.GetData()
+        res=objf.GetCliente()
+        context={"items":res}
+        return render(request,"fatturazione/Modifica/Fsospese-cliente.html",context)
+
+
+def LKFatturabyCliente(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)   
+    if(request.method=="POST"):
+        message=request.POST
+        objf=FCreateTable.Produt()
+        if(message["azione"]=="table"):
+            res=objf.GetFattura(message); 
+        if(message["azione"]=="ftr"):
+            p=message["fatt"]
+            res=objf.GetFatturabyNum(p);          
+        return JsonResponse(res,safe=False)
+    if(request.method=="GET"):
+        objf=FGetTable.GetData()
+        res=objf.GetCliente()
+        context={"items":res}
+        return render(request,"fatturazione/Consultazione/Ffatture-cliente.html",context)
+
+def LKFattura(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    if(request.method=="POST"):
+        message=request.POST
         if(message["azione"]=="reopen"):
             return JsonResponse(res,safe=False) 
         objf=FCreateTable.Produt()
-        res=objf.GetSospesa(message);
+        res=objf.GetFattura(message);
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         context={"items":""}

@@ -105,3 +105,5 @@ class Sospese(models.Model):
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fatturas=models.TextField(max_length=10,null=True,blank=True)
+	def __str__(self):
+		return "%s" % (self.fatturas)	

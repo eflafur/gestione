@@ -22,7 +22,10 @@ class Produt:
         )
         return (1)
     
-    def ScriviFattura(self,line):
+    def ScriviFattura(self,line,sps):
+        if(sps!=" "):
+            rec=Sospese.objects.filter(fatturas=sps)
+            rec.delete()
         s=Scarico.objects.latest("id")
         f=(s.fattura).split("-")
         r=int(f[1])+1
@@ -34,7 +37,10 @@ class Produt:
             rec.save()
         return
 
-    def ScriviSospesa(self,line):
+    def ScriviSospesa(self,line,sps):
+        if(sps!=" "):
+            rec=Sospese.objects.filter(fatturas=sps)
+            rec.delete()        
         s=Sospese.objects.latest("id")
         f=(s.fatturas).split("-")
         r=int(f[1])+1
@@ -53,11 +59,15 @@ class Produt:
         #return data
     
     def GetSospesa(self,message):
+        somma=0
         before=" "
         i=0
         ll=[]
         ss=[]
-        recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
+        if(message["cliente"]!=" "):
+            recls=Sospese.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
+        else:
+            recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
         data=list(recls)
         
         for el in data:
@@ -82,3 +92,44 @@ class Produt:
                 i=i+1
             before=item["fatturas"]
         return ss    
+    
+    
+    def GetFattura(self,message):
+        somma=0
+        before=" "
+        i=0
+        ll=[]
+        ss=[]
+        if(message["cliente"]!=" "):
+            recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","fattura","data","prezzo","cliente__azienda")
+        else:
+            recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fattura","data","prezzo","cliente__azienda")
+        data=list(recls)
+        
+        for el in data:
+            iva=el["idcod__genere__iva"]+1
+            if(el["fattura"]!=before):
+                if(before!=" "):
+                    ll.append(somma)
+                somma=0
+                somma=somma+el["prezzo"]*el["q"]*iva
+            else:
+                somma=somma+el["prezzo"]*el["q"]*iva
+            before=el["fattura"]
+        
+        ll.append(somma)
+        before=" "
+        i=0
+        
+        for item in recls:
+            if (item["fattura"]!=before):
+                item["valore"]=ll[i]
+                ss.append(item)
+                i=i+1
+            before=item["fattura"]
+        return ss        
+    
+    def GetFatturabyNum(self,num):
+        recls=Scarico.objects.filter(fattura=num).values("idcod__cod","idcod__genere__iva","q","fattura","data","prezzo","cliente__azienda")
+        data=list(recls)
+        return data          

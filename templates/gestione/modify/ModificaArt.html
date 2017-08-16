@@ -11,10 +11,9 @@
 
     <div class="row">
         <form class="form-group" action="addart" method="post">
-            <div class="col-md-3">        
+            <div class="col-md-2">        
                 <div class="input-group">
-                    <span class="input-group-addon" >Azienda </span>    
-                    <select class="form-control" name="a1" id="azienda">
+                    <p>Azienda<select class="form-control" name="a1" id="azienda"></p>
                        {% for entry in items %}
                            <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
                        {% endfor %}
@@ -22,25 +21,25 @@
                 </div>
             </div>  
             
-            <div class="col-md-3">   
+            <div class="col-md-2">   
                 <div class="input-group" id="caddgen">
-                    <span class="input-group-addon" id="addgen">Genere</span>
-                    <select class="form-control" name="a2" id="gen">
+                   
+                    <p>Genere<select class="form-control" name="a2" id="gen"></p>
                     </select>
                 </div>
             </div>
             
-            <div class="col-md-3"> 
+            <div class="col-md-2"> 
                 <div class="input-group" id="caddart">
-                    <span class="input-group-addon">Articolo</span>
-                    <select class="form-control" name="a3" id="art" ></select>
+                    
+                    <p>Articolo<select class="form-control" name="a3" id="art" ></select></p>
                 </div>
             </div>
     
-            <div class="col-md-3">   
+            <div class="col-md-2">   
                 <div class="input-group" id="caddcat">
-                    <span class="input-group-addon">Categoria</span>
-                    <input type="text" id="cat" class="form-control" name="a4" list="catls">
+                   
+                    <p>Categoria:<input type="text" id="cat" class="form-control" name="a4" list="catls"></p>
                         <datalist  id="catls">
                         </datalist>
                 </div>

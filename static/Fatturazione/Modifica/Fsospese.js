@@ -56,7 +56,7 @@ $(document).ready(function(){
 function GetTable(date){
     $.post(
         "sospesa",
-        {data:date,azione:"tabella"},
+        {data:date,azione:"tabella",cliente:" "},
         function(res){
             var label="";
             for (i=0;i<res.length;i++){
@@ -76,8 +76,3 @@ function GetTable(date){
 
 
 
-
-
-function GetSospese(num){
-    window.location.replace("fattura?name="+ "poli");
-};
