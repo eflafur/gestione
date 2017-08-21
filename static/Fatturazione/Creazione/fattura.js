@@ -101,7 +101,7 @@ $(document).ready(function(){
             obj['prz'] =$("#prezzo").val();
             obj["iva"]=parseFloat($("#codice option:selected").val())+1;
             ar1.push(obj);
-            Fill("f");
+            Fill();
             $("#tbf").show("");
             $("#peso").val("");
             $("#prezzo").val("");
@@ -127,7 +127,7 @@ $(document).ready(function(){
 });
 
 
-function Fill(crt){
+function Fill(){
     var label="";
     var k=0;
     var sum=0;
@@ -160,7 +160,7 @@ function Invia(act){
 
 function DeleteRow(row){
     ar1.splice(row-1,1);
-    Fill(ar1);
+    Fill();
 };
 
 function AddRow(row){
@@ -183,7 +183,7 @@ function GetSospesa(pvl){
                 obj1["iva"]=parseFloat(res[i].idcod__genere__iva)+1
                 ar1.push(obj1);
             }
-        Fill("s");
+        Fill();
         $("#cod").show("");
         $("#tbf").show("");
         });

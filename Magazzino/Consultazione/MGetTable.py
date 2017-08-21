@@ -21,6 +21,6 @@ class GetData:
         data=list(rec)
         return data    
     def GetCaricoTotale(self,message):
-        rec=Carico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","bolla","data")
+        rec=Carico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","bolla","data").order_by("idcod__produttore__azienda")
         data=list(rec)
         return data    

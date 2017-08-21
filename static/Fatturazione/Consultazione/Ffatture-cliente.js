@@ -47,7 +47,6 @@ function GetTable(date,cl){
                 label=label + '<td>' + res[i].valore+ '</td>';
                 label=label + '<td>' +res[i].data + '</td>';
                 label=label + '</tr>';
-                before=res[i].fattura;
             }
             $("#tbf1").show();
             $("#tb6").html(label);  
@@ -66,7 +65,7 @@ function GetFatt(num){
             var prd=0;
             for (i=0;i<res.length;i++){
                 label=label+'<tr>'
-                sum=sum+parseFloat(res[i].prezzo)*parseFloat(res[i].q)*parseFloat(res[i].idcod__genere__iva);
+                sum=sum+parseFloat(res[i].prezzo)*parseFloat(res[i].q)*(parseFloat(res[i].idcod__genere__iva)+1);
                 label=label + '<td>'+ res[i].idcod__cod + '</td>';
                // label=label + '<td>' + res[i].cliente__azienda + '</td>';
                 label=label + '<td>' + res[i].q + '</td>';

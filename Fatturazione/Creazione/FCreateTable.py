@@ -68,9 +68,8 @@ class Produt:
             recls=Sospese.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
         else:
             recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
-        data=list(recls)
         
-        for el in data:
+        for el in recls:
             iva=el["idcod__genere__iva"]+1
             if(el["fatturas"]!=before):
                 if(before!=" "):

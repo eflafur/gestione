@@ -12,6 +12,7 @@ $(document).ready(function(){
     
      $("#codice").click(function(){
         var bl=$("#bolla").val();
+        $("#bolla").attr("disabled",true);
         var qt=$("#qnt").val();
         $("#idLKP").hide();
         if(bl==""){
@@ -31,6 +32,7 @@ $(document).ready(function(){
      $("#btn2").click(function(){
         $("#bolla").val("");
         $("#qnt").val("");
+        $("#bolla").attr("disabled",false);
         $("#cldt2").hide();
         $("#idLKP").hide();
         $("#codice option:eq(1)").selected();

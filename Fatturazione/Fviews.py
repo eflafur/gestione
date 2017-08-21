@@ -15,7 +15,7 @@ H1=0
 H2=0
 H3=0
 H4=0
-nm=""
+nm=" "
 def CreaAnagrafica(request):
     if(login==0):
         context={}

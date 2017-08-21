@@ -56,7 +56,7 @@ $(document).ready(function(){
 function GetTable(date){
     $.post(
         "sospesa",
-        {data:date,azione:"tabella",cliente:" "},
+        {data:date,cliente:" "},
         function(res){
             var label="";
             for (i=0;i<res.length;i++){
@@ -66,7 +66,6 @@ function GetTable(date){
                 label=label + '<td>' + res[i].valore+ '</td>';
                 label=label + '<td>' +res[i].data + '</td>';
                 label=label + '</tr>';
-                before=res[i].fatturas;
             }
             $("#tb6").html(label);  
             $("#idLKP").show();
