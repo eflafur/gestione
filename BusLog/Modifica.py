@@ -138,9 +138,6 @@ class ModProd:
                 st=Settore.objects.get(articolo=message["a3"])
                 sp=Specifica.objects.get(nome=message["a4"])
                 sp.settore.add(st)
-        #res=self.ChangeIDcod(message)    
-        
-    #def ChangeIDcod(self,message):
         codifica=message["a1"] + "-" + message["a2"] + "-"  + message["a3"] + "-"  + message["a4"] 
         c=IDcod.objects.filter(Q(cod=codifica))
         if (c):

@@ -4,7 +4,8 @@ from django.template import loader
 from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-import CreateTable,Modifica,GetProduct,validazione,Fviews
+import CreateTable,Modifica,GetProduct,validazione,Fviews,GetGraph
+import jsonpickle
 #import wingdbstub
 #nuova relaease salvata
 #runserver --noreload 8000 
@@ -301,6 +302,23 @@ def LKPMargine(request):
     if(request.method=="GET"):
         context={"items":""}
         return render(request,"gestione/Consultazione/GetByMargin.html",context)
+    
+
+def LKGraph(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    if(request.method=="POST"):
+        message=request.POST
+        obj=GetGraph.Design()
+        res=obj.GetGraph()  
+        ret=jsonpickle.encode(res)
+        return JsonResponse(ret,safe=False)             
+    if(request.method=="GET"):
+        context={"items":" "}
+        return render(request,"gestione/modify/GGraph.html",context)           
+    
+    
 
 def Base(request):
     context={}
@@ -312,57 +330,6 @@ def Logo(request):
 
 
 
-
-
-
-
-
-
-
-
-
-#--- per usi futuri---
-
-#def ImportTable(request):
-    #obj=Import.getTable()
-    #res=obj.readTable("go")
-    #context={}
-    #return render(request,"gestione/logo.html",context)
-
-
-
-#def Offerta(request):
-    #if(request.method=="GET"):
-        #context={}
-    #return render(request,"dittemng/temp1.html",context)
-
-
-#def Manage(request):
-    #if(request.method=="POST"):
-        #message=request.POST
-        #x=Load.GetTable()
-        #res=x.Load()
-        #result=jsonpickle.encode(res)
-        #result=json.dumps(res)
-       ##result=({"settore":"a","area":"nord"},{"settore":"b","area":"est"},{"settore":"c","area":"ovest"})
-        #return JsonResponse(result,safe=False)
-    #if(request.method=="GET"):
-        #x=Load.GetTable()
-        #res=x.Load();
-        #context={"vari":res}
-    #return render(request,"dittemng/temp1.html",context)
-
-#def DataTable(request):
-    #if(request.method=='POST'):
-        #message=request.POST
-        #x=Table.Tbl()
-        #var=x.Offerta("ciccio")
-        ##result=jsonpickle.encode(var)
-        #tt=JsonResponse(var, encoder=DjangoJSONEncoder, safe=False)
-        #return tt
-    #if(request.method=="GET"):
-        #context={}	
-    #return render(request,"dittemng/DataTable.html",context)
 
 
 

@@ -77,7 +77,7 @@ class LKPData:
         return data
     
     def GetSpec(self,art):
-        s=Specifica.objects.all().values("nome")
+        s=Specifica.objects.filter(settore__articolo=art).values("nome")
         data=list(s)
         return data
     def GetIDcod(self):

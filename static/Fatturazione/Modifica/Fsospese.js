@@ -21,6 +21,29 @@ $(document).ready(function(){
     
 });
 
+function GetTable(date){
+    $.post(
+        "sospesa",
+        {data:date,cliente:" "},
+        function(res){
+            var label="";
+            for (i=0;i<res.length;i++){
+                label=label + '<tr>';
+                label=label + '<td><a href="#">' + res[i].fatturas + '</a></td>';
+                label=label + '<td>' + res[i].cliente__azienda + '</td>';
+                label=label + '<td>' + res[i].valore+ '</td>';
+                label=label + '<td>' +res[i].data + '</td>';
+                label=label + '</tr>';
+            }
+            $("#tb6").html(label);  
+            $("#idLKP").show();
+        });
+        return
+};
+
+
+
+
 //evidenzia tutte le righe della sospesa *1
 //function GetTable(date){
     //$.post(
@@ -53,25 +76,3 @@ $(document).ready(function(){
         //});
         //return
 //};
-function GetTable(date){
-    $.post(
-        "sospesa",
-        {data:date,cliente:" "},
-        function(res){
-            var label="";
-            for (i=0;i<res.length;i++){
-                label=label + '<tr>';
-                label=label + '<td><a href="#">' + res[i].fatturas + '</a></td>';
-                label=label + '<td>' + res[i].cliente__azienda + '</td>';
-                label=label + '<td>' + res[i].valore+ '</td>';
-                label=label + '<td>' +res[i].data + '</td>';
-                label=label + '</tr>';
-            }
-            $("#tb6").html(label);  
-            $("#idLKP").show();
-        });
-        return
-};
-
-
-

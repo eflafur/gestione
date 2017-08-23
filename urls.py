@@ -22,6 +22,8 @@ urlpatterns = [
 #    url('ppp',views.ImportTable),
     url('base',views.Base),
     url(r'^$',views.Login),
+    url('graph',views.LKGraph),
+    
     
     #MAGAZZINO
     url('entrata',Mviews.CaricoMerci),

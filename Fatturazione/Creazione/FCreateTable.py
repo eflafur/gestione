@@ -99,7 +99,7 @@ class Produt:
         i=0
         ll=[]
         ss=[]
-        if(message["cliente"]!=" "):
+        if(message["cliente"]!= ""):
             recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","fattura","data","prezzo","cliente__azienda")
         else:
             recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fattura","data","prezzo","cliente__azienda")

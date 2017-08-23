@@ -17,9 +17,8 @@ $(document).ready(function(){
     });
 
   $("#gen").click(function(){
-    var a=$("#azienda option:selected").text();
     var b=$("#gen option:selected").text();
-    GetSettore(a,b);
+    GetSettore(b);
     $("#caddart").show();
     $("#caddcat").hide();
     $("#btn1").hide();
@@ -39,26 +38,25 @@ $(document).ready(function(){
     "addart",
      {azienda:name,a2:"genere"},
     function (result){
-      var label = " ";
       var option= " ";
       for (var i=0;i<result.length;i++){
         option += '<option value="'+ result[i]["nome"]+ '">' + result[i]["nome"]+ '</option>';
         }
         $('#gen').html(option);
-        for (i = 0; i < result[1].length; i++) {
-            label = label + '<tr>';
-            label = label + '<td>' + result[i]["nome"] + '</td>';
-            label = label + '</tr>';
-          }
-          $("#tb1").html(label);
+        //for (i = 0; i < result[1].length; i++) {
+            //label = label + '<tr>';
+            //label = label + '<td>' + result[i]["nome"] + '</td>';
+            //label = label + '</tr>';
+          //}
+          //$("#tb1").html(label);
          });
          return;
 };
 
- function GetSettore(azd,art){
+ function GetSettore(art){
   $.post(
     "addart",
-     {azienda:azd,genere:art,a2:"settore"},
+     {genere:art,a2:"settore"},
     function (result){
       var label = " ";
       var option= " ";
@@ -66,12 +64,12 @@ $(document).ready(function(){
         option += '<option value="'+ result[i]["articolo"]+ '">' + result[i]["articolo"]+ '</option>';
         }
         $('#art').html(option);
-        for (i = 0; i < result[1].length; i++) {
-            label = label + '<tr>';
-            label = label + '<td>' + result[i]["articolo"] + '</td>';
-            label = label + '</tr>';
-          }
-          $("#tb1").html(label);
+        //for (i = 0; i < result[1].length; i++) {
+            //label = label + '<tr>';
+            //label = label + '<td>' + result[i]["articolo"] + '</td>';
+            //label = label + '</tr>';
+          //}
+          //$("#tb1").html(label);
         });
          return;
 };
@@ -81,18 +79,11 @@ function GetSpec(art){
     "addart",
      {articolo:art,a2:"spec"},
     function (result){
-      var label = " ";
-      var option= " ";
+      var label1 = " ";
       for (var i=0;i<result.length;i++){
-        option += '<option value="'+ result[i]["nome"]+ '">' + result[i]["nome"]+ '</option>';
+        label1 += '<option value="'+ result[i].nome+ '">' + result[i].nome+ '</option>';
         }
-        $('#catls').html(option);
-        for (i = 0; i < result[1].length; i++) {
-            label = label + '<tr>';
-            label = label + '<td>' + result[i]["nome"] + '</td>';
-            label = label + '</tr>';
-          }
-          $("#tb1").html(label);
+        $('#catls').html(label1);
          });
          return;
 };
@@ -109,12 +100,12 @@ function GetSpec(art){
         option += '<option value="'+ result[0][i]+ '">' + result[0][i]+ '</option>';
         }
         $('#art').html(option);
-        for (i = 0; i < result[1].length; i++) {
-            label = label + '<tr>';
-            label = label + '<td>' + result[1][i] + '</td>';
-            label = label + '</tr>';
-          }
-          $("#tb1").html(label);
+        //for (i = 0; i < result[1].length; i++) {
+            //label = label + '<tr>';
+            //label = label + '<td>' + result[1][i] + '</td>';
+            //label = label + '</tr>';
+          //}
+          //$("#tb1").html(label);
          });
          return;
 };
@@ -130,12 +121,12 @@ function GetSpec(art){
                     option += '<option value="'+ result[0][i]+ '">' + result[0][i]+ '</option>';
                 }
             $('#gen').html(option);
-        for (i = 0; i < result[1].length; i++) {
-                    label = label + '<tr>';
-                    label = label + '<td>' + result[1][i] + '</td>';
-                    label = label + '</tr>';
-                }
-                $("#tb1").html(label);
+        //for (i = 0; i < result[1].length; i++) {
+                    //label = label + '<tr>';
+                    //label = label + '<td>' + result[1][i] + '</td>';
+                    //label = label + '</tr>';
+                //}
+                //$("#tb1").html(label);
         });
     return;
 };

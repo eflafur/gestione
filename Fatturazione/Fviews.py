@@ -174,12 +174,10 @@ def Fattura(request):
             nm=message["nome"]
             if(message["azione"]=="sps"):
                 res1=objf.GetClienteByNumSospese(nm)
-            #elif (message["azione"]=="ftr"):
-                #res1=objf.GetClienteByNumFatture(nm)
             dc["azienda"]=res1[0]["cliente__azienda"]
             ls.append(dc)
             context={"items":res,"itemsf":ls,"el":nm}
-            return render(request,"fatturazione/Creazione/fattura.html",context)    
+            return render(request,"fatturazione/Creazione/fattura.html",context)
         res1=objf.GetCliente()
         context={"items":res,"itemsf":res1}
         return render(request,"fatturazione/Creazione/fattura.html",context)    
@@ -240,14 +238,14 @@ def LKFattura(request):
         return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
-        if(message["azione"]=="reopen"):
-            return JsonResponse(res,safe=False) 
+        if(request.GET.get("cliente")==None):
+            a="ciao "
         objf=FCreateTable.Produt()
         res=objf.GetFattura(message);
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         context={"items":""}
-        return render(request,"fatturazione/Modifica/Fsospese.html",context)
+        return render(request,"fatturazione/Consultazione/Ffatture.html",context)
 
 
 

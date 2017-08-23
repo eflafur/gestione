@@ -42,6 +42,8 @@ $(document).ready(function(){
     $("#btsps").click(function(){
         Invia('S');
         ar1.length=0
+        if(pvl!=" ")
+            window.location.replace("sospesa");
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();
@@ -49,12 +51,20 @@ $(document).ready(function(){
         $("#ps").hide();
         $("#prz").hide();
         $("#btadd").hide();
-
+            
+            //$("#tbf").hide("");
+            //$("#cln").hide();
+            //$("#cod").hide();
+            //$("#ps").hide();
+            //$("#prz").hide();
+            //$("#btadd").hide();
     });
     
     $("#btems").click(function(){
         Invia('I');
         ar1.length=0
+        if(pvl!=" ")
+            window.location.replace("sospesa");
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();
@@ -66,6 +76,8 @@ $(document).ready(function(){
     
     $("#btanl").click(function(){
         ar1.length=0
+        if(pvl!=" ")
+            window.location.replace("sospesa");
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();
