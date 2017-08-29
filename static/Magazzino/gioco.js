@@ -12,10 +12,14 @@ $(document).ready(function(){
     var num="380.24";    
     var iNum = parseFloat(num);
     var g=iNum;
+    var lnk="<a href='lkrgraph'> prova </a>"
+    
     $("#btl").click(function(){
             citta=$("#ct option:selected").text();
-            alert (citta);
+//            alert (citta);
             $("#reg option:selected").html(regione);
+            var aa=$(lnk);
+            $("#mio").text(aa);
         });
         
           //  $('a[href]').hide();
@@ -74,6 +78,8 @@ $(document).ready(function(){
                     res1.css("background-color", "black");
                 });
                 
+                
+                var lnk="<a href='lkrgraph'>" + itemsc["idcod__specifica__nome"]+ "</a>"
             });
             
             

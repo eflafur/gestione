@@ -1,0 +1,39 @@
+
+{% extends 'Rimanenza/RLayout.html'%}
+{% load static %}
+
+{%block css%}
+ <link rel="stylesheet" href="{% static 'mbraak-jqTree-1273274/jqtree.css' %}">
+{% endblock %}
+
+{%block insert%}
+
+ <div class="container">
+    <div class="row">
+    
+      <div class="col-xs-2 col-md-5">
+        <div id="tree1"></div>
+      </div>
+
+      <div class="col-xs-2 col-md-2">
+        <div class="input-group" id="ps">
+          <input type="number" id="peso" class="form-control" name="a10" min="0">
+        </div>
+      </div>        
+
+
+          <button type="submit" class="btn btn-primary" id="go">Inserisci quantità</button>
+          <button type="submit" class="btn btn-primary" id="ggraph">GRAFICO</button>
+    </div>
+</div>
+
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}" ></script>
+  <script src="{% static 'mbraak-jqTree-1273274/tree.jquery.js' %}" ></script>
+  <script src="{% static 'Rimanenza/Consultazione/RGraph.js' %}" ></script>
+
+  
+{% endblock %}
+

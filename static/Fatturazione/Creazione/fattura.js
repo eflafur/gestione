@@ -165,7 +165,9 @@ function Invia(act){
         "fattura",
       {res:JSON.stringify(ar1),azione:act,res1:pvl},
     function (result){
-
+        if(result!=" ") 
+            for(i=0;i<result.length;i++)
+                alert(result[i]+"negativo")
     });
     return;
 };

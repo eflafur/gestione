@@ -1,6 +1,7 @@
 import django
 django.setup()
-from gestione.models import Cliente,Scarico,IDcod,Sospese
+from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo
+from decimal import Decimal
 from django.db.models import Q
 
 class Produt:
@@ -23,6 +24,7 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps):
+        ls=[]
         if(sps!=" "):
             rec=Sospese.objects.filter(fatturas=sps)
             rec.delete()
@@ -35,7 +37,12 @@ class Produt:
             cod=IDcod.objects.get(cod=item["cod"])
             rec=Scarico(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],fattura=fatt)
             rec.save()
-        return
+            rec1=Saldo.objects.get(idcod__cod=item["cod"])
+            rec1.q=rec1.q-(Decimal(item["ps"]))
+            if(rec1<0):
+                ls.append(item["cod"])
+            rec1.save()              
+        return ls
 
     def ScriviSospesa(self,line,sps):
         if(sps!=" "):
@@ -70,6 +77,8 @@ class Produt:
             recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
         
         for el in recls:
+            if(el["fatturas"]=="sc2018-0"):
+                continue
             iva=el["idcod__genere__iva"]+1
             if(el["fatturas"]!=before):
                 if(before!=" "):
@@ -85,6 +94,8 @@ class Produt:
         i=0
         
         for item in recls:
+            if(item["fatturas"]=="sc2018-0"):
+                continue
             if (item["fatturas"]!=before):
                 item["valore"]=ll[i]
                 ss.append(item)

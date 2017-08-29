@@ -316,7 +316,7 @@ def LKGraph(request):
         return JsonResponse(ret,safe=False)             
     if(request.method=="GET"):
         context={"items":" "}
-        return render(request,"gestione/modify/GGraph.html",context)           
+        return render(request,"gestione/Consultazione/GGraph.html",context)           
     
     
 

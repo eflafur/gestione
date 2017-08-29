@@ -4,7 +4,8 @@ from django.db.models import Q
 
 class GetData:
     def GetIdCod(self,message):
-        rec=Carico.objects.filter(Q(idcod__produttore__azienda=message["res"]),Q(data__gte=message["res1"])).values("idcod__cod","q","bolla","data")
+        rec=Carico.objects.filter(Q(idcod__produttore__azienda=message["res"]),Q(data__gte=message["res1"])).values("idcod__cod",
+                                "q","bolla","data").order_by("bolla")
         data=list(rec)
         return data
     def GetCarico(self):
@@ -12,7 +13,7 @@ class GetData:
         data=list(rec)
         return data    
     def GetBolla(self,line):
-        rec=Carico.objects.filter(Q(bolla=line[0]), Q(idcod__produttore__azienda=line[1])).values("idcod__cod","q","data")
+        rec=Carico.objects.filter(Q(bolla=line[0]), Q(idcod__produttore__azienda=line[1])).values("idcod__id","idcod__cod","q","data","bolla")
         data=list(rec)
         return data 
     def GetIdCodbyProdotto(self,message):
@@ -21,6 +22,6 @@ class GetData:
         data=list(rec)
         return data    
     def GetCaricoTotale(self,message):
-        rec=Carico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","bolla","data").order_by("idcod__produttore__azienda")
+        rec=Carico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","bolla","data").order_by("bolla")
         data=list(rec)
         return data    

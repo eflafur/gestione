@@ -1,0 +1,48 @@
+
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block css%}
+ <link rel="stylesheet" href="{% static 'mbraak-jqTree-1273274/jqtree.css' %}">
+{% endblock %}
+
+{%block insert%}
+
+<!--{% for el in item %}-->
+ <!--<p> {{el}} </p>-->
+<!--{% endfor %}-->
+
+<!--<ul>-->
+    <!--{% for key,value  in item.items %}           -->
+            <!--<li> {{key}}: {{value}} </li>-->
+    <!--{% endfor %}    -->
+<!--</ul>-->
+
+ <div class="container">
+    <div class="row">
+        <div class="col-md-3"><h2>Cancella Articolo</h2>    
+            <p id="result"></p>
+                <select class="form-control" name="s1" id="slc1">
+                    {% for entry in items %}
+                        <option value="{{ entry.nome }}">{{ entry.nome}}</option>
+                    {% endfor %}
+                </select>
+                <br/>
+
+        <div id="tree1"></div>
+        
+            <button type="submit" class="btn btn-primary" id="ggraph">Insert</button>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}" ></script>
+  <script src="{% static 'mbraak-jqTree-1273274/tree.jquery.js' %}" ></script>
+  <script src="{% static 'Fatturazione/Consultazione/FGraph.js' %}" ></script>
+
+  
+{% endblock %}
+

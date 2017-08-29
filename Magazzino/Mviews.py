@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 import CreateTable,Modifica,GetProduct,validazione,Fviews,MCreateTable,MGetTable,MModifica
-import re
+import re,json
 #import wingdbstub
 #nuova relaease salvata
 #runserver --noreload 8000 
@@ -17,35 +17,71 @@ H1=0
 H2=0
 H3=0
 H4=0
+bl=[]
 
-def CaricoMerci(request):
+def CreaBolla(request):
     if(login==0):
         context={}
-        return render(request,"Validazione/login.html",context)         
-    global H1
-    context={}
+        return render(request,"Validazione/login.html",context)        
+    global bl
+    ls1=[]
+    if(request.method=="POST"):
+        ls1.clear()
+        message=request.POST
+        if(message["azione"]=="gid"):
+            
+            ls1.append(re.sub(" ","",(message["bolla"])))
+            ls1.append(message["cliente"])
+            objf=MGetTable.GetData()
+            res1=objf.GetBolla(ls1)         
+            if(res1 and message["dod"]==" "):
+                res="full"
+            elif (message["dod"]!=" "):
+                obj1=GetProduct.LKPData()
+                res2=obj1.GetIDcodbyProvider(message)            
+                objf=MGetTable.GetData()
+                res3=objf.GetBolla(bl)
+                res={}
+                res["a"]=res2
+                res["b"]=res3
+            else:
+                obj1=GetProduct.LKPData()
+                res=obj1.GetIDcodbyProvider(message)            
+        elif(message["azione"]=="I"):
+            lst = json.loads(message['res'])
+            bolla=message["bolla"]
+            obj1=MCreateTable.CreateData()
+            res=obj1.EntrataBolla(lst,bolla)
+        return JsonResponse(res,safe=False)
+    if(request.method=="GET"):
+        message=request.GET
+        if(request.GET.get("azione")):
+            bl.clear()
+            dc={} 
+            ls=[]
+            bl.append(message["bolla"])
+            bl.append(message["cliente"])
+            dc["azienda"]=message["cliente"]
+            ls.append(dc)
+            context={"prod":ls,"el":bl[0]}
+        else:
+            obj=Modifica.ModProd()
+            prod=obj.GetProduttori()
+            context={"prod":prod}
+        return render(request,"Magazzino/Creazione/bolla.html",context)   
+
+def LKCaricoTotale(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
-        line=[]
-        if((message["a1"]!="") & (message["a2"]!="")  & (message["a3"]!="")):
-            obj1=MCreateTable.CreateData()
-            res=obj1.Entrata(message)
-            line.append(message["a1"])
-            line.append(res)
-            return JsonResponse(line,safe=False)
-        #if(res==2):
-            #var= message["a1"].split("-")
-            #context={"avviso":"bolla esistente per il fornitore: "+ var[0],"azione":"entrata"}
-            #return render(request,"gestione/safe1.html",context) 
-        obj=GetProduct.LKPData()
-        res=obj.GetIDcod("ciao")
-        context={"items":res}
-        return render(request,"Magazzino/Creazione/entrata.html",context)  
+        objm=MGetTable.GetData()
+        res=objm.GetCaricoTotale(message);
+        return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
-        obj=GetProduct.LKPData()
-        res=obj.GetIDcod()
-        context={"items":res}
-        return render(request,"Magazzino/Creazione/entrata.html",context)
+        context={"items":""}
+        return render(request,"Magazzino/Modifica/Mbolle.html",context)
     
 def LKCaricoFornitore(request):
     if(login==0):
@@ -53,19 +89,31 @@ def LKCaricoFornitore(request):
         return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
-        if(message["res"]!=""):
-            mgt=MGetTable.GetData()
-            res=mgt.GetIdCod(message)
-            return JsonResponse(res,safe=False)
-        mod=Modifica.ModProd()
-        prod=mod.GetProduttori()
-        context={"items":prod}
-        return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)    
+        objm=MGetTable.GetData()
+        if(message["prs"]!=" "):
+            res=objm.GetBolla(bl)
+        else:
+            res=objm.GetIdCod(message);
+        return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
-        mod=Modifica.ModProd()
-        prod=mod.GetProduttori()
-        context={"items":prod}
-        return render(request,"Magazzino/Consultazione/LKcaricofornitore.html",context)   
+        message=request.GET
+        if(request.GET.get("azione")):
+            bl.clear()
+            dc={} 
+            ls=[]
+            bl.append(message["bolla"])
+            bl.append(message["cliente"])
+            dc["azienda"]=message["cliente"]
+            ls.append(dc)
+            context={"prod":ls,"el":bl[0]}
+        else:        
+            mod=Modifica.ModProd()
+            prod=mod.GetProduttori()
+            context={"prod":prod,"el":" "}
+        return render(request,"Magazzino/Modifica/Mfbolle.html",context) 
+
+
+
 
 def LKCaricoProdotto(request):
     if(login==0):
@@ -82,21 +130,6 @@ def LKCaricoProdotto(request):
         res=el.GetGenere() 
         context={"items":res}
         return render(request,"Magazzino/Consultazione/LKcaricoprodotto.html",context)
-
-def LKCaricoTotale(request):
-    if(login==0):
-        context={}
-        return render(request,"Validazione/login.html",context)     
-    if(request.method=="POST"):
-        message=request.POST
-        obj7=MGetTable.GetData()
-        res=obj7.GetCaricoTotale(message)     
-        return JsonResponse(res,safe=False)        
-    if(request.method=="GET"):
-        item=" "
-        context={item:" "}
-        return render(request,"Magazzino/Consultazione/LKcaricototale.html",context)
-
 
 def EliminaBolla(request):
     if(login==0):

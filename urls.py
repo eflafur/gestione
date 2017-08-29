@@ -3,7 +3,7 @@ from django.conf.urls import url
 from . import views
 from Magazzino import Mviews
 from Fatturazione import Fviews
-
+from Rimanenza import Rviews
 urlpatterns = [
     url('logout',views.Logout),
     url('login',views.Login),
@@ -22,11 +22,11 @@ urlpatterns = [
 #    url('ppp',views.ImportTable),
     url('base',views.Base),
     url(r'^$',views.Login),
-    url('graph',views.LKGraph),
+  #  url('graph',views.LKGraph),
     
     
     #MAGAZZINO
-    url('entrata',Mviews.CaricoMerci),
+    url('entrata',Mviews.CreaBolla),
     url('elimina',Mviews.EliminaBolla),
     url('lkfornitore',Mviews.LKCaricoFornitore),
     url('lkprodotto',Mviews.LKCaricoProdotto),
@@ -45,5 +45,9 @@ urlpatterns = [
     url('ca',Fviews.CreaAnagrafica),
     url('delcliente',Fviews.DelCliente),
     url('modana',Fviews.ModificaAnagrafica),
-
+    
+    #URL DI RIMANENZA
+    url('lkrgraph',Rviews.LKRGraph),
+    url('rim',Rviews.RBase),
+   
 ]

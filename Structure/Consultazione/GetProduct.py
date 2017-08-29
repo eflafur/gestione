@@ -84,3 +84,7 @@ class LKPData:
         s=IDcod.objects.all().values("cod","genere__iva").order_by("produttore__azienda")
         data=list(s)
         return data
+    def GetIDcodbyProvider(self,message):
+        s=IDcod.objects.filter(produttore__azienda=message["cliente"]).values("id","cod","genere__iva").order_by("produttore__azienda")
+        data=list(s)
+        return data    

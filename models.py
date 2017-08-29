@@ -72,6 +72,15 @@ class Carico(models.Model):
 	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
+	def __str__(self):
+		return "%s" % (self.q)	
+	
+	
+class Saldo(models.Model):
+	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
+	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	data=models.DateField(default=date.today)	
+
 
 #FATTURAZIONE
 
@@ -107,3 +116,5 @@ class Sospese(models.Model):
 	fatturas=models.TextField(max_length=10,null=True,blank=True)
 	def __str__(self):
 		return "%s" % (self.fatturas)	
+	
+	

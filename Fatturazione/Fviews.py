@@ -155,10 +155,10 @@ def Fattura(request):
         objf=FCreateTable.Produt()        
         if(message["azione"]=="I"):
             lst = json.loads(message['res'])
-            objf.ScriviFattura(lst,nm)
+            res=objf.ScriviFattura(lst,nm)
         elif (message["azione"]=="S"):
             lst = json.loads(message['res'])
-            objf.ScriviSospesa(lst,nm)
+            res=objf.ScriviSospesa(lst,nm)
         elif (message["azione"]=="reazione"):
             objf=FGetTable.GetData()
             res=objf.GetClienteByNumSospese(nm)
@@ -246,6 +246,22 @@ def LKFattura(request):
     if(request.method=="GET"):
         context={"items":""}
         return render(request,"fatturazione/Consultazione/Ffatture.html",context)
+    
+    
+def LKFGraph(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    if(request.method=="POST"):
+        message=request.POST
+        
+        obj=GetGraph.Design()
+        res=obj.GetFGraph()  
+        ret=jsonpickle.encode(res)
+        return JsonResponse(ret,safe=False)             
+    if(request.method=="GET"):
+        context={"items":" "}
+        return render(request,"fatturazione/Consultazione/FGraph.html",context)          
 
 
 
