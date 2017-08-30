@@ -29,14 +29,13 @@ def CreaBolla(request):
         ls1.clear()
         message=request.POST
         if(message["azione"]=="gid"):
-            
-            ls1.append(re.sub(" ","",(message["bolla"])))
+            ls1.append(message["bolla"])
             ls1.append(message["cliente"])
             objf=MGetTable.GetData()
             res1=objf.GetBolla(ls1)         
             if(res1 and message["dod"]==" "):
                 res="full"
-            elif (message["dod"]!=" "):
+            elif (res1 and message["dod"]!=" "):
                 obj1=GetProduct.LKPData()
                 res2=obj1.GetIDcodbyProvider(message)            
                 objf=MGetTable.GetData()
@@ -67,7 +66,7 @@ def CreaBolla(request):
         else:
             obj=Modifica.ModProd()
             prod=obj.GetProduttori()
-            context={"prod":prod}
+            context={"prod":prod,"el":" "}
         return render(request,"Magazzino/Creazione/bolla.html",context)   
 
 def LKCaricoTotale(request):

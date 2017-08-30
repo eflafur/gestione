@@ -60,14 +60,11 @@ def Produttore(request):
         elif(message['a2']!=""):
             if(H1!=1):
                 context={}
-                return render(request,"gestione/safe1.html",context)                 
+                return render(request,"gestione/safe1.html",context)
+            azn=message['a2'].strip()
             el=CreateTable.Produt()
-            res=el.put(message)
+            res=el.put(message,azn)
             H1=0
-            if(res==2):
-                H1=0
-                context={}
-                return render(request,"gestione/safe.html",context)            
         el=CreateTable.GetProd()
         res1=el.GetArea()
         prod=el.GetProduttori()
@@ -93,8 +90,9 @@ def CreaArticolo(request):
             res=el.GetSettore(a)     
             return JsonResponse(res,safe=False)        
         if((message['s1']!="insert")& (message['s2']!="")):
+            sett=message['s2'].strip()
             el=CreateTable.Sett()
-            res=el.put(message)
+            res=el.put(message,sett)
             if(res==2):
                 context={}
                 return render(request,"gestione/safe_settore.html",context)
@@ -141,8 +139,6 @@ def ModProd(request):
             return JsonResponse(res,safe=False)            
         elif(message['a2']!="insert"):
             if(H2==1):
-                #context={}
-                #return render(request,"gestione/modify/safe_modifica.html",context)              
                 el=Modifica.ModProd()
                 res=el.Change(message)
             H2=0
@@ -181,8 +177,9 @@ def AddCod(request):
             return JsonResponse(res,safe=False)        
         elif(message["a1"]!=""):
             if ((message["a1"]!="") & (message["a2"]!="")  & (message["a3"]!="" )):
+                cat=message["a4"].strip()
                 obj=Modifica.ModProd()
-                res=obj.ChangeSpec(message)
+                res=obj.ChangeSpec(message,cat)
                 if(res==2):
                     context={}
                     return render(request,"gestione/modify/safe_modifica.html",context)

@@ -5,13 +5,13 @@ from decimal import Decimal
 from django.db.models import Q
 
 class Produt:
-    def put(self,line):
+    def put(self,line,azn):
         self.row=line
-        p=Cliente.objects.filter(Q(azienda=self.row["a1"])) 
+        p=Cliente.objects.filter(azienda=azn) 
         if (p):
             return (2)
         p=Cliente.objects.create(
-            azienda=self.row["a1"],
+            azienda=azn,
             citta=self.row["a4"],
             regione=self.row["a3"],
             pi=self.row["a2"],
@@ -39,7 +39,7 @@ class Produt:
             rec.save()
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
             rec1.q=rec1.q-(Decimal(item["ps"]))
-            if(rec1<0):
+            if(rec1.q<0):
                 ls.append(item["cod"])
             rec1.save()              
         return ls

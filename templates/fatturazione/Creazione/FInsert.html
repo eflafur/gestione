@@ -5,6 +5,13 @@
 {%block insert%}
 
             
+  <select id="sl">
+       {% for entry in items %}
+                <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
+       {% endfor %}
+    </select>                    
+            
+            
 <div class="container">
     <div class="row">
         <div class="col-xs-2 col-md-8 col-md-offset-2"><h2>Elimina</h2> </div>      
@@ -17,11 +24,11 @@
          <div class="input-group">
          <span class="input-group-addon">Azienda</span>
           <input type="text" id="dl" class="form-control" name="a1" list="cityname">
-           <datalist  id="cityname">
-            {% for entry in items %}
-                <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
-            {% endfor %}
-          </datalist>
+           <!--<datalist  id="cityname">-->
+            <!--{% for entry in items %}-->
+                <!--<option value="{{ entry.azienda }}">{{ entry.azienda}}</option>-->
+            <!--{% endfor %}-->
+          <!--</datalist>-->
        </div>
        <br/><br/>
         

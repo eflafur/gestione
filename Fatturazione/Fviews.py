@@ -33,9 +33,10 @@ def CreaAnagrafica(request):
         elif(message['a1']!=""):
             if(H1!=1):
                 context={}
-                return render(request,"fatturazione/FSafe1.html",context)                 
+                return render(request,"fatturazione/FSafe1.html",context)  
+            azn=message['a1'].strip()
             obj=FCreateTable.Produt()
-            res=obj.put(message)
+            res=obj.put(message,azn)
             H1=0
             if(res==2):
                 context={}

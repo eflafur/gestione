@@ -1,9 +1,19 @@
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+        $("#sl").hide();
         $('input').first().focus();
         $("#acq").val("2000-01-01");
         $("#trpag").val("0");
         $("#fatturato").val("0");
+        $("#dl").focusout(function(){
+        var str = $("#dl").val().replace(/\s+/g, '');
+            $("#sl option").each(function(){
+                if(str==$(this).val()){
+                    alert("Nominativo già presente");
+                    $("#dl").val(" ")
+                }
+            });
+        });
 
     $("#reg").click(function(){
         a=$("#dl").val();

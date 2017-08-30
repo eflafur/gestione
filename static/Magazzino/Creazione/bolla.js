@@ -128,9 +128,10 @@ $(document).ready(function(){
 });
 
 function GetCodId(cl){
+    str = ($("#bolla").val()).replace(/\s/g, '');
     $.post(
         "entrata",
-        {cliente:cl,bolla:$("#bolla").val(),azione:"gid",dod:pvl},
+        {cliente:cl,bolla:str,azione:"gid",dod:pvl},
         function(res){
             label=" ";
             for (i=0;i<res.a.length;i++){
@@ -155,12 +156,13 @@ function GetCodId(cl){
 
 
 function GetCod(cl){
+    str = ($("#bolla").val()).replace(/\s/g, '');
     $.post(
         "entrata",
-        {cliente:cl,bolla:$("#bolla").val(),azione:"gid",dod:pvl},
+        {cliente:cl,bolla:str,azione:"gid",dod:pvl},
         function(res){
             if(res=="full"){
-                window.location.replace("lkfornitore?bolla="+$("#bolla").val()+"&cliente="+cl+"&azione=spsf");
+                window.location.replace("lkfornitore?bolla="+str+"&cliente="+cl+"&azione=spsf");
             }
             else{
                 label=" ";
@@ -184,7 +186,7 @@ function Fill(){
         label = label + '<td>' + ar1[i].cod+ '</td>';
         label = label + '<td>' + ar1[i].ps+ '</td>';
 //        label = label + '<td>' + ar1[i].prz+ '</td>';
-        label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
+        //label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
         label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
         label = label + '</tr>';
     }
@@ -195,9 +197,10 @@ function Fill(){
 };
 
 function Invia(act){
+    str = ($("#bolla").val()).replace(/\s/g, '');
     $.post(
         "entrata",
-      {res:JSON.stringify(ar1),bolla:$("#bolla").val(),azione:act},
+        {res:JSON.stringify(ar1),bolla:str,azione:act},
     function (result){
 
     });
@@ -209,10 +212,10 @@ function DeleteRow(row){
     Fill();
 };
 
-function AddRow(row){
-    t=ar1[row-1].cod;
-    $("#codice option:selected").text(t);
-    $("#ps").show();
-};
+//function AddRow(row){
+    //t=ar1[row-1].cod;
+    //$("#codice option:selected").text(t);
+    //$("#ps").show();
+//};
 
 

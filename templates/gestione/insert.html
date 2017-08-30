@@ -54,6 +54,11 @@
     
   <!--EXPERIMENT          -->
             
+    <select id="sl">
+       {% for entry in items3 %}
+                <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
+       {% endfor %}
+    </select>        
             
 <div class="container">
     <div class="row">
@@ -67,11 +72,11 @@
       <div class="input-group">
          <span class="input-group-addon">Azienda</span>
           <input type="text" id="dl" class="form-control" name="a2" list="cityname">
-           <datalist  id="cityname">
-            {% for entry in items3 %}
-                <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
-            {% endfor %}
-          </datalist>
+           <!--<datalist  id="cityname">-->
+            <!--{% for entry in items3 %}-->
+                <!--<option value="{{ entry.azienda }}">{{ entry.azienda}}</option>-->
+            <!--{% endfor %}-->
+          <!--</datalist>-->
        </div>
        <br/><br/>
         

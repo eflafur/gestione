@@ -6,17 +6,13 @@ from django.db.models import Q
 #nuova release salvata
 
 class Produt:
-    def put(self,line):
+    def put(self,line,azn):
         self.row=line
-        p=Produttore.objects.filter(Q(azienda=self.row["a2"])) 
         contatto1=self.row["a3"]
         if (self.row["a3"]==""):
-            contatto1=self.row["a2"]
-        if (p):
-            return (2)
-#        item=Settore.objects.get(articolo=self.row["a1"])
+            contatto1=azn
         p=Produttore.objects.create(
-            azienda=self.row["a2"],
+            azienda=azn,
             contatto=contatto1,
             citta=self.row["a4"],
             regione=self.row["a5"],
@@ -28,7 +24,6 @@ class Produt:
             fatturato=self.row["a12"],
             pi=self.row["a13"],
         )
-#        p.settore.add(item)
         return (1)
 
 
@@ -80,14 +75,13 @@ class GetSett:
         return data
     
 class Sett:
-    def put(self,line):
-        self.row=line
-        s=Settore.objects.filter(Q(articolo=self.row["s2"]))
+    def put(self,line,sett):
+        s=Settore.objects.filter(articolo=sett)
         if (s):
             return (2)
-        item=Genere.objects.get(nome=self.row["s1"])        
+        item=Genere.objects.get(nome=line["s1"])        
         Settore.objects.create(
-            articolo=self.row["s2"],
+            articolo=sett,
             genere=item,
         )
         return 

@@ -33,9 +33,8 @@ class CreateData:
         before=" "
         tot=0
         line= sorted(ls, key=lambda k: k['cod']) 
-        bolla=re.sub(" ","",bl)
         seg=line[0]["cod"].split('-')
-        p=Carico.objects.filter(Q(bolla=bolla),Q(idcod__produttore__azienda=seg[0]))
+        p=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__azienda=seg[0]))
         if(p):
             p1=p.filter().values("q","idcod__id")
             for itm in p1:
@@ -50,7 +49,7 @@ class CreateData:
                     tot=tot+Decimal(item["ps"])
                 else:
                     codid=IDcod.objects.get(id=before)
-                    rec=Carico(q=tot,bolla=bolla,idcod=codid)
+                    rec=Carico(q=tot,bolla=bl,idcod=codid)
                     rec.save()
                     rec1=Saldo.objects.get(idcod__cod=codid)
                     rec1.q=rec1.q+tot
@@ -61,9 +60,9 @@ class CreateData:
                 tot=tot+Decimal(item["ps"])
             before=item["id"]
         codid=IDcod.objects.get(id=before)
-        rec=Carico(q=tot,bolla=bolla,idcod=codid)
+        rec=Carico(q=tot,bolla=bl,idcod=codid)
         rec.save()
-        rec1=Saldo.objects.get(idcod__cod=codid)
+        rec1=Saldo.objects.get(idcod=codid)
         rec1.q=rec1.q+tot
         rec1.save()
         return 2

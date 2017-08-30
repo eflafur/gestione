@@ -150,7 +150,7 @@ function Fill(){
         label = label + '<td>' + ar1[i].cod+ '</td>';
         label = label + '<td>' + ar1[i].ps+ '</td>';
         label = label + '<td>' + ar1[i].prz+ '</td>';
-        label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
+        //label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
         label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
         label = label + '</tr>';
     }
@@ -177,11 +177,11 @@ function DeleteRow(row){
     Fill();
 };
 
-function AddRow(row){
-    t=ar1[row-1].cod;
-    $("#codice option:selected").text(t);
-    $("#ps").show();
-};
+//function AddRow(row){
+    //t=ar1[row-1].cod;
+    //$("#codice option:selected").text(t);
+    //$("#ps").show();
+//};
 
 function GetSospesa(pvl){
     $.post(
