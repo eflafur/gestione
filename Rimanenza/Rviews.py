@@ -18,7 +18,7 @@ def LKRGraph(request):
         message=request.POST
         if(message["act"]=="tree"):
             obj=GetRGraph.Design()
-            res=obj.GetRGraph()  
+            res=obj.GetRGraph(message["flag"])  
             ret=jsonpickle.encode(res)
         elif(message["act"]=="set"):
             n=message["node"]
@@ -27,7 +27,12 @@ def LKRGraph(request):
             ret=objr.ModPeso(n,p)
         return JsonResponse(ret,safe=False)             
     if(request.method=="GET"):
-        context={"items":" "}
+        if(request.GET.get("opr")):    
+            message=request.GET
+            flag=message["opr"]
+            context={"el":flag}
+        else:
+            context={"items":" "}
         return render(request,"Rimanenza/Consultazione/RGraph.html",context)           
 
 

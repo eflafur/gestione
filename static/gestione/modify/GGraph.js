@@ -9,14 +9,15 @@ $(document).ready(function(){
 
 function GetGraph(){
     $.post(
-    "graph",
+    "ioio",
     function(res){
         var ls=[];
         var data=[];
         var c;
         data=JSON.parse(res);
         $('#tree1').tree({
-            data: data    
+            data: data,
+            closedIcon: '+',
         });
     });
 };

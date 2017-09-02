@@ -10,9 +10,11 @@ $(document).ready(function(){
  //   cliente=$("#cliente option:selected").text();
       // ln=$("#cliente option").length;
       //$("p:contains('sos')").css("color", "blue");
+    $("#css").hide();
 
-    if(pvl!=" "){
-        GetSospesa(pvl);
+    if(pvl!=""){
+        $("#cliente").attr('disabled',true);
+        GetSospesa();
     }  
     
     $("#cln").focus();
@@ -23,6 +25,7 @@ $(document).ready(function(){
         $("#peso").val("");
         $("#prezzo").val("");
         $("#ps").hide();
+        $("#css").hide();
         $("#prz").hide();
     });
     
@@ -32,9 +35,11 @@ $(document).ready(function(){
     });
     
     $("#peso").keypress(function(){
+        $("#css").show();
+    });
+    $("#cassa").keypress(function(){
         $("#prz").show();
     });
-    
     $("#prezzo").keypress(function(){
         $("#btadd").show();
     });
@@ -48,6 +53,7 @@ $(document).ready(function(){
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();
         $("#cod").hide();
+        $("#css").hide();
         $("#ps").hide();
         $("#prz").hide();
         $("#btadd").hide();
@@ -70,6 +76,7 @@ $(document).ready(function(){
         $("#cliente").focus();
         $("#cod").hide("");
         $("#ps").hide();
+        $("#css").hide();
         $("#prz").hide();  
         $("#btadd").hide();
     });
@@ -83,6 +90,7 @@ $(document).ready(function(){
         $("#cliente").focus();
         $("#cod").hide("");
         $("#ps").hide();
+        $("#css").hide();
         $("#prz").hide();  
         $("#btadd").hide();
     });
@@ -90,6 +98,7 @@ $(document).ready(function(){
     $("#btadd").click(function(){
         a=$("#peso").val();
         b=$("#prezzo").val();
+        c=$("#cassa").val();
         if(a==""){
             alert ("inserire peso")
             $("#peso").focus()
@@ -98,26 +107,26 @@ $(document).ready(function(){
             alert ("inserire prezzo")
             $("#prezzo").focus()
         }
+        else if(c==""){
+            alert ("inserire Num Casse")
+            $("#cassa").focus()
+        }
         else {
-        //versione con array
-            //ar1[i]=$("#codice").val();
-            //ar2[i]=$("#peso").val();
-            //ar3[i]=$("#prezzo").val();
-            //i++;
-            //Fill(ar1,ar2,ar3);
-  
             var obj={}
             obj['cln'] =$("#cliente").val();
             obj['cod'] =$("#codice option:selected").text();
             obj['ps'] =$("#peso").val();
+            obj['css'] =$("#cassa").val();
             obj['prz'] =$("#prezzo").val();
             obj["iva"]=parseFloat($("#codice option:selected").val())+1;
             ar1.push(obj);
             Fill();
             $("#tbf").show("");
             $("#peso").val("");
+            $("#cassa").val("");
             $("#prezzo").val("");
             $("#ps").hide();
+            $("#css").hide();
             $("#prz").hide();
             $("#btadd").hide();
             $("#cod").focus();
@@ -131,8 +140,8 @@ $(document).ready(function(){
         arr=$(this).text().split('-');   
         if(arr[1]=='E')
             DeleteRow(arr[0]);
-        else if(arr[1]=='A')
-            AddRow(arr[0]);
+        //else if(arr[1]=='A')
+            //AddRow(arr[0]);
     });
     
     return;
@@ -149,8 +158,8 @@ function Fill(){
         label = label + '<tr>';
         label = label + '<td>' + ar1[i].cod+ '</td>';
         label = label + '<td>' + ar1[i].ps+ '</td>';
+        label = label + '<td>' + ar1[i].css+ '</td>';
         label = label + '<td>' + ar1[i].prz+ '</td>';
-        //label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
         label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
         label = label + '</tr>';
     }
@@ -163,9 +172,9 @@ function Fill(){
 function Invia(act){
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act,res1:pvl},
+      {res:JSON.stringify(ar1),azione:act,item:pvl},
     function (result){
-        if(result!=" ") 
+        if(result!=" " && act=='S') 
             for(i=0;i<result.length;i++)
                 alert(result[i]+"negativo")
     });
@@ -183,7 +192,7 @@ function DeleteRow(row){
     //$("#ps").show();
 //};
 
-function GetSospesa(pvl){
+function GetSospesa(){
     $.post(
         "fattura",
         {item:pvl,azione:"reazione"},
@@ -193,6 +202,7 @@ function GetSospesa(pvl){
                 obj1['cln'] =$("#cliente").val();
                 obj1['cod'] =res[i].idcod__cod;
                 obj1['ps'] =res[i].q;
+                obj1['css'] =res[i].cassa;
                 obj1['prz'] =res[i].prezzo;
                 obj1["iva"]=parseFloat(res[i].idcod__genere__iva)+1
                 ar1.push(obj1);

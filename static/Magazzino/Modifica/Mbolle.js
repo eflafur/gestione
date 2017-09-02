@@ -15,10 +15,10 @@ $(document).ready(function(){
     });
     
     $("#tablef").on('click','a',function(){
-        ar=[]
+        var ar1=[]
         a=$(this).text();
-        ar=a.split("-");
-        window.location.replace("entrata?bolla="+ar[0]+"&cliente="+ar[1]+"&azione=sps");
+        ar1=a.split("-");
+        window.location.replace("entrata?bolla="+ar1[0]+"&cliente="+ar1[1]+"&azione=sps");
        // return; 
     });
     
@@ -41,9 +41,10 @@ function GetTable(date){
                     label=label + '<td><a href="#">' + bl+ '</a></td>';
                 }
                 else
-                    label=label + '<tr><td></td>';
+                label=label + '<tr><td></td>';
                 label=label + '<td>' + res[i].idcod__cod+ '</td>';
                 label=label + '<td>' + res[i].q+ '</td>';
+                label=label + '<td>' + res[i].cassa+ '</td>';
                 label=label + '<td>' +res[i].data + '</td>';
                 label=label + '</tr>';
                 below=bl

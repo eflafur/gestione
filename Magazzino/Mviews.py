@@ -17,14 +17,14 @@ H1=0
 H2=0
 H3=0
 H4=0
-bl=[]
 
 def CreaBolla(request):
+    dc={} 
+    ls=[]
+    ls1=[]
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)        
-    global bl
-    ls1=[]
     if(request.method=="POST"):
         ls1.clear()
         message=request.POST
@@ -38,11 +38,9 @@ def CreaBolla(request):
             elif (res1 and message["dod"]!=" "):
                 obj1=GetProduct.LKPData()
                 res2=obj1.GetIDcodbyProvider(message)            
-                objf=MGetTable.GetData()
-                res3=objf.GetBolla(bl)
                 res={}
                 res["a"]=res2
-                res["b"]=res3
+                res["b"]=res1
             else:
                 obj1=GetProduct.LKPData()
                 res=obj1.GetIDcodbyProvider(message)            
@@ -55,14 +53,9 @@ def CreaBolla(request):
     if(request.method=="GET"):
         message=request.GET
         if(request.GET.get("azione")):
-            bl.clear()
-            dc={} 
-            ls=[]
-            bl.append(message["bolla"])
-            bl.append(message["cliente"])
             dc["azienda"]=message["cliente"]
             ls.append(dc)
-            context={"prod":ls,"el":bl[0]}
+            context={"prod":ls,"el":message["bolla"]}
         else:
             obj=Modifica.ModProd()
             prod=obj.GetProduttori()
@@ -83,28 +76,29 @@ def LKCaricoTotale(request):
         return render(request,"Magazzino/Modifica/Mbolle.html",context)
     
 def LKCaricoFornitore(request):
+    ls1=[]
+    dc={} 
+    ls=[]
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)     
+
     if(request.method=="POST"):
         message=request.POST
         objm=MGetTable.GetData()
         if(message["prs"]!=" "):
-            res=objm.GetBolla(bl)
+            ls1.append(message["prs"])
+            ls1.append(message["res"])
+            res=objm.GetBolla(ls1)
         else:
             res=objm.GetIdCod(message);
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         message=request.GET
         if(request.GET.get("azione")):
-            bl.clear()
-            dc={} 
-            ls=[]
-            bl.append(message["bolla"])
-            bl.append(message["cliente"])
             dc["azienda"]=message["cliente"]
             ls.append(dc)
-            context={"prod":ls,"el":bl[0]}
+            context={"prod":ls,"el":message["bolla"]}
         else:        
             mod=Modifica.ModProd()
             prod=mod.GetProduttori()

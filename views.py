@@ -301,7 +301,7 @@ def LKPMargine(request):
         return render(request,"gestione/Consultazione/GetByMargin.html",context)
     
 
-def LKGraph(request):
+def Graffo(request):
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)     

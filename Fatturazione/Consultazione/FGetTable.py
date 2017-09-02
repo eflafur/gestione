@@ -17,7 +17,7 @@ class GetData:
         return data
     def GetClienteByNumSospese(self,nome):
         rec=""
-        rec=Sospese.objects.filter(fatturas=nome).values("cliente__azienda","data","fatturas","q","prezzo","idcod__cod","idcod__genere__iva")
+        rec=Sospese.objects.filter(fatturas=nome).values("cliente__azienda","data","fatturas","q","cassa","prezzo","idcod__cod","idcod__genere__iva")
         data=list(rec)
         return data   
     def GetClienteByNumFatture(self,nome):

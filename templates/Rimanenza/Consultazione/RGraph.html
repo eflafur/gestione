@@ -11,21 +11,23 @@
  <div class="container">
     <div class="row">
     
-      <div class="col-xs-2 col-md-5">
+      <div class="col-xs-2 col-md-6">
         <div id="tree1"></div>
       </div>
 
       <div class="col-xs-2 col-md-2">
         <div class="input-group" id="ps">
           <input type="number" id="peso" class="form-control" name="a10" min="0">
+          <button type="submit" class="btn btn-primary" id="go">Go</button>
         </div>
       </div>        
 
-
-          <button type="submit" class="btn btn-primary" id="go">Inserisci quantità</button>
-          <button type="submit" class="btn btn-primary" id="ggraph">GRAFICO</button>
+          <button type="submit" class="btn btn-primary" id="ggrapht">Totale</button>
+          <button type="submit" class="btn btn-primary" id="ggraph">Maggiore di 0</button>
     </div>
 </div>
+
+<p id="fl">{{el}}</p>
 
 {%endblock%}
 

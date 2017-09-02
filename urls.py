@@ -22,7 +22,7 @@ urlpatterns = [
 #    url('ppp',views.ImportTable),
     url('base',views.Base),
     url(r'^$',views.Login),
-  #  url('graph',views.LKGraph),
+    url('ioio',views.Graffo),
     
     
     #MAGAZZINO

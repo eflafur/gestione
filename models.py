@@ -70,6 +70,7 @@ class Sito(models.Model):
 class Carico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	cassa=models.IntegerField(null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
 	def __str__(self):
@@ -78,7 +79,7 @@ class Carico(models.Model):
 	
 class Saldo(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
-	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	q=models.IntegerField(null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)	
 
 
@@ -102,6 +103,7 @@ class Scarico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
 	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	cassa=models.IntegerField(null=True,blank=True,default=0)
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fattura=models.TextField(max_length=10,null=True,blank=True)
@@ -111,6 +113,7 @@ class Sospese(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
 	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	cassa=models.IntegerField(null=True,blank=True,default=0)
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fatturas=models.TextField(max_length=10,null=True,blank=True)

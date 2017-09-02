@@ -35,10 +35,10 @@ class Produt:
         for item in line:
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
-            rec=Scarico(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],fattura=fatt)
+            rec=Scarico(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],fattura=fatt)
             rec.save()
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
-            rec1.q=rec1.q-(Decimal(item["ps"]))
+            rec1.q=rec1.q-(int(item["css"]))
             if(rec1.q<0):
                 ls.append(item["cod"])
             rec1.save()              
@@ -55,7 +55,7 @@ class Produt:
         for item in line:
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
-            rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],fatturas=fatt)
+            rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],fatturas=fatt)
             rec.save()
         return
     
@@ -72,9 +72,9 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!=" "):
-            recls=Sospese.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda")
         else:
-            recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fatturas","data","prezzo","cliente__azienda")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda")
         
         for el in recls:
             if(el["fatturas"]=="sc2018-0"):
@@ -111,12 +111,13 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!= ""):
-            recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","fattura","data","prezzo","cliente__azienda")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
         else:
-            recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","fattura","data","prezzo","cliente__azienda")
-        data=list(recls)
+            recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
         
-        for el in data:
+        for el in recls:
+            if(el["fattura"]=="fc2018-0"):
+                continue
             iva=el["idcod__genere__iva"]+1
             if(el["fattura"]!=before):
                 if(before!=" "):
@@ -132,6 +133,8 @@ class Produt:
         i=0
         
         for item in recls:
+            if(item["fattura"]=="fc2018-0"):
+                continue     
             if (item["fattura"]!=before):
                 item["valore"]=ll[i]
                 ss.append(item)
@@ -140,6 +143,6 @@ class Produt:
         return ss        
     
     def GetFatturabyNum(self,num):
-        recls=Scarico.objects.filter(fattura=num).values("idcod__cod","idcod__genere__iva","q","fattura","data","prezzo","cliente__azienda")
+        recls=Scarico.objects.filter(fattura=num).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
         data=list(recls)
         return data          

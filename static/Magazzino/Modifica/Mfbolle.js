@@ -23,7 +23,7 @@ $(document).ready(function(){
     });
     
     $("#tablef").on('click','a',function(){
-        ar=[]
+        var ar=[]
         a=$(this).text();
         ar=a.split("-");
         window.location.replace("entrata?bolla="+ar[0]+"&cliente="+ar[1]+"&azione=sps");
@@ -49,9 +49,10 @@ function GetTable(date){
                     label=label + '<td><a href="#">' + bl+ '</a></td>';
                 }
                 else
-                    label=label + '<tr><td></td>';
+                label=label + '<tr><td></td>';
                 label=label + '<td>' + res[i].idcod__cod+ '</td>';
                 label=label + '<td>' + res[i].q+ '</td>';
+                label=label + '<td>' + res[i].cassa+ '</td>';
                 label=label + '<td>' +res[i].data + '</td>';
                 label=label + '</tr>';
                 below=bl
