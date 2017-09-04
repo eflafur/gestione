@@ -19,5 +19,14 @@ function GetGraph(){
             data: data,
             closedIcon: '+',
         });
+        $("#tree1 ul:last-child").each(function(){
+            $(this).find("li:last-child").each(function(){        
+                $(this).css("font-size","20px");
+            });
+        });
+        //$("#tree1 li:last-child").each(function(){
+                //$(this).css("font-size","30px");
+            //});   
     });
 };
+

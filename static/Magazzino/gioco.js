@@ -14,17 +14,18 @@ $(document).ready(function(){
     var g=iNum;
     var lnk="<a href='lkrgraph'> prova </a>"
     
-    $("#btl").click(function(){
-            citta=$("#ct option:selected").text();
-//            alert (citta);
-            $("#reg option:selected").html(regione);
-            var aa=$(lnk);
-            $("#mio").text(aa);
-        });
+    //$("#btl").click(function(){
+            //citta=$("#ct option:selected").text();
+////            alert (citta);
+            //$("#reg option:selected").html(regione);
+            //var aa=$(lnk);
+            //$("#mio").text(aa);
+        //});
         
           //  $('a[href]').hide();
             //$("div").css("font-size","10px");
-            //$("#menu1 li:last-child").css("font-size","30px");
+ 
+ 
              //$("#menu1 li:nth-child(3)").css("font-size","30px");
              //$("ul#menu1 li:nth-last-child(3)").css("font-size","30px");
             //$("div:has(p)").css("font-size","40px");
@@ -41,9 +42,7 @@ $(document).ready(function(){
              //$(".li1").siblings().each(function(index){
                 //Write(index);
              //});
-                //$("#menu2 li").each(function(index){
-                    //Write(index);
-                //});
+ 
                 
                 //$('#idLKP11 tr').each(function() {
                     //var customerId = $(this).find("td:first").html(); 
@@ -63,7 +62,7 @@ $(document).ready(function(){
                   
                 //$("#ulfb a").click(function(){
                 //$('#tbfb').on('click','a',function(){
-                    //o=$(this).text();   
+                    //o=$(this).text();
                     //alert (o );
                 //});
                 
@@ -71,16 +70,67 @@ $(document).ready(function(){
                     //Test("ciao");
                 //});
                 
-                  $("#btadd").click(function(){
-                    Fill("ciao");
-                    res=$("#tbfb tr:first-child").next();
-                    res1=res.find("td").first();
-                    res1.css("background-color", "black");
-                });
+                  //$("#btadd").click(function(){
+                    //Fill("ciao");
+                    //res=$("#tbfb tr:first-child").next();
+                    //res1=res.find("td").first();
+                    //res1.css("background-color", "black");
+                //});
                 
                 
-                var lnk="<a href='lkrgraph'>" + itemsc["idcod__specifica__nome"]+ "</a>"
+                //var lnk="<a href='lkrgraph'>" + itemsc["idcod__specifica__nome"]+ "</a>"
+                
+                
+                
+            //var es=$("#menu2 ul");
+                //$(es).each(function(){
+                    //var g=$(this).children().find("li:last");
+                    //g.css("color","yesllow");
+            //});
+            
+            //$("#indice").children().css("color", "blue");
+            
+            var es=$("#menu2 ul>li");
+           //var d=$(es).find("li:first-child").find("li").first();
+           // var  dd=$(es).children().find("li").first().next();//.find("li:eq(1)");//.children();//.find("li:first-child");
+            es.css("color","yellow");
+            $(d).each(function(index){
+//                    $(this).text("pipo");
+  //                  alert($(this).text())
             });
+            
+            
+            //$("#menu2").each(function(){
+                //$(this).find("li").each(function(){
+                    //var a=$(this).text();
+                    //var b="ciao";
+                //});
+            //});
+
+
+            //var a=$("#menu2").children();
+                //$(a).each(function(){
+                        //$(this).css("color","yellow");
+            //}); 
+ 
+        // $("#menu2 li").each(function(index){
+              //alert(index);
+         // });
+
+    });
+            
+            
+
+          
+function Write(index){
+   label="ciccio della bruma lariolacci";
+    if($(this).is('.ull')){
+        $("#pp").val(label);
+    }
+    else { 
+        $("#pp").val(index);
+    }
+};            
             
             
 function Test(el){
@@ -143,16 +193,6 @@ function LightLi(){
 };          
           
 
-          
-function Write(index){
-   label="ciccio della bruma lariolacci";
-    if($(this).is('.ull')){
-        $("#pp").val(label);
-    }
-    else { 
-        $("#pp").val(index);
-    }
-};
 
 function Read(){
     $.post(

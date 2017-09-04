@@ -27,40 +27,61 @@ $(document).ready(function(){
         $("#ggrapht").hide();
         $("#ggraph").show();
     });
+    
+
+    
 });
 
-function GetGraph(fl){
-    if(dd!=0){
-        $('#tree1').tree('destroy');
-        window.location.replace("lkrgraph?opr="+fl)
-    }
-    dd=1;
-    $.post(
-        "lkrgraph",
-        {act:"tree",flag:fl},
-        function(res){
-            var ls=[];
-            var data=[];
-            var c;
-            data=JSON.parse(res);
-            $('#tree1').tree({
-                data: data,    
-                autoOpen:true,
-                closedIcon: '+',
-                selectable: false
+    function GetGraph(fl){
+        if(dd!=0){
+            $('#tree1').tree('destroy');
+            window.location.replace("lkrgraph?opr="+fl)
+        }
+        dd=1;
+        $.post(
+            "lkrgraph",
+            {act:"tree",flag:fl},
+            function(res){
+                var ls=[];
+                var data=[];
+                var c;
+                data=JSON.parse(res);
+                $('#tree1').tree({
+                    data: data,    
+                    autoOpen:true,
+                    closedIcon: '+',
+                    selectable: false
+                });
+                var a=$("#tree1 ul");
+                  $(a).each(function(){
+                     $(this).find("li :last").css("color","red");
+                  });
             });
-        });
-};
-
-
-$('#tree1').bind(
-    'tree.click',
-    function(event) {
+    };
+ 
+$('#tree1').on('tree.click',function(event) {
         node=" "
         mul=[];
-        var nd = event.node;
-        node = $('#tree1').tree('getNodeById', nd.id);
-//        alert (node.name)
+        node = event.node;
+        mul=node.name.split(":")
+        if (mul.length>=2){
+            var a=$("span:contains("+node.name+")");
+            $(a).css("color","green");
+        }
+        else{
+            $("#peso").val(" ");
+            $("#ps").hide();
+            $("#go").hide();
+        }
+        
+});
+
+
+$('#tree1').on('tree.contextmenu',function(event) {
+        node=" "
+        mul=[];
+        node = event.node;
+        //node = $('#tree1').tree('getNodeById', nd.id);
         mul=node.name.split(":")
         if (mul.length>=2){
             $("#peso").val(" ");
@@ -74,6 +95,9 @@ $('#tree1').bind(
             $("#go").hide();
         }
 });
+
+
+
 
 function SetNode(q){
     var arr= new Array();
@@ -92,13 +116,11 @@ function SetNode(q){
  function updateNode(cod,p){
     var name=cod+"  :  "+p;
     $('#tree1').tree('updateNode', node, name);
+
+    var a=$("span:contains("+name+")");
+        $(a).css("color","green");
+    $(a).focus();
     return
  };
  
  
- //$('#tree1').tree({
- //rtl: true
-    ////onLoading:function (is_loading, node, $el){
-        ////var a="ciao"
-    ////}    
-//});
