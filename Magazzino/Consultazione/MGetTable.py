@@ -1,5 +1,5 @@
 from gestione.models import Produttore,IDcod,Carico
-from django.db.models import Q
+from django.db.models import Q,F
 
 
 class GetData:
@@ -18,10 +18,15 @@ class GetData:
         return data 
     def GetIdCodbyProdotto(self,message):
         rec=Carico.objects.filter(Q(idcod__genere__nome=message["prd"]),Q(data__gte=message["data"])).values("idcod__cod",
-                                                                        "q","bolla","data").order_by("-idcod__cod")
+                                "q","bolla","data").order_by("-idcod__cod")
         data=list(rec)
-        return data    
+        return data
     def GetCaricoTotale(self,message):
         rec=Carico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","cassa","bolla","data").order_by("bolla")
         data=list(rec)
         return data    
+    def GetCaricobyIdcod(self):
+        rec=Carico.objects.filter(cassa__gt=F("cassaexit")).values("bolla","id","idcod__cod","cassa","cassaexit").order_by("idcod_id","data")
+        data=list(rec)
+        return data    
+    

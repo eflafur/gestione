@@ -1,6 +1,6 @@
 import django
 django.setup()
-from gestione.models import Produttore,Settore,Genere,Area,Sito,Specifica,IDcod
+from gestione.models import Produttore,Settore,Genere,Area,Sito,Specifica,IDcod,Prodotto,Pagamento
 from django.db.models import Q
 
 class LKPData:
@@ -81,10 +81,19 @@ class LKPData:
         data=list(s)
         return data
     def GetIDcod(self):
-        s=IDcod.objects.all().values("cod","genere__iva").order_by("produttore__azienda")
+        s=IDcod.objects.all().values("id","cod","genere__iva").order_by("produttore__azienda")
         data=list(s)
         return data
     def GetIDcodbyProvider(self,message):
         s=IDcod.objects.filter(produttore__azienda=message["cliente"]).values("id","cod","genere__iva").order_by("produttore__azienda")
         data=list(s)
         return data    
+    def GetTerminiPag(self):
+        s=Pagamento.objects.filter().values("tipo")
+        data=list(s)
+        return data
+    def GetProdotto(self):
+        s=Prodotto.objects.filter().values("tipo")
+        data=list(s)
+        return data
+    

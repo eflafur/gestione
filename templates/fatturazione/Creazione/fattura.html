@@ -4,50 +4,102 @@
 {%block insert%}
 
 <div class="container">
- <!--<div class="row">-->
-  <!--<div class="col-md-8 col-md-offset-2"><h2>Carico Merce</h2> </div>      -->
- <!--</div>-->
- <!--<br/><br/>-->
- 
- 
   <div class="row">
-   <div class="col-md-4">  
-    <div class="input-group" id="cln">
-     <span class="input-group-addon">Cliente </span> 
-     <select class="form-control" name="cln" id="cliente">
-       {% for entry in itemsf %}
-           <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
-       {% endfor %}
-     </select>
+
+   <div class="col-md-7">
+   
+    <div class="row">
+     <div class="col-md-4 ">  
+      <div class="input-group" id="cln">
+       <p>Cliente<select class="form-control" name="cln" id="cliente"></p>
+         {% for entry in itemsf %}
+             <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+         {% endfor %}
+       </select>
+      </div>
+     </div>
+   
+     <div class="col-sm-2"> 
+         <button type="submit" class="btn btn-primary" id="btsps">Sospesa </button>  
+     </div>
+      <div class="col-sm-2"> 
+         <button type="submit" class="btn btn-primary" id="btems">Emissione</button>  
+     </div>
+      <div class="col-sm-2"> 
+         <button type="submit" class="btn btn-primary" id="btanl">Annulla</button>  
+     </div>
+    </div>
+    </br>
+   
+     <div class="row">
+       <div class="col-md-5">  
+       <div class="input-group" id="dsc">
+        <p>Descrizione<select class="form-control" name="a5" id="desc"></p>
+          {% for entry in itemsd %}
+              <option value="{{ entry.tipo}}">{{ entry.tipo}} </option>
+          {% endfor %}
+        </select>
+       </div>
+      </div>
+       <div class="col-md-5">  
+       <div class="input-group" id="pgm">
+        <p>Termini di pagamento<select class="form-control" name="a6" id="pagam"></p>
+          {% for entry in itemsp %}
+              <option value="{{ entry.tipo}}">{{ entry.tipo}} </option>
+          {% endfor %}
+        </select>
+       </div>
+      </div>
+     </div>
+  
+     <div class="row">
+      <div class="col-md-6">  
+       <div class="input-group" id="cod">
+        <p>Codice<select class="form-control" name="a1" id="codice"></p>
+          {% for entry in items %}
+              <option value="{{ entry.genere__iva}} ">{{ entry.cod}}</option>
+          {% endfor %}
+        </select>
+       </div>
+      </div>
+      <div class="col-md-6">  
+       <div class="input-group" id="lt">  
+       '<p> Lotto<select class="form-control" id="lotto"></p>
+         </select>
+       </div>
+      </div>
+     </div>
+
+
+      
+     <div class="row">
+      <div class="col-md-2"> 
+       <div class="input-group" id="ps">
+        <p>Peso<input type="number" id="peso" class="form-control" name="a2" placeholder="KG" min="0"></p>
+       </div>
+      </div> 
+      <div class="col-md-2"> 
+       <div class="input-group" id="css">
+        <p>Colli<input type="number" id="cassa" class="form-control" name="a4" placeholder="Num" min="0"></p>
+       </div>
+      </div> 
+     <div class="col-md-2 "> 
+      <div class="input-group" id="prz">
+       <p>Prezzo<input type="number" id="prezzo" class="form-control" name="a3" min="0"></p>
+      </div>
     </div>
    </div>
- 
-   <div class="col-md-1"> 
-       <button type="submit" class="btn btn-primary" id="btsps">Sospesa </button>  
-   </div>
-    <div class="col-md-1"> 
-       <button type="submit" class="btn btn-primary" id="btems">Emissione</button>  
-   </div>
-    <div class="col-md-1"> 
-       <button type="submit" class="btn btn-primary" id="btanl">Annulla</button>  
+    </br>
+   </br>
+  
+   <div class="row">
+     <div class="col-md-2 "> 
+       <button type="submit" class="btn btn-primary" id="btadd">Aggiungi </button>  
    </div>
   </div>
-  </br>
+ </div>
   
-  <div class="row">
-    <div class="col-md-4">  
-    <div class="input-group" id="cod">
-     <span class="input-group-addon">Codice </span> 
-     <select class="form-control" name="a1" id="codice">
-       {% for entry in items %}
-           <option value="{{ entry.genere__iva}}">{{ entry.cod}} </option>
-       {% endfor %}
-     </select>
-    </div>
-   </div>
-   
-    
-   <div class=" col-md-6 col-md-offset-2" id="tbf" >
+   <div class=" col-md-5" id="tbf" >
       <table id="mytable"  class="table table-hover">
           <thead id="thd">
               <tr>
@@ -62,45 +114,11 @@
       </table>
   </div>
  </div>
- </br>
-  
-   <div class="row">
-    <div class="col-md-3"> 
-     <div class="input-group" id="ps">
-      <span class="input-group-addon">Peso</span>
-      <input type="number" id="peso" class="form-control" name="a2" placeholder="KG" min="0">
-     </div>
-    </div> 
-    <div class="col-md-3"> 
-     <div class="input-group" id="css">
-      <span class="input-group-addon">Colli</span>
-      <input type="number" id="cassa" class="form-control" name="a4" placeholder="Num" min="0">
-     </div>
-    </div> 
-  </div>
- </br>
- 
-  <div class="row">
-   <div class="col-md-3 "> 
-    <div class="input-group" id="prz">
-     <span class="input-group-addon">Prezzo</span>
-     <input type="number" id="prezzo" class="form-control" name="a3" min="0">
-    </div>
-   </div>
-  </div>
-  </br>
-  
-   <div class="row">
-     <div class="col-md-1 "> 
-       <button type="submit" class="btn btn-primary" id="btadd">Aggiungi </button>  
-   </div>
-  </div>
- </div>
+</div>
  
  <p id="psps">{{el}}</p>
  
  
-</div>
   
 
   

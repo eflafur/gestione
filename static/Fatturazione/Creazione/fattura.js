@@ -1,37 +1,62 @@
 var ar1= [];
-var ar2= [];
-var ar3= [];
+var sum;
 var i=0;
 var cliente;
 var pvl=$("#psps").text();
-    
+var lotto=[];    
+var lt;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
  //   cliente=$("#cliente option:selected").text();
       // ln=$("#cliente option").length;
       //$("p:contains('sos')").css("color", "blue");
     $("#css").hide();
+    $("#dsc").hide();
+    $("#pgm").hide();
+    $("#cod").hide();
+    $("#lt").hide();
+
+    GetLotto();
 
     if(pvl!=""){
         $("#cliente").attr('disabled',true);
+        $("#cod").hide();
+        $("#dsc").show();
+        $("#desc").focus();
         GetSospesa();
     }  
     
     $("#cln").focus();
-    
+
     $("#cliente").click(function(){
-        $("#cod").show();
-        $("#codice").focus();
+        $("#dsc").show();
+        $("#desc").focus();
         $("#peso").val("");
         $("#prezzo").val("");
         $("#ps").hide();
         $("#css").hide();
         $("#prz").hide();
     });
+
+    $("#dsc").click(function(){
+        $("#pgm").show();
+    });
+
+    $("#pagam").click(function(){
+        $("#cod").show();
+    });
     
      $("#codice").click(function(){
+        var cod=$("#codice option:selected").text();
+        SelLotto(cod);
         $("#ps").show();
         $("#peso").focus();
+        $("#peso").val("");
+        $("#prezzo").val("");
+        $("#css").hide();
+        $("#cassa").val("");
+        $("#prz").hide();
+        $("#lt").show();
     });
     
     $("#peso").keypress(function(){
@@ -41,7 +66,16 @@ $(document).ready(function(){
         $("#prz").show();
     });
     $("#prezzo").keypress(function(){
-        $("#btadd").show();
+        var t=parseInt($("#cassa").val());
+        if(parseInt($("#cassa").val())>sum){
+            alert("superato il lotto massimo di magazzino")
+            $("#prz").hide();
+            $("#cassa").val("");
+            $("#cassa").val(sum);
+            $("#cassa").focus();
+        }
+        else
+            $("#btadd").show();
     });
     
     $("#btsps").click(function(){
@@ -57,13 +91,9 @@ $(document).ready(function(){
         $("#ps").hide();
         $("#prz").hide();
         $("#btadd").hide();
-            
-            //$("#tbf").hide("");
-            //$("#cln").hide();
-            //$("#cod").hide();
-            //$("#ps").hide();
-            //$("#prz").hide();
-            //$("#btadd").hide();
+        $("#dsc").hide();
+        $("#pgm").hide();
+        $("#lt").hide();
     });
     
     $("#btems").click(function(){
@@ -79,6 +109,9 @@ $(document).ready(function(){
         $("#css").hide();
         $("#prz").hide();  
         $("#btadd").hide();
+        $("#dsc").hide();
+        $("#pgm").hide();
+        $("#lt").hide();
     });
     
     $("#btanl").click(function(){
@@ -93,6 +126,9 @@ $(document).ready(function(){
         $("#css").hide();
         $("#prz").hide();  
         $("#btadd").hide();
+        $("#dsc").hide();
+        $("#pgm").hide();
+        $("#lt").hide();
     });
     
     $("#btadd").click(function(){
@@ -119,6 +155,7 @@ $(document).ready(function(){
             obj['css'] =$("#cassa").val();
             obj['prz'] =$("#prezzo").val();
             obj["iva"]=parseFloat($("#codice option:selected").val())+1;
+            obj['lotto']=lt;
             ar1.push(obj);
             Fill();
             $("#tbf").show("");
@@ -131,8 +168,13 @@ $(document).ready(function(){
             $("#btadd").hide();
             $("#cod").focus();
             $("#cliente").attr('disabled',true);
+            $("#lt").hide();
         }
         return;
+    });
+
+    $("#lotto").on('click',function(){
+        lt=$(this).val();
     });
 
     $('#tbfb').on('click','a',function(){
@@ -140,10 +182,7 @@ $(document).ready(function(){
         arr=$(this).text().split('-');   
         if(arr[1]=='E')
             DeleteRow(arr[0]);
-        //else if(arr[1]=='A')
-            //AddRow(arr[0]);
     });
-    
     return;
 });
 
@@ -163,7 +202,7 @@ function Fill(){
         label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
         label = label + '</tr>';
     }
-    label=label + '<tr><td>TOT</td><td></td><td>'+sum+ '</td></tr>';
+    label=label + '<tr><td>TOT</td><td></td><td></td><td>'+sum.toFixed(2)+ '</td></tr>';
     $("#tbfb").html(label);
     $("#tbfb tr:last").find("td:last").css("color","blue");
     return;
@@ -186,12 +225,6 @@ function DeleteRow(row){
     Fill();
 };
 
-//function AddRow(row){
-    //t=ar1[row-1].cod;
-    //$("#codice option:selected").text(t);
-    //$("#ps").show();
-//};
-
 function GetSospesa(){
     $.post(
         "fattura",
@@ -208,7 +241,27 @@ function GetSospesa(){
                 ar1.push(obj1);
             }
         Fill();
-        $("#cod").show("");
         $("#tbf").show("");
         });
 };
+
+function GetLotto(){
+    $.post(
+        "fattura",
+        {azione:"L"},
+        function(res){
+            lotto=res;
+        });
+};
+
+function SelLotto(cod){
+    var option=" ";
+    sum=0;
+    for (var i=0;i<lotto.length;i++)
+        if(lotto[i].idcod__cod==cod){
+            sum=sum+lotto[i].cassa-lotto[i].cassaexit
+            option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +lotto[i].cassa+ ":"+lotto[i].cassaexit + '</option>';
+        }
+    $('#lotto').html(option);
+    };
+

@@ -4,7 +4,7 @@ from django.template import loader
 from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-import CreateTable,Modifica,GetProduct,validazione,FCreateTable,FGetTable,FModifica
+import CreateTable,Modifica,GetProduct,validazione,FCreateTable,FGetTable,FModifica,MGetTable
 import json
 
 artic11=""
@@ -152,7 +152,10 @@ def Fattura(request):
     context={}
     if(request.method=="POST"):
         message=request.POST
-        objf=FCreateTable.Produt()        
+        objf=FCreateTable.Produt()
+        if(message["azione"]=='L'):
+            obj=MGetTable.GetData()
+            res=obj.GetCaricobyIdcod()
         if(message["azione"]=="I"):
             itm=message["item"]
             lst = json.loads(message['res'])
@@ -170,6 +173,8 @@ def Fattura(request):
         message=request.GET
         obj=GetProduct.LKPData()
         res=obj.GetIDcod()
+        res2=obj.GetProdotto()
+        res3=obj.GetTerminiPag()
         objf=FGetTable.GetData()
         if(request.GET.get("azione")):
             dc={} 
@@ -178,10 +183,10 @@ def Fattura(request):
                 res1=objf.GetClienteByNumSospese(message["nome"])
             dc["azienda"]=res1[0]["cliente__azienda"]
             ls.append(dc)
-            context={"items":res,"itemsf":ls,"el":message["nome"]}
+            context={"items":res,"itemsd":res2,"itemsp":res3,"itemsf":ls,"el":message["nome"]}
             return render(request,"fatturazione/Creazione/fattura.html",context)
         res1=objf.GetCliente()
-        context={"items":res,"itemsf":res1}
+        context={"items":res,"itemsf":res1,"itemsd":res2,"itemsp":res3}
         return render(request,"fatturazione/Creazione/fattura.html",context)    
 
 def Sospesa(request):

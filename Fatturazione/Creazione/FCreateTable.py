@@ -1,8 +1,8 @@
 import django
 django.setup()
-from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo
+from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico
 from decimal import Decimal
-from django.db.models import Q
+from django.db.models import Q,F
 
 class Produt:
     def put(self,line,azn):
@@ -25,6 +25,7 @@ class Produt:
     
     def ScriviFattura(self,line,sps):
         ls=[]
+        lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         if(sps!=" "):
             rec=Sospese.objects.filter(fatturas=sps)
             rec.delete()
@@ -35,14 +36,49 @@ class Produt:
         for item in line:
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
-            rec=Scarico(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],fattura=fatt)
-            rec.save()
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
             rec1.q=rec1.q-(int(item["css"]))
             if(rec1.q<0):
                 ls.append(item["cod"])
-            rec1.save()              
+            rec1.save()
+                
+            ltcod=lotto.filter(idcod__cod=item["cod"])
+            if("lotto" in item):
+                ltt=int(item["lotto"])
+            else:
+                ltt=ltcod[0].id
+            ltid=ltcod.get(id=ltt)
+            num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
+            if(num>=0):
+                ltid.cassaexit=int(item["css"])+ltid.cassaexit
+                ltid.save()
+            else:
+                ltid.cassaexit=ltid.cassa
+                ltid.save()
+                self.Rec(ltcod,num*(-1),0,ltt)
+            rec=Scarico(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
+                                    fattura=fatt,lotto=ltt)
+            rec.save()
         return ls
+    
+    def Rec(self,lotti,casse,i,lotto):
+        if(i<lotti.count()):
+            num=lotti[i].cassa-(lotti[i].cassaexit+casse)
+            if(num>=0 and lotti[i].id!=lotto):
+                lotti[i].cassaexit=lotti[i].cassaexit+casse
+                lotti[i].save()
+                return 
+            else:
+                if(lotti[i].id!=lotto):
+                    lotti[i].cassaexit=lotti[i].cassa
+                    lotti[i].save()
+                else:
+                    num=casse*(-1)
+                i=i+1
+                self.Rec(lotti,num*(-1),i,lotto)
+                return
+            return lotti[i].id
+            
 
     def ScriviSospesa(self,line,sps):
         if(sps!=" "):
@@ -55,7 +91,8 @@ class Produt:
         for item in line:
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
-            rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],fatturas=fatt)
+            rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
+                        fatturas=fatt,lotto=item["lotto"])
             rec.save()
         return
     

@@ -2,6 +2,12 @@ from django.db import models
 from datetime import date,datetime
 
 
+class Prodotto(models.Model):
+	tipo=models.CharField(max_length=30)
+
+class Pagamento(models.Model):
+	tipo=models.CharField(max_length=30)
+
 class Genere(models.Model):
 	nome=models.CharField(max_length=50)
 	iva=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
@@ -70,6 +76,7 @@ class Sito(models.Model):
 class Carico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	cassaexit=models.IntegerField(null=True,blank=True,default=0)
 	cassa=models.IntegerField(null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
@@ -107,6 +114,7 @@ class Scarico(models.Model):
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fattura=models.TextField(max_length=10,null=True,blank=True)
+	lotto=models.CharField(max_length=5,null=True)
 
 
 class Sospese(models.Model):
@@ -117,6 +125,7 @@ class Sospese(models.Model):
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fatturas=models.TextField(max_length=10,null=True,blank=True)
+	lotto=models.CharField(max_length=5,null=True)
 	def __str__(self):
 		return "%s" % (self.fatturas)	
 	

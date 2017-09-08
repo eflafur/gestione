@@ -3,11 +3,13 @@ var regione;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
         regione=$("#reg option:selected").text();
+
+
         $("#reg").click(function(){
             opt=$("#reg option:selected").text();
-            alert (regione);
             Put(opt);
         });
+
 
     var num="380.24";    
     var iNum = parseFloat(num);
@@ -220,5 +222,6 @@ function Put(item) {
                 }
                 $('#ct').html(option);
             });
+
     return;
 };
