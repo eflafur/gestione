@@ -3,11 +3,11 @@ var TempUserTable=null;
 
 $(document).ready(function(){
   $.ajaxSetup({cache:false});
-   $('select').first().focus();
+  $("#azienda").first().focus();
   $("#catls").text("");
   
   $("#azienda").click(function(){
-     $('select').first().focus();
+//     $("#azienda").first().focus();
     var a=$("#azienda option:selected").text();
     GetGenere(a)
       $("#caddgen").show();
@@ -64,12 +64,6 @@ $(document).ready(function(){
         option += '<option value="'+ result[i]["articolo"]+ '">' + result[i]["articolo"]+ '</option>';
         }
         $('#art').html(option);
-        //for (i = 0; i < result[1].length; i++) {
-            //label = label + '<tr>';
-            //label = label + '<td>' + result[i]["articolo"] + '</td>';
-            //label = label + '</tr>';
-          //}
-          //$("#tb1").html(label);
         });
          return;
 };
@@ -100,12 +94,6 @@ function GetSpec(art){
         option += '<option value="'+ result[0][i]+ '">' + result[0][i]+ '</option>';
         }
         $('#art').html(option);
-        //for (i = 0; i < result[1].length; i++) {
-            //label = label + '<tr>';
-            //label = label + '<td>' + result[1][i] + '</td>';
-            //label = label + '</tr>';
-          //}
-          //$("#tb1").html(label);
          });
          return;
 };
@@ -121,12 +109,6 @@ function GetSpec(art){
                     option += '<option value="'+ result[0][i]+ '">' + result[0][i]+ '</option>';
                 }
             $('#gen').html(option);
-        //for (i = 0; i < result[1].length; i++) {
-                    //label = label + '<tr>';
-                    //label = label + '<td>' + result[1][i] + '</td>';
-                    //label = label + '</tr>';
-                //}
-                //$("#tb1").html(label);
         });
     return;
 };

@@ -7,7 +7,7 @@ var pvl=$("#psps").text();
     
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    if(pvl!=" "){
+    if(pvl!=""){
         $("#cln").show();
         $("#cliente").attr('disabled',true);
         $("#bolla").attr('disabled',true);

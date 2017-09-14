@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 import CreateTable,Modifica,GetProduct,validazione,Fviews,MCreateTable,MGetTable,MModifica
-import re,json
+import re,json,jsonpickle
 #import wingdbstub
 #nuova relaease salvata
 #runserver --noreload 8000 
@@ -33,9 +33,9 @@ def CreaBolla(request):
             ls1.append(message["cliente"])
             objf=MGetTable.GetData()
             res1=objf.GetBolla(ls1)         
-            if(res1 and message["dod"]==" "):
+            if(res1 and message["dod"]==""):
                 res="full"
-            elif (res1 and message["dod"]!=" "):
+            elif (res1 and message["dod"]!=""):
                 obj1=GetProduct.LKPData()
                 res2=obj1.GetIDcodbyProvider(message)            
                 res={}
@@ -45,7 +45,7 @@ def CreaBolla(request):
                 obj1=GetProduct.LKPData()
                 res=obj1.GetIDcodbyProvider(message)            
         elif(message["azione"]=="I"):
-            lst = json.loads(message['res'])
+            lst = jsonpickle.decode(message['res'])
             bolla=message["bolla"]
             obj1=MCreateTable.CreateData()
             res=obj1.EntrataBolla(lst,bolla)
@@ -59,7 +59,7 @@ def CreaBolla(request):
         else:
             obj=Modifica.ModProd()
             prod=obj.GetProduttori()
-            context={"prod":prod,"el":" "}
+            context={"prod":prod,"el":""}
         return render(request,"Magazzino/Creazione/bolla.html",context)   
 
 def LKCaricoTotale(request):
@@ -86,7 +86,7 @@ def LKCaricoFornitore(request):
     if(request.method=="POST"):
         message=request.POST
         objm=MGetTable.GetData()
-        if(message["prs"]!=" "):
+        if(message["prs"]!=""):
             ls1.append(message["prs"])
             ls1.append(message["res"])
             res=objm.GetBolla(ls1)

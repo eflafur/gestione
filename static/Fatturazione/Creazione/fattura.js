@@ -25,8 +25,6 @@ $(document).ready(function(){
         $("#desc").focus();
         GetSospesa();
     }  
-    
-    $("#cln").focus();
 
     $("#cliente").click(function(){
         $("#dsc").show();
@@ -65,16 +63,15 @@ $(document).ready(function(){
     $("#cassa").keypress(function(){
         $("#prz").show();
     });
-    $("#prezzo").keypress(function(){
-        var t=parseInt($("#cassa").val());
+    $("#cassa").on("blur", function(){
         if(parseInt($("#cassa").val())>sum){
             alert("superato il lotto massimo di magazzino")
-            $("#prz").hide();
-            $("#cassa").val("");
             $("#cassa").val(sum);
-            $("#cassa").focus();
+            $("#prezzo").focus();
         }
-        else
+    });
+    
+    $("#prezzo").keypress(function(){
             $("#btadd").show();
     });
     
@@ -101,6 +98,22 @@ $(document).ready(function(){
         ar1.length=0
         if(pvl!=" ")
             window.location.replace("sospesa");
+        $("#tbf").hide("");
+        $("#cliente").attr('disabled',false);
+        $("#cliente").focus();
+        $("#cod").hide("");
+        $("#ps").hide();
+        $("#css").hide();
+        $("#prz").hide();  
+        $("#btadd").hide();
+        $("#dsc").hide();
+        $("#pgm").hide();
+        $("#lt").hide();
+    });
+    
+      $("#ddtft").click(function(){
+        Invia('D');
+        ar1.length=0
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();

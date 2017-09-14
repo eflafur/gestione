@@ -45,6 +45,7 @@ urlpatterns = [
     url('ca',Fviews.CreaAnagrafica),
     url('delcliente',Fviews.DelCliente),
     url('modana',Fviews.ModificaAnagrafica),
+    url('ddt',Fviews.DDT),
     
     #URL DI RIMANENZA
     url('lkrgraph',Rviews.LKRGraph),

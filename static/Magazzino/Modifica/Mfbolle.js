@@ -4,12 +4,12 @@ var TempUserTable=null;
 
 var option=""
 var optionValues=[];
-pvl=" ";
+pvl="";
 var pvl=$("#psps").text();
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    if (pvl!=" "){
+    if (pvl!=""){
         var ddt="2017-01-01";
         $("#dt2").val(ddt);
         GetTable(ddt)

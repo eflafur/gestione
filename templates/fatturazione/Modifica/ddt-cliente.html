@@ -1,0 +1,65 @@
+{% extends 'fatturazione/FLayout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container">
+   <div class="row">
+        <div class="col-md-8 col-md-offset-2"><h2>Elimina Fornitore</h2> </div>      
+    </div>
+    <br/><br/>
+
+    <div class="row">
+        <div class="col-md-3" id="cl">  
+            <span class="input-group-addon">Cliente </span> 
+                <select class="form-control" id="clientes"> 
+                    {% for entry in items %}
+                        <option value="{{entry.azienda}}">{{entry.azienda}}</option>
+                    {%endfor%}
+            </select> 
+        </div>
+          
+       <div class="col-sm-2"> 
+         <button type="submit" class="btn btn-primary" id="btddt">Emetti </button>  
+     </div>
+    </div>
+    </br>
+  
+        <div class=" col-md-9" id="tbf1" >
+            <table id="tablef"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Num</th>
+                        <th>Cliente</th>
+                        <th>Valore</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="tb6"></tbody>
+            </table>
+        </div>
+          <div class=" col-md-9" id="tbf2" >
+            <table id="tableddt"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Ddt</th>
+                        <th>Q</th>
+                        <th>Prezzo</th>
+                        <th>Cassa</th>
+                        <th>Iva</th>
+                        <th>Data</th>
+                        <th>Lotto</th>
+                    </tr>
+                </thead>
+                <tbody id="tb7"></tbody>
+            </table>
+        </div>
+</div>
+
+
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Fatturazione/Modifica/ddt-cliente.js' %}" ></script>
+{% endblock %}

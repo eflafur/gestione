@@ -28,10 +28,7 @@ $(document).ready(function(){
         $("#pf").show();
         $("#tbf1").hide();
         $("#tbf2").show();
-        
-       // window.location.replace("fattura?nome="+a+"&azione=ftr");
     });
-    
 });
 
 function GetTable(date,cl){

@@ -2,6 +2,7 @@ import django
 django.setup()
 from gestione.models import Produttore,Settore,Genere,Area,Sito,Preferenza,Specifica,IDcod,Saldo
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 class Produt:
     def put(self,line):
@@ -127,24 +128,30 @@ class ModProd:
         return
     
     def ChangeSpec(self,message,cat):
-        sp=Specifica.objects.filter(nome=cat)
-        st=Settore.objects.filter(Q(articolo=message["a3"]),  Q(specifica__nome=message["a4"]))
+        try:
+            sp=Specifica.objects.get(nome=cat)
+        except ObjectDoesNotExist:
+            sp=None
+        sttr=Settore.objects.filter()
+        st=sttr.filter(Q(articolo=message["a3"]),  Q(specifica__nome=message["a4"]))
         if((not sp) & (cat!="")):
             sp=Specifica(nome=cat)
             sp.save()
-            st=Settore.objects.get(articolo=message["a3"])
+            st=sttr.get(articolo=message["a3"])
             sp.settore.add(st)
         elif ((sp is not None) & (cat!="") & (not st)):
-                st=Settore.objects.get(articolo=message["a3"])
-                sp=Specifica.objects.get(nome=cat)
+                st=sttr.get(articolo=message["a3"])
                 sp.settore.add(st)
         codifica=message["a1"] + "-" + message["a2"] + "-"  + message["a3"] + "-"  + cat 
-        c=IDcod.objects.filter(Q(cod=codifica))
+        try:
+            c=IDcod.objects.get(cod=codifica)
+        except ObjectDoesNotExist:
+            c=None
         if (c):
             return 2
         p=Produttore.objects.get(azienda=message["a1"])
         g=Genere.objects.get(nome=message["a2"])
-        st=Settore.objects.get(articolo=message["a3"])
+        st=sttr.get(articolo=message["a3"])
         if(cat==""):
             c=IDcod(cod=codifica,genere=g,settore=st,produttore=p)
         else:

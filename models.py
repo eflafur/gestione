@@ -81,7 +81,7 @@ class Carico(models.Model):
 	data=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
 	def __str__(self):
-		return "%s" % (self.q)	
+		return "%s %s" % (self.q,self.bolla)	
 	
 	
 class Saldo(models.Model):
@@ -115,6 +115,8 @@ class Scarico(models.Model):
 	data=models.DateField(default=date.today)
 	fattura=models.TextField(max_length=10,null=True,blank=True)
 	lotto=models.CharField(max_length=5,null=True)
+	iva=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
+	
 
 
 class Sospese(models.Model):
@@ -129,4 +131,15 @@ class Sospese(models.Model):
 	def __str__(self):
 		return "%s" % (self.fatturas)	
 	
+	
+class trasporto(models.Model):
+	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
+	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
+	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	cassa=models.IntegerField(null=True,blank=True,default=0)
+	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
+	data=models.DateField(default=date.today)
+	ddt=models.TextField(max_length=10,null=True,blank=True)
+	lotto=models.CharField(max_length=5,null=True)
+	status=models.SmallIntegerField(max_length=1,default=0)
 	

@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 import CreateTable,Modifica,GetProduct,validazione,FCreateTable,FGetTable,FModifica,MGetTable
-import json
+import json,jsonpickle
 
 artic11=""
 MPaz=" "
@@ -164,6 +164,10 @@ def Fattura(request):
             itm=message["item"]
             lst = json.loads(message['res'])
             res=objf.ScriviSospesa(lst,itm)
+        elif (message["azione"]=="D"):
+            itm=message["item"]
+            lst = json.loads(message['res'])
+            res=objf.ScriviDDT(lst,itm)            
         elif (message["azione"]=="reazione"):
             itm=message["item"]
             objf=FGetTable.GetData()
@@ -218,6 +222,27 @@ def SospesabyCliente(request):
         res=objf.GetCliente()
         context={"items":res}
         return render(request,"fatturazione/Modifica/Fsospese-cliente.html",context)
+
+def DDT(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)   
+    if(request.method=="POST"):
+        message=request.POST
+        if(message["action"]=="tbl"):
+            objf=FCreateTable.Produt()
+            res=objf.GetDdt(message);        
+        elif(message["action"]=="ddt"):
+            objf=FCreateTable.Produt()
+            ddtls=jsonpickle.decode(message["ddt"])
+            ret=objf.DdtEmit(ddtls)
+            res=jsonpickle.encode(ret)
+        return JsonResponse(res,safe=False)
+    if(request.method=="GET"):
+        objf=FGetTable.GetData()
+        res=objf.GetCliente()
+        context={"items":res}
+        return render(request,"fatturazione/Modifica/ddt-cliente.html",context)
 
 
 def LKFatturabyCliente(request):
