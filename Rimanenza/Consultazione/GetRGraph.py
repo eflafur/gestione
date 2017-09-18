@@ -26,7 +26,7 @@ class Design:
     else:
       sg=s.filter(q__gte=1).values("q","idcod__cod","idcod","idcod__genere","idcod__genere__nome").order_by("idcod__genere__nome")
   
-
+    tree=Model("SALDO",900)
     for itemsg in sg:
       if(befsg==itemsg["idcod__genere__nome"]):
         continue
@@ -67,7 +67,8 @@ class Design:
               msp.children.append(msid)               
           mss.children.append(msp)
         msg.children.append(mss)
-      ls.append(msg)
+        tree.children.append(msg)
+      ls.append(tree)
     return ls  
     
                 

@@ -84,6 +84,7 @@ $(document).ready(function(){
                 
                 
                 
+                
             //var es=$("#menu2 ul");
                 //$(es).each(function(){
                     //var g=$(this).children().find("li:last");
@@ -93,7 +94,7 @@ $(document).ready(function(){
             //$("#indice").children().css("color", "blue");
             
             var es=$("#menu2 ul>li");
-           //var d=$(es).find("li:first-child").find("li").first();
+           var d=$(es).find("li:first-child").find("li").first();
            // var  dd=$(es).children().find("li").first().next();//.find("li:eq(1)");//.children();//.find("li:first-child");
             es.css("color","yellow");
             $(d).each(function(index){
@@ -101,13 +102,12 @@ $(document).ready(function(){
   //                  alert($(this).text())
             });
             
-            
-            //$("#menu2").each(function(){
-                //$(this).find("li").each(function(){
-                    //var a=$(this).text();
-                    //var b="ciao";
-                //});
-            //});
+            $("#btl").click(function(){
+                $("#ct option").each(function(){
+                        var a=$(this).text();
+                        alert (a)
+                });
+            });
 
 
             //var a=$("#menu2").children();

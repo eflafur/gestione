@@ -1,18 +1,17 @@
-{% extends 'fatturazione/FLayout.html'%}
+{% extends 'gestione/layout.html'%}
 {% load static %}
 
 {%block insert%}
 
-<div class="container">
+<div class="container  col-md-offset-2">
    <div class="row">
-        <div class="col-md-8 col-md-offset-2"><h2>Elimina Fornitore</h2> </div>      
+        <div class="col-md-8"><h4>Emissione DDT</h4> </div>      
     </div>
-    <br/><br/>
+    </br>
 
     <div class="row">
         <div class="col-md-3" id="cl">  
-            <span class="input-group-addon">Cliente </span> 
-                <select class="form-control" id="clientes"> 
+                <p>Cliente<select class="form-control" id="clientes"></p> 
                     {% for entry in items %}
                         <option value="{{entry.azienda}}">{{entry.azienda}}</option>
                     {%endfor%}
@@ -29,7 +28,8 @@
             <table id="tablef"  class="table table-hover">
                 <thead id="thd">
                     <tr>
-                        <th>Num</th>
+                        <th></th>
+                        <th>Ddt</th>
                         <th>Cliente</th>
                         <th>Valore</th>
                         <th>Data</th>

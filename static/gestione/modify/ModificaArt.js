@@ -25,8 +25,8 @@ $(document).ready(function(){
 
   });
 
- $("#art").click(function(){
-    var a=$("#art option:selected").text();
+ $("#art1").click(function(){
+    var a=$("#art1 option:selected").text();
     GetSpec(a);
     $("#caddcat").show();
     $("#btn1").show();
@@ -43,12 +43,6 @@ $(document).ready(function(){
         option += '<option value="'+ result[i]["nome"]+ '">' + result[i]["nome"]+ '</option>';
         }
         $('#gen').html(option);
-        //for (i = 0; i < result[1].length; i++) {
-            //label = label + '<tr>';
-            //label = label + '<td>' + result[i]["nome"] + '</td>';
-            //label = label + '</tr>';
-          //}
-          //$("#tb1").html(label);
          });
          return;
 };
@@ -63,7 +57,7 @@ $(document).ready(function(){
       for (var i=0;i<result.length;i++){
         option += '<option value="'+ result[i]["articolo"]+ '">' + result[i]["articolo"]+ '</option>';
         }
-        $('#art').html(option);
+        $('#art1').html(option);
         });
          return;
 };

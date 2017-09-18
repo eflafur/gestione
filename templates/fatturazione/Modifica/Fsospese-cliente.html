@@ -1,32 +1,37 @@
-{% extends 'fatturazione/FLayout.html'%}
+{% extends 'gestione/layout.html'%}
 {% load static %}
 
 {%block insert%}
 
-<div class="container">
+<div class="container col-md-offset-2">
    <div class="row">
-        <div class="col-md-8 col-md-offset-2"><h2>Elimina Fornitore</h2> </div>      
+        <div class="col-md-6"><h4>Ricerca per CLiente</h4> </div>      
     </div>
-    <br/><br/>
+    <br/>
 
+ <div class="row">
+ 
+  <div class="col-md-4">
     <div class="row">
-        <div class="col-md-3" id="cl">  
-            <span class="input-group-addon">Cliente </span> 
-                <select class="form-control" id="clientes"> 
+        <div class="col-md-8" id="cl">  
+                <p>Cliente<select class="form-control" id="clientes"></p> 
                     {% for entry in items %}
                         <option value="{{entry.azienda}}">{{entry.azienda}}</option>
                     {%endfor%}
             </select> 
         </div>
     </div>
-    </br>
-        <div class="col-md-3">     
+
+    <div class="row">
+        <div class="col-md-6">     
             <div class="input-group" id="dtf">
                 <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
             </div>   
         </div>
+    </div>
+  </div>  
   
-        <div class=" col-md-9" id="tbf1" >
+       <div class=" col-md-8" id="tbf1" >
             <table id="tablef"  class="table table-hover">
                 <thead id="thd">
                     <tr>
@@ -39,7 +44,7 @@
                 <tbody id="tb6"></tbody>
             </table>
         </div>
-    </div>
+   </div>
 </div>
   
 {%endblock%}

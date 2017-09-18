@@ -16,7 +16,6 @@ $(document).ready(function(){
     $("#cod").hide();
     $("#lt").hide();
 
-    GetLotto();
 
     if(pvl!=""){
         $("#cliente").attr('disabled',true);
@@ -27,6 +26,7 @@ $(document).ready(function(){
     }  
 
     $("#cliente").click(function(){
+        GetLotto();
         $("#dsc").show();
         $("#desc").focus();
         $("#peso").val("");
@@ -78,7 +78,7 @@ $(document).ready(function(){
     $("#btsps").click(function(){
         Invia('S');
         ar1.length=0
-        if(pvl!=" ")
+        if(pvl!="")
             window.location.replace("sospesa");
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
@@ -96,7 +96,7 @@ $(document).ready(function(){
     $("#btems").click(function(){
         Invia('I');
         ar1.length=0
-        if(pvl!=" ")
+        if(pvl!="")
             window.location.replace("sospesa");
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
@@ -129,7 +129,7 @@ $(document).ready(function(){
     
     $("#btanl").click(function(){
         ar1.length=0
-        if(pvl!=" ")
+        if(pvl!="")
             window.location.replace("sospesa");
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);

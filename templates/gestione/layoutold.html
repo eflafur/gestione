@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+      {% load static %}
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="{% static '/Plugins/jquery-ui/css/jquery-ui.min.css' %}">
+      <!--<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.css">-->
+      <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+      <link rel="stylesheet" type="text/css" href="{% static 'css/stile.css' %}">
+      {% block css%}
+      {% endblock %}
+  </head>
+  <body>
+
+
+
+
+
+  <!--<div class="jumbotron">-->
+    <div class="page-header">
+      <h5>
+       <a href="fatt" class="btn btn-default">
+              <i class="fa fa-ban" aria-hidden="true"></i> Fatturazione
+          </a>
+          <a href="rim" class="btn btn-default">
+              <i class="fa fa-ban" aria-hidden="true"></i> Rimanenza
+          </a>
+        <!--<small>Ortofrutta F.V. SrL</small>-->
+      </h5>
+      
+           <!--<a href="logout" class="btn btn-default">-->
+              <!--<i class="fa fa-ban" aria-hidden="true"></i> Logout-->
+          <!--</a>-->
+     </div>
+    <!--</div>-->
+    
+
+   
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header" >
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Espandi barra di navigazione</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="logo">Profilo Aziendale</a>
+      </div>
+      
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav nav-tabs">
+        
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Fornitori<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+             <li><a href="produttore" id="md1">Creazione</a></li>
+             <li><a href="addart">Aggiungi Articolo</a></li>
+             <!--<li><a href="delart">Elimina Articolo</a></li>-->
+             <li><a href="mp">Modifica</a></li>
+             <li><a href="fe">Elimina</a></li>
+            </ul>
+          </li>
+         
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Articoli<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+             <li><a href="articolo">Crea </a></li>
+             <li><a href="ma">Elimina </a></li>
+           </ul>
+          </li>
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ricerca<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Produttore <i class="fa fa-chevron-right"></i></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="ricercaM">Margine</a></li>
+                    <li><a href="ricercaP">Nome</a></li>
+                  </ul>
+              </li>	
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Articoli <i class="fa fa-chevron-right"></i></a>
+                <ul class="dropdown-menu">
+                  <li><a href="ricercaA">Nome</a></li>
+                </ul>
+              </li>		
+            </ul>
+          </li>	
+          
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magazzino<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Merci <i class="fa fa-chevron-right"></i></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="entrata">Entrata</a></li>
+                    <li><a href="elimina">Elimina Entrata</a></li>
+                  </ul>
+              </li>	
+              
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Ricerca <i class="fa fa-chevron-right"></i></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="lkfornitore">Fornitore</a></li>
+                    <li><a href="lkprodotto">Prodotto</a></li>
+                    <li><a href="lktotale">Totale</a></li>
+                  </ul>
+              </li>	
+              <li><a href="ioio">GRAPH</a></li>
+            </ul>
+          </li>
+        </ul>
+      <!--<p class="navbar-text navbar-right">Navigazione IOT</p>-->
+      </div>
+    </nav>
+    
+    
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container-fluid">-->
+        
+        <!--<!-- Brand and toggle get grouped for better mobile display -->
+        <!--<div class="navbar-header">-->
+          <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">-->
+            <!--<span class="sr-only">Toggle navigation</span>-->
+            <!--<span class="icon-bar"></span>-->
+            <!--<span class="icon-bar"></span>-->
+            <!--<span class="icon-bar"></span>-->
+          <!--</button>-->
+          <!--<a class="navbar-brand" href="#">Brand</a>-->
+        <!--</div>-->
+        
+        <!--<!-- Collect the nav links, forms, and other content for toggling -->
+        <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+          <!--<ul class="nav navbar-nav">-->
+            <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
+            <!--<li><a href="#">Link</a></li> 		    -->
+            <!--<li class="dropdown">-->
+               <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+              <!--<ul class="dropdown-menu" role="menu">				          -->
+                <!--<li><a href="#">Link</a></li>-->
+                <!--<li class="dropdown-submenu">-->
+                    <!--<a tabindex="-1" href="#">Second Level Menu ! <i class="fa fa-chevron-right"></i></a>-->
+                    <!--<ul class="dropdown-menu">-->
+                      <!--<li><a tabindex="-1" href="#">Link 1</a></li>			                  
+                      <!--<li><a href="#">Lik 2</a></li>-->
+                      <!--<li><a href="#">Link 3</a></li>-->
+                    <!--</ul>-->
+                <!--</li>			            -->
+                <!--<li><a href="#">Link</a></li>-->
+                <!--<li><a href="#">Link</a></li>-->
+              <!--</ul>-->
+            <!--</li> <!-- .dropdown -->						
+          <!--</ul> <!-- .nav .navbar-nav -->		 
+        <!--</div><!-- /.navbar-collapse -->
+        
+    <!--</div><!-- /.container-fluid -->
+<!--</nav>-->
+    
+    
+    
+    
+    
+         {% block insert%}
+         {% endblock %}
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2 col-md-offset-10">
+                {% block Tcontent %}
+                {% endblock %}
+        </div>
+      </div>
+    </div>
+
+      
+<script src="{% static 'jquery-3.2.1.js' %}" ></script>
+<script src="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.js' %}" ></script>
+<script src="{% static 'cookie.js' %}" ></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!--<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>-->
+ <script src="{% static 'gestione/layout.js' %}" ></script>
+
+{% block script%}
+{% endblock %}
+
+  </body>
+</html>

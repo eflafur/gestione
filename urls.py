@@ -41,11 +41,12 @@ urlpatterns = [
     url('lksps',Fviews.SospesabyCliente),
     url('fattura',Fviews.Fattura),
     url('sospesa',Fviews.Sospesa),
-    url('fatt',Fviews.FBase),
+    #url('fatt',Fviews.FBase),
     url('ca',Fviews.CreaAnagrafica),
     url('delcliente',Fviews.DelCliente),
     url('modana',Fviews.ModificaAnagrafica),
     url('ddt',Fviews.DDT),
+    url('gino',Fviews.LKDdt),
     
     #URL DI RIMANENZA
     url('lkrgraph',Rviews.LKRGraph),

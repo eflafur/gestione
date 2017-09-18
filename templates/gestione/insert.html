@@ -6,112 +6,54 @@
 
 
     
-    
-  <!--EXPERIMENT          -->
-    
-    
-  <!--{% for el in item %}-->
- <!--<p> {{el}} </p>-->
-<!--{% endfor %}-->
-
-<!--<ul>-->
-    <!--{% for key,value  in item.items %}           -->
-            <!--<li> {{key}}: {{value}} </li>-->
-    <!--{% endfor %}    -->
-<!--</ul>-->
-  
-    
-    <!--<form class="form-inline" role="form" id="yourformID-form" action="" method="post">-->
-    <!--<div class="input-group">-->
-        <!--<span class="input-group-addon"><i class="fa fa-male"></i></span>-->
-
-        <!--<div class="form-group">-->
-            <!--<input size="50" maxlength="50" class="form-control" name="q" type="text">          -->
-        <!--</div>-->
-
-        <!--<div class="form-group">-->
-            <!--<select class="form-control" name="category">-->
-                <!--<option value=""></option>-->
-                <!--<option value="0">select1</option>-->
-                <!--<option value="1">select2</option>-->
-                <!--<option value="2">select3</option>-->
-            <!--</select>           -->
-        <!--</div>-->
-    <!--</div>-->
-<!--</form>-->
-
-<!--<div class="input-group">-->
-         <!--<div class="input-group-btn">-->
-            <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Scegli <span class="caret"></span></button>-->
-            <!--<ul class="dropdown-menu" id="cityname">-->
-            <!--{% for entry in items3 %}-->
-              <!--<li><a href="#">{{ entry.azienda}}</a></li>-->
-            <!--{%endfor%}-->
-            <!--</ul>-->
-         <!--</div>-->
-         <!--<input type="text" class="form-control" >-->
-       <!--</div>-->
-    
-  <!--EXPERIMENT          -->
+   
             
-    <select id="sl">
-       {% for entry in items3 %}
-                <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
-       {% endfor %}
-    </select>        
-            
-<div class="container">
+<div class="container col-md-offset-2">
     <div class="row">
-        <div class="col-xs-2 col-md-8 col-md-offset-2"><h2>Nuovo Fornitore</h2> </div>      
+        <div class="col-xs-2 "><h4>Nuovo Fornitore</h4> </div>      
     </div>
-    <br/><br/>
+    <br/>
    
    <div class="row">
       <div class="col-xs-2 col-md-3">
       <form class="form-group" action="produttore" method="post">
       <div class="input-group">
-         <span class="input-group-addon">Azienda</span>
-          <input type="text" id="dl" class="form-control" name="a2" list="cityname">
-           <!--<datalist  id="cityname">-->
-            <!--{% for entry in items3 %}-->
-                <!--<option value="{{ entry.azienda }}">{{ entry.azienda}}</option>-->
-            <!--{% endfor %}-->
-          <!--</datalist>-->
+          <p>Nome<input type="text" id="dl" class="form-control" name="a2"></p>
+            <select id="sl">
+       {% for entry in items3 %}
+                <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
+       {% endfor %}
+    </select>       
        </div>
-       <br/><br/>
+       <br/>
         
          <div class="input-group">
-         <span class="input-group-addon">Regione</span>
-            <select class="form-control" name="a5" id="reg">
+            <p>Regione<select class="form-control" name="a5" id="reg"></p>
                 {% for entry in items1 %}
                     <option value="{{ entry.regione }}">{{ entry.regione}}</option>
                 {% endfor %}
             </select>
        </div>
-       <br/><br/>
+       <br/>
 
         <div class="input-group">
-         <span class="input-group-addon">Citta</span>
-        <select class="form-control" name="a4" id="ct" >
+        <p>Citta<select class="form-control" name="a4" id="ct" ></p>
         </select>
         </div>
-        <br/><br/>
+        <br/>
         
         <div class="input-group">
-         <span class="input-group-addon">PI</span>
-          <input type="text" id="Contatto" class="form-control" name="a13" placeholder="PI" maxlength="11" min="11">
+          <p>P.I.<input type="text" id="Contatto" class="form-control" name="a13" placeholder="PI" maxlength="11" min="11"></p>
        </div>
-       <br/><br/>
+       <br/>
         
     <div class="input-group">
-         <span class="input-group-addon">Contatto</span>
-          <input type="text" id="Contatto" class="form-control" name="a3" placeholder="Contatto">
+          <p>Contatto<input type="text" id="Contatto" class="form-control" name="a3" placeholder="Contatto"></p>
        </div>
-       <br/><br/>
+       <br/>
        
        <div class="input-group">
-         <span class="input-group-addon">Data </span>
-          <input type="date" id="acq" class="form-control"  name="a6" >
+          <p>Data<input type="date" id="acq" class="form-control"  name="a6" ></p>
        </div>
       <!--<br/><br/>-->
       
@@ -122,45 +64,39 @@
     <!--<h1></h1> -->
        
         <div class="input-group">
-         <span class="input-group-addon">Capacita</span>
-        <select class="form-control" name="a7" id="Capacità" value="nessuna">
+        <p>Capacità<select class="form-control" name="a7" id="Capacità" value="nessuna"></p>
             <option value=""> Nessuna</option>
             <option value="Alta"> Alta</option>
             <option value="Alta"> Media</option>
             <option value="Alta"> Bassa</option>
         </select>
         </div>
-        <br/><br/>
+        <br/>
        
         <div class="input-group">
-         <span class="input-group-addon">Email</span>
-          <input type="email" id="Email" class="form-control" name="a8" placeholder="Email">
+          <p>Email<input type="email" id="Email" class="form-control" name="a8" placeholder="Email"></p>
        </div>
-       <br/><br/>
+       <br/>
        
        <div class="input-group">
-         <span class="input-group-addon">Citta</span>
-          <input type="text" id="Citta" class="form-control" name="a9" placeholder="Tel">
+          <p>Città<input type="text" id="Citta" class="form-control" name="a9" placeholder="Tel"></p>
        </div>
-      <br/><br/>
+      <br/>
        
        <div class="input-group">
-         <span class="input-group-addon">Termini  pagamento</span>
-          <input type="number" id="trpag" class="form-control" name="a10" placeholder="gg" min="0">
+          <p>Pagamento<input type="number" id="trpag" class="form-control" name="a10" placeholder="gg" min="0"></p>
        </div>
-       <br/><br/>
+       <br/>
        
        <div class="input-group">
-         <span class="input-group-addon">Margine</span>
-          <input type="number" id="margine" class="form-control" name="a11" placeholder="%" min="0">
+          <p>Margine<input type="number" id="margine" class="form-control" name="a11" placeholder="%" min="0"></p>
        </div>
-       <br/><br/>
+       <br/>
        
        <div class="input-group">
-         <span class="input-group-addon">Fatturato</span>
-          <input type="number" id="fatturato" class="form-control" name="a12" placeholder="Euro" min="0">
+          <p>Fatturato<input type="number" id="fatturato" class="form-control" name="a12" placeholder="Euro" min="0"></p>
        </div>
-       <br/><br/>
+       <br/>
        
        <button type="submit" class="btn btn-primary">Insert</button>
     </form>

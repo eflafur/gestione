@@ -1,0 +1,267 @@
+
+{% extends 'Magazzino/layoutgioco.html'%}
+{% load static %}
+
+{%block insert%}
+            
+<!--<div class="container">-->
+    <!--<div class="row">-->
+        <!--<div class="col-xs-2 col-md-8 col-md-offset-2"><h2>Nuovo Fornitore</h2> </div>      -->
+    <!--</div>-->
+    <!--<br/><br/>-->
+   
+   <input type="text" id="pp">
+   
+   <div class="row">
+      <div class="col-xs-2 col-md-3">
+      <div class="input-group">
+         <span class="input-group-addon">Azienda</span>
+          <input type="text" id="dl" class="form-control" name="a2" list="cityname">
+           <datalist  id="cityname">
+            {% for entry in items3 %}
+                <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
+            {% endfor %}
+          </datalist>
+       </div>
+       <br/><br/>
+        
+         <div class="input-group">
+         <span class="input-group-addon">Regione</span>
+            <select class="form-control" name="a5" id="reg">
+                {% for entry in items1 %}
+                    <option value="{{ entry.regione }}">{{ entry.regione}}</option>
+                {% endfor %}
+            </select>
+       </div>
+       <br/><br/>
+
+        <div class="input-group">
+         <span class="input-group-addon">Citta</span>
+        <select class="form-control" name="a4" id="ct" >
+        </select>
+        </div>
+        <br/><br/>
+        
+        
+        <p id="mio"> </p>
+        
+        
+        <!--<div class="row">-->
+          <!--<div class=" col-md-6 col-md-offset-1" id="idLKP11" >-->
+            <!--<table id="mytable"  class="table table-hover">-->
+                <!--<thead>-->
+                    <!--<tr>-->
+                        <!--<th>Fornitore</th>-->
+                        <!--<th>Articolo</th>-->
+                        <!--<th>Quantita</th>-->
+                        <!--<th>Bolla</th>-->
+                        <!--<th>Data Carico</th>-->
+                    <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody class="tbl" id="tb4">-->
+                   <!--<tr> <td> io1</td> <td> io2</td> <td> io3</td> <td> <a href="#"><p>aa</p></a>  </td>    </tr>-->
+                   <!--<tr> <td> tu1</td> <td> tu2</td> <td> tu3</td><td> <a href="#"><p>bb</p></a>  </td></tr>-->
+                   <!--<tr> <td> noi1</td> <td> noi2</td> <td> noi3</td><td> <a href="#" value="flop" ><p>cc</p></a>  </td></tr>-->
+                <!--</tbody> value-->
+            <!--</table>-->
+        <!--</div>-->
+    <!--</div>-->
+        
+        
+        <div class="row">
+            <div class=" col-md-6 col-md-offset-5" id="tbf" >
+            <table id="mytable"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Codice</th>
+                        <th>Peso</th>
+                        <th>Prezzo</th>
+                        <th>Ref</th>
+                    </tr>
+                </thead>
+                <tbody id="tbfb"></tbody>
+            </table>
+        </div>
+    </div>
+        
+    <div class=" col-md-6 col-md-offset-5" id="ulfb" >
+    </div>
+        
+        
+ 
+       
+       <div class="input-group">
+       <p>bello dentro</p>
+         <span class="input-group-addon">Data </span>
+           <button  class="btn btn-primary" id="btadd">Aggiungi </button> 
+           <button  class="btn btn-primary" id="btl">test </button> 
+          <input type="date" id="acq" class="form-control"  name="a6" >
+       </div>
+      <!--<br/><br/>-->
+      
+      </div>
+       <!--<br/><br/>-->
+    
+    <div class="col-xs-2 col-md-3 ">
+    <!--<h1></h1> -->
+       
+        <!--<div class="input-group">-->
+         <!--<span class="input-group-addon">Capacita</span>-->
+        <!--<select class="form-control" name="a7" id="Capacità" value="nessuna">-->
+            <!--<option value=""> Nessuna</option>-->
+            <!--<option value="Alta"> Alta</option>-->
+            <!--<option value="Alta"> Media</option>-->
+            <!--<option value="Alta"> Bassa</option>-->
+        <!--</select>-->
+        <!--</div>-->
+        <!--<br/><br/>-->
+       
+        <!--<div class="input-group">-->
+         <!--<span class="input-group-addon">Email</span>-->
+          <!--<input type="email" id="Email" class="form-control" name="a8" placeholder="Email">-->
+       <!--</div>-->
+       <!--<br/><br/>-->
+       
+       <!--<div class="input-group">-->
+         <!--<span class="input-group-addon">Citta</span>-->
+          <!--<input type="text" id="Citta" class="form-control" name="a9" placeholder="Tel">-->
+       <!--</div>-->
+      <!--<br/><br/>-->
+       
+       <!--<div class="input-group">-->
+         <!--<span class="input-group-addon">Termini  pagamento</span>-->
+          <!--<input type="number" id="trpag" class="form-control" name="a10" placeholder="gg" min="0">-->
+       <!--</div>-->
+       <!--<br/><br/>-->
+       
+       <!--<div class="input-group">-->
+         <!--<span class="input-group-addon">Margine</span>-->
+          <!--<input type="number" id="margine" class="form-control" name="a11" placeholder="%" min="0">-->
+       <!--</div>-->
+       <!--<br/><br/>-->
+       
+       <!--<ul id="indice">-->
+ <!--<li>Primo capitolo</li>-->
+ <!--<li>Secondo capitolo-->
+  <!--<ul>-->
+   <!--<li>Sottocapitolo</li>-->
+  <!--</ul>-->
+ <!--</li>-->
+ <!--<li>Terzo capitolo</li>-->
+<!--</ul>-->
+       
+       
+  
+     <div class="ull" id="menu2">
+          <ul class="ul2" id="ll">
+            <li> a1
+                <ul>
+                    <li>a2</li>
+                    <li>a3
+                        <ul>
+                            <li> d4 </li>
+                        </ul>
+                    </li>
+                </ul> 
+            </li>
+            
+             <li> a1
+                <ul>
+                    <li>a3
+                        <ul>
+                            <li> d4 </li>
+                        </ul>
+                    </li>
+                </ul> 
+            </li>
+        </ul>
+
+
+
+                <!--<ul class="ul4" >-->
+                   <!--<li>a2</li>-->
+                   <!--<li>b2-->
+                        <!--<ul class="ul4" >-->
+                                <!--<li>a3</li> -->
+                                <!--<li>b3</li>-->
+                        <!--</ul>-->
+                    <!--</li>-->
+                   <!--<li>c2</li>-->
+               <!--</ul>-->
+            <!--</li>-->
+            <!--<li>b1-->
+                   <!--<ul class="ul4" >-->
+                           <!--<li>b2</li> -->
+                           <!--<li>c2</li>-->
+                   <!--</ul>-->
+            <!--</li>-->
+            <!--<li> c1-->
+                   <!--<ul class="ul4" >-->
+                           <!--<li>b3</li> -->
+                           <!--<li>c3</li>-->
+                   <!--</ul>-->
+         <!--</li>-->
+       <!--</ul>-->
+
+
+                <!--<ul class="ul3" >-->
+                    <!--<li> b1-->
+                        <!--<ul class="ul4" >-->
+                            <!--<li>c1</li> -->
+                            <!--<li>c11</li>-->
+                        <!--</ul>-->
+                    <!--</li>-->
+               <!--</ul>-->
+            <!--</li>-->
+            <!--<li> a2-->
+                <!--<ul class="ul5" >-->
+                    <!--<li> b2-->
+                        <!--<ul class="ul6" >-->
+                            <!--<li> c2</li>-->
+                        <!--</ul>-->
+                    <!--</li>-->
+               <!--</ul>-->
+            <!--</li>-->
+            <!--<li> a3-->
+                <!--<ul class="ul7" >-->
+                    <!--<li> b3-->
+                        <!--<ul class="ul8" >-->
+                            <!--<li> c3-->
+                                <!--<ul class="ul8" >-->
+                                    <!--<li> c2</li>-->
+                                <!--</ul>-->
+                            <!--</li>    -->
+                        <!--</ul>-->
+                    <!--</li>-->
+               <!--</ul>-->
+            <!--</li>-->
+         <!--</ul>-->
+        </div>
+  
+       
+       <!--<button type="submit" class="btn btn-primary">Insert</button>-->
+    <!--</form>-->
+    <!--</div>-->
+    
+         
+    
+ <!--</div>-->
+     
+      <!--<div class="row">-->
+        <!--<div class="col-md-4 col-md-offset-1">-->
+            <!--<ul>-->
+                <!--{%for key,value  in item.items %}           -->
+                        <!--<li> {{key}}: {{value}} </li>-->
+                <!--{%endfor%}    -->
+            <!--</ul>-->
+        <!--</div>-->
+     <!--</div>-->
+    <!--</div>-->
+
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Magazzino/gioco.js' %}" ></script>
+{% endblock %}
+
+

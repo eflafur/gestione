@@ -3,6 +3,7 @@ django.setup()
 from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
 from decimal import Decimal
 from django.db.models import Q,F
+import openpyxl,time
 
 class Modelddt:
     def __init__(self,ddt,q,prezzo,data,lotto,cassa,iva):
@@ -34,6 +35,8 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps):
+        vnd={}
+        bl=[]
         ls=[]
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         if(sps!=""):
@@ -52,13 +55,14 @@ class Produt:
             if(rec1.q<0):
                 ls.append(item["cod"])
             rec1.save()
-                
             ltcod=lotto.filter(idcod__cod=item["cod"])
+            data=list(ltcod)
             if("lotto" in item):
                 ltt=int(item["lotto"])
             else:
                 ltt=ltcod[0].id
             ltid=ltcod.get(id=ltt)
+            bl.append(ltt)
             num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
             if(num>=0):
                 ltid.cassaexit=int(item["css"])+ltid.cassaexit
@@ -66,13 +70,60 @@ class Produt:
             else:
                 ltid.cassaexit=ltid.cassa
                 ltid.save()
-                self.Rec(ltcod,num*(-1),0,ltt)
+                res=self.Rec(ltcod,num*(-1),0,ltt,bl)
+                if(res==0):
+                    return
             rec=Scarico(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
                                     fattura=fatt,lotto=ltt,iva=iva1)
             rec.save()
-        return ls
+            rg=list(line)
+            
+        venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
+        cln=Cliente.objects.get(azienda=item["cln"])
+        self.stampaFattura(fatt,venditore,cln,rg)
+        return res
+    
+    def stampaFattura(self,nFattura, venditore, cliente, righeFattura):
+        data=time.strftime("%d/%m/%Y")
+        
+        fa=openpyxl.load_workbook('formFattura.xlsx')
+        sheet=fa.get_sheet_by_name('Sheet1')
+        
+        sheet['F3'].value = nFattura
+        sheet['F4'].value = data
+        sheet['F5'].value = cliente['NumCliente']
+        
+        sheet['B2'].value = venditore['venditore']
+        sheet['B3'].value = venditore['P-IVA']
+        sheet['B4'].value = venditore['indirizzo']
+        sheet['B5'].value = venditore['città']
+        sheet['B6'].value = venditore['telefono']
+        
+        sheet['B8'].value = cliente['cliente']
+        sheet['B9'].value = cliente['P-IVA']
+        sheet['B10'].value = cliente['indirizzo']
+        sheet['B11'].value = cliente['città']
+        sheet['B12'].value = cliente['telefono']
+        
+        line=16												# riga primo articolo
+        cntr=0
+        total=0
+        for riga in righeFattura:
+            sheet["B"+str(line+cntr)].value = riga[0]		# nome articolo
+            sheet["C"+str(line+cntr)].value = riga[1]		# quantita'
+            sheet["D"+str(line+cntr)].value = riga[2]		# prezzo unitario
+            sheet["F"+str(line+cntr)].value = riga[3]		# sub-totale
+            total+=float(riga[3])
+            cntr+=1
+        
+        sheet["F25"].value = total							# riga totale per il momento hardcoded a cella F25
+        
+        fa.save('nuovaFattura.xlsx')
+        fa.close    
+    
     
     def ScriviDDT(self,line,sps):
+        bl=[]
         ls=[]
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         s=trasporto.objects.latest("id")
@@ -94,6 +145,7 @@ class Produt:
             else:
                 ltt=ltcod[0].id
             ltid=ltcod.get(id=ltt)
+            bl.append(ltt)
             num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
             if(num>=0):
                 ltid.cassaexit=int(item["css"])+ltid.cassaexit
@@ -101,40 +153,44 @@ class Produt:
             else:
                 ltid.cassaexit=ltid.cassa
                 ltid.save()
-                self.Rec(ltcod,num*(-1),0,ltt)
+                res=self.Rec(ltcod,num*(-1),0,ltt,bl)
             rec=trasporto(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
                         ddt=fatt,lotto=ltt)
             rec.save()
-        return ls    
+        return res
     
-    
-    
-    def Rec(self,lotti,casse,i,lotto):
-        if(i<lotti.count()):
-            data=list(lotti)
-            a=lotti[i].id
+    def Rec(self,lotti,casse,i,lotto,bl):
+        data=list(lotti)
+        try:
             num=lotti[i].cassa-(lotti[i].cassaexit+casse)
-            if(num>=0 and lotti[i].id!=lotto):
-#                lt1=lotti.get(id=lotti[i].id)
-                lotti[i].cassaexit=lotti[i].cassaexit+casse
-                lotti[i].save()
-                #lt1.cassaexit=lotti[i].cassaexit+casse    
+        except IndexError:
+            return 0
+        if(num>=0 and lotti[i].id!=lotto):
+            bl.append(lotti[i].id)
+            lt1=lotti.get(id=lotti[i].id)
+            lotti[i].cassaexit=lotti[i].cassaexit+casse
+            lotti[i].save()
+            #lt1.cassaexit=lotti[i].cassaexit+casse
+            #lt1.save()
+            return bl
+        else:
+            if(lotti[i].id!=lotto):
+                bl.append(lotti[i].id)
+                #lt1=lotti.get(id=lotti[i].id)
+                #lt1.cassaexit=lotti[i].cassa
                 #lt1.save()
-                return 
+                lotti[i].cassaexit=lotti[i].cassa
+                lotti[i].save()
             else:
-                if(lotti[i].id!=lotto):
-                    #lt1=lotti.get(id=lotti[i].id)
-                    #lt1.cassaexit=lotti[i].cassa
-                    #lt1.save()
-                    lotti[i].cassaexit=lotti[i].cassa
-                    lotti[i].save()
-                else:
-                    num=casse*(-1)
-                i=i+1
-                self.Rec(lotti,num*(-1),i,lotto)
-                return
-            return 
-            
+                num=casse*(-1)
+            i=i+1
+            res=self.Rec(lotti,num*(-1),i,lotto,bl)
+        return res
+
+
+ 
+        
+        
 
     def ScriviSospesa(self,line,sps):
         if(sps!=" "):
@@ -247,7 +303,7 @@ class Produt:
         i=0
         ll=[]
         ss=[]
-        if(message["cliente"]!=" "):
+        if(message["cliente"]!=""):
             recls=trasporto.objects.filter(Q(cliente__azienda=message["cliente"]),Q(status=0)).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
         else:
             recls=trasporto.objects.filter(Q(status=0)).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
@@ -277,14 +333,21 @@ class Produt:
                 i=i+1
             before=item["ddt"]
         return ss
+
+    def GetDdtbyNum(self,num):
+        recls=trasporto.objects.filter(ddt=num).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
+        data=list(recls)
+        return data          
+    
     
     def DdtEmit(self,ls):
         ddtls=[]
         ls1=[]
+        trs=trasporto.objects.filter().values("ddt","q","prezzo","data","lotto","cassa",
+                                "idcod__cod","cliente__azienda","idcod__genere__iva","status")
         for item in ls:
             i=0
-            t=trasporto.objects.filter(ddt=item).values("ddt","q","prezzo","data","lotto","cassa",
-                                             "idcod__cod","cliente__azienda","idcod__genere__iva","status")
+            t=trs.filter(ddt=item)
             t.update(status=1)
             for el in t:
                 prz=float(el["prezzo"])

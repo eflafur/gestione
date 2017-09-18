@@ -8,7 +8,7 @@ import CreateTable,Modifica,GetProduct,validazione,Fviews,MCreateTable,MGetTable
 import re,json,jsonpickle
 #import wingdbstub
 #nuova relaease salvata
-#runserver --noreload 8000 
+#runserver --noreload 8000
 
 artic11=""
 MPaz=" "
@@ -17,6 +17,7 @@ H1=0
 H2=0
 H3=0
 H4=0
+
 
 def CreaBolla(request):
     dc={} 

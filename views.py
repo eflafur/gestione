@@ -44,11 +44,10 @@ def Login(request):
 def Produttore(request):
     res=""
     res1=""
-    if(login==0):
-        context={}
-        return render(request,"Validazione/login.html",context)         
     global H1
     context={}
+    if(login==0):
+        return render(request,"Validazione/login.html",context)         
     if(request.method=="POST"):
         message=request.POST
         if(message["a2"]=="insert"):

@@ -13,27 +13,36 @@
     <!--{% endfor %}    -->
 <!--</ul>-->
 
- <div class="container">
+       
+<div class="container col-md-offset-2">
     <div class="row">
-        <div class="col-md-3"><h2>Cancella Articolo</h2>    
-            <p id="result"></p>
-            <form class="form-horizontal" action="ma" method="post"> 
+        <div class="col-xs-2 "><h4>Cerca/Elimina</h4> </div>      
+    </div>
+    </br>
+    
+   <div class="row">
+        <div class="col-md-3">   
+            <p>Articolo<form class="form-inline" action="ma" method="post"></p> 
                 <select class="form-control" name="s1" id="slc1">
                     {% for entry in items %}
                         <option value="{{ entry.nome }}">{{ entry.nome}}</option>
                     {% endfor %}
                 </select>
-                <br/>
-            
-                <select class="form-control" name="s2" id="tx1">
-                </select>
-                <br/><br/>
-                <button type="submit" class="btn btn-primary">Insert</button>
-            </form>
+        </div>
+        <div class="col-md-2">   
+            <button type="submit" class="btn btn-primary">Elimina</button>
         </div>
     </div>
-</div>
-
+    <br/>
+    <div class="row">
+        <div class="col-md-3">   
+            <select class="form-control" name="s2" id="tx1">
+            </select>
+        </div>
+    </div>
+            </form>
+</div>    
+    
 {%endblock%}
 
 {%block script%}
