@@ -80,6 +80,7 @@ class Carico(models.Model):
 	cassa=models.IntegerField(null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
+	costo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	def __str__(self):
 		return "%s %s" % (self.q,self.bolla)	
 	
@@ -98,6 +99,7 @@ class Cliente(models.Model):
 	azienda=models.CharField(max_length=50,unique=True,blank=True,default=" ")
 	indirizzo=models.CharField(max_length=60,null=True,blank=True,default=" ")
 	acquisizione=models.DateField(default=date.today,)
+	email=models.EmailField(null=True,blank=True)
 	tel=models.CharField(max_length=15,null=True,blank=True,default=" ")
 	trpag=models.IntegerField(null=True,blank=True,default=0)
 	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")

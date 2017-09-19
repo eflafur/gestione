@@ -152,8 +152,25 @@ def EliminaBolla(request):
         context={"items":res}
         return render(request,"Magazzino/Modifica/eliminabolla.html",context)
     
-   
-
+def Contov(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
+    if(request.method=="POST"):
+        message=request.POST
+        if(message["azione"]=="B"):
+            obj=MGetTable.GetData()
+            v=message["cln"]
+            res=obj.GetBollaCv(v)
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        obj=Modifica.ModProd()
+        res=obj.GetProduttori()
+        context={"items":res}
+        return render(request,"Magazzino/Consultazione/contov.html",context)
+    
+def ContovT(request):
+    b=2354
 
 # per la selezione anche dell'articolo*****
 #def LKCaricoProdotto(request):

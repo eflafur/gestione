@@ -32,6 +32,8 @@ urlpatterns = [
     url('lkprodotto',Mviews.LKCaricoProdotto),
     url('lktotale',Mviews.LKCaricoTotale),
     url('gioco',Mviews.Gioco),
+    url('cvc',Mviews.Contov),
+    url('cvt',Mviews.ContovT),
 
 #    url('lkprodotto',Mviews.LKCaricoProdotto),
 
