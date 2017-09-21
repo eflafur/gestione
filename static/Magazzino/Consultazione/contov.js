@@ -1,48 +1,75 @@
 var UserTable=$("#mytable");
 var TempUserTable=null;
 var x=0;
+var res="";
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#azienda").click(function(){
         $("#tbf1").show();
+        $("#cldt2").show();
+        $("#btddt").show();
+        $("#btmrg").show();
         GetBolla();
     });
+    $("#btmrg").click(function(){
+        Write();
+    });
+    $("#btddt").click(function(){
+        PushDdt();
+    });
+    
+    //$("#btmrg").click(function(){
+        //var a=[];    
+        //$("#tbf1 tr").each(function(){
+            //a=$(this).last().text();               
+        //});
+    //});
+
 });
 
 function GetBolla(){
     $.post(
         "cvc",
         {cln:$("#azienda option:selected").text(),azione:"B"},
-        function(res){
-            //res=[]
-            //res=JSON.parse(rec);
-            var before="";
-            var label="";
-            for (i=0;i<res.length;i++){
-                label=label + '<tr>';
-                if( res[i].bolla!=before)
-                    label=label + '<td><input type="checkbox" value='+res[i].bolla+'></td>';
-                else
-                    label=label + '<td></td>';
-                label=label + '<td>' +res[i].bolla+ '</td>';
-                label=label + '<td>' + res[i].idcod__cod+ '</td>';
-                label=label + '<td>' + res[i].q+ '</td>';
-                label=label + '<td>' + res[i].cassa + '</td>';
-                label=label + '<td>' + res[i].data+ '</td>';
-                label=label + '<td>' +res[i].costo+ '</td>';
-                label=label + '</tr>';
-                before=res[i].bolla;
-            }
-            $("#tb6").html(label);  
-        });
-        return
+        function(ret){
+            res=ret;    
+            $("#dt2").val(res[0].idcod__produttore__margine);
+            Write();
+            return;
+    });
 };
 
-function GetDdt(){
+function Write() {
+    var before="";
+    var label="";
+    mrg=$("#dt2").val();
+    for (i=0;i<res.length;i++){
+        nt=res[i].costo*(1-mrg/100);
+        label=label + '<tr>';
+        if( res[i].bolla!=before)
+            label=label + '<td><input type="checkbox" value='+res[i].bolla+'></td>';
+        else
+            label=label + '<td></td>';
+        label=label + '<td>' +res[i].bolla+ '</td>';
+        label=label + '<td>' + res[i].idcod__cod+ '</td>';
+        label=label + '<td>' + res[i].q+ '</td>';
+        label=label + '<td>' + res[i].cassa + '</td>';
+        label=label + '<td>' + res[i].data+ '</td>';
+        label=label + '<td>' +res[i].costo+ '</td>';
+        label=label + '<td>' +nt+ '</td>';
+        label=label + '</tr>';
+        before=res[i].bolla;
+    }
+    $("#tb6").html(label);  
+    return
+};
+
+function PushDdt(){
     var ar=[];
+    var st=[]
     $("#tbf1 :checked").each(function(index){
-        x=index;
+        x=index+1;
         ar[x]=$(this).val();
     });
 
@@ -53,26 +80,9 @@ function GetDdt(){
         });
     }
     $.post(
-        "ddt",
-        {ddt:JSON.stringify(ar),action:"ddt"},
-        function(ret){
-            var label="";
-            var res=[]
-            res=JSON.parse(ret);
-            for (i=0;i<res.length;i++){
-                label=label + '<tr>';
-                label=label + '<td>'+res[i].ddt+'</td>';
-                label=label + '<td>' + res[i].q + '</td>';
-                label=label + '<td>' + res[i].cassa + '</td>';
-                label=label + '<td>' + res[i].prezzo + '</td>';
-                label=label + '<td>' + res[i].iva+ '</td>';
-                label=label + '<td>' + res[i].data + '</td>';
-                label=label + '<td>' + res[i].lotto + '</td>';
-                label=label + '</tr>';
-            }
-            $("#tb7").html(label);  
-        });
-};
+        "cvc",
+        {ddt:JSON.stringify(ar),mrg:$("#dt2").val(),frn:$("#azienda option:selected").text(),azione:"P"},
+)};
 
 
 

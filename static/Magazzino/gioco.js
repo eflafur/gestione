@@ -5,16 +5,16 @@ $(document).ready(function(){
         regione=$("#reg option:selected").text();
 
 
-        $("#reg").click(function(){
-            opt=$("#reg option:selected").text();
-            Put(opt);
-        });
+        //$("#reg").click(function(){
+            //opt=$("#reg option:selected").text();
+            //Put(opt);
+        //});
 
 
-    var num="380.24";    
-    var iNum = parseFloat(num);
-    var g=iNum;
-    var lnk="<a href='lkrgraph'> prova </a>"
+    //var num="380.24";    
+    //var iNum = parseFloat(num);
+    //var g=iNum;
+    //var lnk="<a href='lkrgraph'> prova </a>"
     
     //$("#btl").click(function(){
             //citta=$("#ct option:selected").text();
@@ -102,7 +102,7 @@ $(document).ready(function(){
   //                  alert($(this).text())
             });
             
-            $("#btl").click(function(){
+            $("#btl").on(click,"td",function(){
                 $("#ct option").each(function(){
                         var a=$(this).text();
                         alert (a)
@@ -118,9 +118,27 @@ $(document).ready(function(){
         // $("#menu2 li").each(function(index){
               //alert(index);
          // });
+         $("#tbf1").show();
+         GetBolla();
 
     });
             
+
+function GetBolla(){
+    var label="";
+            for (i=0;i<10;i++){
+                label=label + '<tr>';
+                label=label + '<td> io'+i+ '</td>';
+                label=label + '<td> tu'+i+ '</td>';
+                label=label + '<td> egli'+i+ '</td>';
+                label=label + '<td> noi'+i+ '</td>';
+                label=label + '<td> voi'+i+ '</td>';
+                label=label + '<td> essi'+i+ '</td>';
+                label=label + '</tr>';
+            }
+            $("#tb7").html(label);  
+        return
+};            
             
 
           

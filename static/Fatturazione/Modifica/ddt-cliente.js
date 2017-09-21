@@ -13,7 +13,6 @@ $(document).ready(function(){
    $("#btddt").click(function(){
         $("#tbf1").hide();
         $("#tbf2").show();
-//        $("#tb7").show();
         GetDdt()
     });
 });
@@ -42,7 +41,7 @@ function GetTable(cl){
 function GetDdt(){
     var ar=[];
     $("#tbf1 :checked").each(function(index){
-        x=index;
+        x=index+1;
         ar[x]=$(this).val();
     });
 
@@ -52,25 +51,25 @@ function GetDdt(){
             ar[x]=$(this).val();
         });
     }
+    var t=JSON.stringify(ar);
     $.post(
         "ddt",
         {ddt:JSON.stringify(ar),action:"ddt"},
-        function(ret){
+        function(res){
             var label="";
-            var res=[]
-            res=JSON.parse(ret);
             for (i=0;i<res.length;i++){
                 label=label + '<tr>';
-                label=label + '<td>'+res[i].ddt+'</td>';
-                label=label + '<td>' + res[i].q + '</td>';
-                label=label + '<td>' + res[i].cassa + '</td>';
-                label=label + '<td>' + res[i].prezzo + '</td>';
-                label=label + '<td>' + res[i].iva+ '</td>';
-                label=label + '<td>' + res[i].data + '</td>';
-                label=label + '<td>' + res[i].lotto + '</td>';
+                label=label + '<td>'+res[i]["ddt"]+'</td>';
+                label=label + '<td>' + res[i]["cod"] + '</td>';
+                label=label + '<td>' + res[i]["ps"] + '</td>';
+                label=label + '<td>' + res[i]["css"] + '</td>';
+                label=label + '<td>' + res[i]["prz"] + '</td>';
+                label=label + '<td>' + res[i]["iva"]+ '</td>';
+                label=label + '<td>' + res[i]["data"] + '</td>';
+                label=label + '<td>' + res[i]["lotto"] + '</td>';
                 label=label + '</tr>';
             }
-            $("#tb7").html(label);  
+            $("#tb7").html(label);
         });
 };
 

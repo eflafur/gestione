@@ -17,11 +17,23 @@
                     {%endfor%}
             </select> 
         </div>
+        <div class="col-md-2" >  
+          <div class="input-group" id="cldt2">
+            <p>Margine:<input type = "number" id = "dt2"  class="form-control"></p>
+            </div>   
+        </div>
+    </br>
+     <div class="col-sm-2"> 
+         <button type="submit" class="btn btn-primary" id="btmrg">Cambia</button>  
+     </div>
+     <div class="col-sm-2"> 
+         <button type="submit" class="btn btn-primary" id="btddt">Emetti </button>  
+     </div>
     </div>
     </br>
     
      <div class="row">
-        <div class=" col-md-9" id="tbf1" >
+        <div class=" col-md-11" id="tbf1" >
             <table id="tablef"  class="table table-hover">
                 <thead id="thd">
                     <tr>
@@ -31,7 +43,8 @@
                         <th>Peso</th>
                         <th>Casse</th>
                         <th>Data</th>
-                        <th>Costo</th>
+                        <th>Importo</th>
+                        <th>Netto a Pagare</th>
                     </tr>
                 </thead>
                 <tbody id="tb6"></tbody>

@@ -6,8 +6,9 @@ from django.db.models import Q,F
 import openpyxl,time,os,subprocess
 
 class Modelddt:
-    def __init__(self,ddt,q,prezzo,data,lotto,cassa,iva):
+    def __init__(self,ddt,cod,q,prezzo,data,lotto,cassa,iva):
         self.ddt=ddt
+        self.cod=cod
         self.q=q
         self.prezzo=prezzo
         self.data=data
@@ -114,7 +115,7 @@ class Produt:
                 ls.append(item["cod"])
             rec1.save()
             ltcod=lotto.filter(idcod__cod=item["cod"])
-            if("lotto" in item):
+            if(item["lotto"]!=""):
                 ltt=int(item["lotto"])
             else:
                 ltt=ltcod[0].id
@@ -141,9 +142,8 @@ class Produt:
             line[i]["lotto"]=str(ltt)
             i=i+1
         rg=list(line)
-        venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
         cln=Cliente.objects.get(azienda=item["cln"])
-        self.stampaFattura(fatt,venditore,cln,rg)            
+        self.stampaFattura(fatt,cln,rg)            
         return res
     
     def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
@@ -176,7 +176,8 @@ class Produt:
             res=self.Rec(lotti,num*(-1),i,lotto,bl,qc,prz)
         return res
 
-    def stampaFattura(self,nFattura, venditore, cln, righeFattura):
+    def stampaFattura(self,nFattura,cln, righeFattura):
+        venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
         cliente={}
         cliente["azienda"]=cln.azienda         
         cliente["pi"]=cln.pi         
@@ -379,37 +380,38 @@ class Produt:
     def DdtEmit(self,ls):
         ddtls=[]
         ls1=[]
-        trs=trasporto.objects.filter().values("ddt","q","prezzo","data","lotto","cassa",
-                                "idcod__cod","cliente__azienda","idcod__genere__iva","status")
+        del ls[0]
+        trs=trasporto.objects.filter(status=0).values("ddt","q","prezzo","data","lotto","cassa",
+                                "idcod__cod","cliente__azienda","idcod__genere__iva","status","cliente__azienda")
+        trstrs=trs.annotate(cod=F("idcod__cod"),ps=F("q"),css=F("cassa"),prz=F("prezzo"),iva=F("idcod__genere__iva")).values("cod",
+                                   "ps","css","prz","iva","data","lotto","ddt")
         for item in ls:
             i=0
-            t=trs.filter(ddt=item)
+            t=trstrs.filter(ddt=item).values()
+            data=list(t)
             t.update(status=1)
-            for el in t:
-                prz=float(el["prezzo"])
-                q=float(el["q"])
-                iva=float(el["idcod__genere__iva"])
-                dt=str(el["data"])
+            for el in data:
                 if(i==1):
                     el["ddt"]=""
-                m=Modelddt(el["ddt"],q,prz,dt,el["lotto"],el["cassa"],iva)
-                ddtls.append(m)
-                ls1.append(el)
+                ddtls.append(el)
                 i=1
-        self.Ddt2Fatt(ls1)
+            o=trs[0]["cliente__azienda"]
+        self.Ddt2Fatt(ddtls,o)
         return ddtls
             
         
-    def Ddt2Fatt(self,line):
+    def Ddt2Fatt(self,line,cliente):
         ls=[]
         s=Scarico.objects.latest("id")
         f=(s.fattura).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
+        cln=Cliente.objects.get(azienda=cliente)
         for item in line:
-            c=Cliente.objects.get(azienda=item["cliente__azienda"])
-            cod=IDcod.objects.get(cod=item["idcod__cod"])
-            rec=Scarico(idcod=cod,cliente=c,prezzo=item["prezzo"],q=item["q"],cassa=item["cassa"],
-                                    fattura=fatt,lotto=item["lotto"],iva=item["idcod__genere__iva"])
+            cod=IDcod.objects.get(cod=item["cod"])
+            rec=Scarico(idcod=cod,cliente=cln,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
+                                    fattura=fatt,lotto=item["lotto"],iva=item["iva"])
             rec.save()
+            cln=Cliente.objects.get(azienda=cliente)
+        self.stampaFattura(fatt,cln,line)
         return ls        

@@ -4,7 +4,7 @@ var i=0;
 var cliente;
 var pvl=$("#psps").text();
 var lotto=[];    
-var lt;
+var lt="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
  //   cliente=$("#cliente option:selected").text();
@@ -154,7 +154,7 @@ $(document).ready(function(){
         }
         else if(b==""){
             alert ("inserire prezzo")
-            $("#prezzo").focus()
+            $("#prezzo").focus()   
         }
         else if(c==""){
             alert ("inserire Num Casse")
@@ -170,6 +170,7 @@ $(document).ready(function(){
             obj["iva"]=parseFloat($("#codice option:selected").val())+1;
             obj['lotto']=lt;
             ar1.push(obj);
+            lt=""
             Fill();
             $("#tbf").show("");
             $("#peso").val("");

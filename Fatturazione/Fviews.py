@@ -235,8 +235,7 @@ def DDT(request):
         elif(message["action"]=="ddt"):
             objf=FCreateTable.Produt()
             ddtls=jsonpickle.decode(message["ddt"])
-            ret=objf.DdtEmit(ddtls)
-            res=jsonpickle.encode(ret)
+            res=objf.DdtEmit(ddtls)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         objf=FGetTable.GetData()

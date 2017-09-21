@@ -162,6 +162,15 @@ def Contov(request):
             obj=MGetTable.GetData()
             v=message["cln"]
             res=obj.GetBollaCv(v)
+        if(message["azione"]=="P"):
+            ret=jsonpickle.decode(message["ddt"])
+            if(ret[0]==None):
+                ret.pop(0);
+            mrg=message["mrg"]
+            frn=message["frn"]
+            obj=MGetTable.GetData()
+            res=obj.PushBollaCv(ret,frn,mrg)
+            
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         obj=Modifica.ModProd()
@@ -172,39 +181,6 @@ def Contov(request):
 def ContovT(request):
     b=2354
 
-# per la selezione anche dell'articolo*****
-#def LKCaricoProdotto(request):
-    #if(login==0):
-        #context={}
-        #return render(request,"Validazione/login.html",context)     
-    #global H4
-    #context={}
-    #if(request.method=="POST"):
-        #message=request.POST
-        #if(message["s1"]=="insert"):
-            #H4=1
-            #obj6=CreateTable.GetSett()
-            #a=message["var"]
-            #res=obj6.GetSettore(a)     
-            #return JsonResponse(res,safe=False)  
-        #elif(message["s1"]=="table"):
-            #obj7=MGetTable.GetData()
-            #res=obj7.GetIdCodbyProdotto(message)     
-            #return JsonResponse(res,safe=False)        
-        #else: 
-            #if(H4==1):
-                #el=CreateTable.Sett()
-                #res=el.Delete(message)
-                #H4=0
-            #el=CreateTable.GetSett()
-            #res=el.GetGenere() 
-            #context={"items":res}
-            #return render(request,"Magazzino/Consultazione/LKcaricoprodotto.html",context)
-    #if(request.method=="GET"):
-        #el=CreateTable.GetSett()
-        #res=el.GetGenere() 
-        #context={"items":res}
-    #return render(request,"Magazzino/Consultazione/LKcaricoprodotto.html",context)
 
 
 
