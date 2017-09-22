@@ -251,6 +251,7 @@ function GetSospesa(){
                 obj1['ps'] =res[i].q;
                 obj1['css'] =res[i].cassa;
                 obj1['prz'] =res[i].prezzo;
+                obj1['lotto'] =res[i].lotto;
                 obj1["iva"]=parseFloat(res[i].idcod__genere__iva)+1
                 ar1.push(obj1);
             }

@@ -10,45 +10,34 @@
  <br/>
 
  <div class="row">
-  <form class="form-horizontal" action="elimina" method="post">  
-  
-   <div class="col-md-4">  
+  <form class="form-horizontal" action="elimina" method="post">
+   <div class="col-md-4">
     <div class="input-group">
-     <span class="input-group-addon">Bolla </span>    
+     <span class="input-group-addon">Bolla </span>
      <select class="form-control" name="a1" id="bolla">
        {% for entry in items %}
-           <option >{{ entry.bolla}} : {{ entry.idcod__produttore__azienda}}</option>
+           <option >{{ entry.bolla}}:{{ entry.idcod__produttore__azienda}}</option>
        {% endfor %}
      </select>
     </div>
    </div>
-      
+   </br>   
 
-   <div class="col-md-3" id="cldt2"> 
-    <div class="input-group" >
-     <span class="input-group-addon">Kilogrammi</span>
-     <input type="number" id="kg" class="form-control" name="a2" readonly>
-    </div>
-   </div> 
- </div>
- </br>
- 
   <div class="row">
-   <div class="col-md-4" id="idLKP1"> 
-    <div class="input-group">
-     <span class="input-group-addon">Codice</span>
-     <input type="text" id="cdc"  class="form-control" name="a3" readonly>
+        <div class=" col-md-11" id="tbf1" >
+            <table id="tablef"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Articolo</th>
+                        <th>Peso</th>
+                        <th>Colli</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="tb6"></tbody>
+            </table>
+        </div>
     </div>
-   </div>
-   
-   <div class="col-md-3" id="idLKP2"> 
-    <div class="input-group">
-     <span class="input-group-addon">Data</span>
-     <input type="text" id="dt3"  class="form-control" name="a3" readonly>
-    </div>
-   </div>
-  </div>
-  <br/>
 
      <div class="row">
         <div class="col-md-3"> 

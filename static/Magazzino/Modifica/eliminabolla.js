@@ -15,10 +15,22 @@ function Put(item) {
         "elimina",
         { a1: item,a2:"js"},
         function (result) {
-
-        $("#kg").val(result[0].q);
-        $("#cdc").val(result[0].idcod__cod);
-        $("#dt3").val(result[0].data);
+        $("#tbf1").show();
+            Write(result)
     });
     return;
+};
+
+function Write(res) {
+    var label="";
+    for (i=0;i<res.length;i++){
+        label=label + '<tr>';
+        label=label + '<td>' +res[i].idcod__cod+ '</td>';
+        label=label + '<td>' + res[i].q+ '</td>';
+        label=label + '<td>' + res[i].cassa+ '</td>';
+        label=label + '<td>' + res[i].data+ '</td>';
+        label=label + '</tr>';
+    }
+    $("#tb6").html(label);
+    return
 };

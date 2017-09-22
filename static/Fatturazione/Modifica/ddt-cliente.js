@@ -5,9 +5,10 @@ $(document).ready(function(){
     $("#tbf2").hide();
 
     $("#clientes").click(function(){
+        $("#btddt").hide();
+        $("#tbf1").hide();
         $("#tbf2").hide();
         GetTable($("#clientes").val());
-                $("#tbf1").show();
     });
     
    $("#btddt").click(function(){
@@ -22,20 +23,24 @@ function GetTable(cl){
         "ddt",
         {cliente:cl,action:"tbl"},
         function(res){
-             var label="";
-            for (i=0;i<res.length;i++){
-                label=label + '<tr>';
-                label=label + '<td><input type="checkbox" value='+res[i].ddt+'></td>';
-                label=label + '<td>' + res[i].ddt + '</td>';
-                label=label + '<td>' + res[i].cliente__azienda + '</td>';
-                label=label + '<td>' + res[i].valore+ '</td>';
-                label=label + '<td>' +res[i].data + '</td>';
-                label=label + '</tr>';
-                before=res[i].ddt;
-            }
-            $("#tb6").html(label);  
-        });
-        return
+        if(res.length==0)
+            return;
+        $("#btddt").show();
+        $("#tbf1").show();
+        var label="";
+        for (i=0;i<res.length;i++){
+           label=label + '<tr>';
+           label=label + '<td><input type="checkbox" value='+res[i].ddt+'></td>';
+           label=label + '<td>' + res[i].ddt + '</td>';
+           label=label + '<td>' + res[i].cliente__azienda + '</td>';
+           label=label + '<td>' + res[i].valore+ '</td>';
+           label=label + '<td>' +res[i].data + '</td>';
+           label=label + '</tr>';
+           before=res[i].ddt;
+       }
+       $("#tb6").html(label);  
+   });
+   return
 };
 
 function GetDdt(){

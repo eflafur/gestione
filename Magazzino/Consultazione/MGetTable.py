@@ -9,7 +9,7 @@ class GetData:
         data=list(rec)
         return data
     def GetCarico(self):
-        rec=Carico.objects.all().values("bolla","idcod__produttore__azienda").order_by("bolla")
+        rec=Carico.objects.all().values("bolla","idcod__produttore__azienda").order_by("bolla").distinct()
         data=list(rec)
         return data    
     def GetBolla(self,line):
@@ -32,7 +32,7 @@ class GetData:
     def GetBollaCv(self,nome):
         ls=[]
         ls1=[]
-        c=Carico.objects.filter(Q(idcod__produttore__azienda=nome)).order_by("bolla")
+        c=Carico.objects.filter(Q(idcod__produttore__azienda=nome),Q(p=False)).order_by("bolla")
         cm1=c.filter(Q(cassa__gt=F("cassaexit")))
         cm2=cm1.values("bolla").distinct()
         for  item in cm2:
@@ -43,18 +43,16 @@ class GetData:
         for item in cM1:
             if(item["bolla"] in ls):
                 continue
-#            item["netto"]=float(item["costo"])*(1-float(item["idcod__produttore__margine"])/100)
             ls1.append(item)
         return ls1 
     
     def PushBollaCv(self,line,cln,mrg):
         ls=[]
         cliente=Produttore.objects.get(azienda=cln)
-        c=Carico.objects.filter(Q(idcod__produttore__azienda=cln)).values("idcod__id",
+        c=Carico.objects.filter(Q(idcod__produttore__azienda=cln),Q(p=False)).values("idcod__id",
                                    "idcod__cod","q","cassa","data","bolla","costo","idcod__genere__iva").order_by("bolla")
         for item in line:
             c1=c.filter(bolla=item)
-            data=list(c1)
             for item1 in c1:
                 ddt={}
                 costo=float(item1["costo"])*(1-float(mrg)/100)
@@ -65,6 +63,7 @@ class GetData:
                 ddt["iva"]=item1["idcod__genere__iva"]
                 ddt["prz"]=costo
                 ls.append(ddt)
+                c1.update(p=True)
         self.stampaFattura("vostra fattura",cliente,ls,mrg)
         return
                 

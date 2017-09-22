@@ -133,7 +133,8 @@ def EliminaBolla(request):
     context={}
     if(request.method=="POST"):
         message=request.POST
-        res=re.sub('[" "]',"",message["a1"])
+        res=message["a1"]
+#        res=re.sub('[" "]',"",message["a1"])
         var=res.split(":")
         if((message["a2"]=="js")):
             obj1=MGetTable.GetData()
@@ -178,14 +179,7 @@ def Contov(request):
         context={"items":res}
         return render(request,"Magazzino/Consultazione/contov.html",context)
     
-def ContovT(request):
-    b=2354
-
-
-
-
-
-
+#test----------------------------------------------
 
 def Gioco(request):
     res=""

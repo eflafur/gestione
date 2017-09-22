@@ -60,7 +60,7 @@ class Produt:
             rec1.save()
             ltcod=lotto.filter(idcod__cod=item["cod"])
             data=list(ltcod)
-            if("lotto" in item):
+            if(item["lotto"]!=""):
                 ltt=int(item["lotto"])
             else:
                 ltt=ltcod[0].id
@@ -89,9 +89,8 @@ class Produt:
             line[i]["lotto"]=str(ltt)
             i=i+1
         rg=list(line)
-        venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
         cln=Cliente.objects.get(azienda=item["cln"])
-        self.stampaFattura(fatt,venditore,cln,rg)
+        self.stampaFattura(fatt,cln,rg)
         return res
     
     
@@ -176,25 +175,22 @@ class Produt:
             res=self.Rec(lotti,num*(-1),i,lotto,bl,qc,prz)
         return res
 
-    def stampaFattura(self,nFattura,cln, righeFattura):
+    
+    def stampaFattura(self,nFattura, cln, righeFattura):
+        """ produce fattura in excel """
         venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
-        cliente={}
-        cliente["azienda"]=cln.azienda         
-        cliente["pi"]=cln.pi         
-        cliente["indirizzo"]=cln.indirizzo         
-        
+    
         data=time.strftime("%d/%m/%Y")
-        a=os.getcwd()
         try:
             fa=openpyxl.load_workbook('formFattura.xlsx')
         except:
-            print("file formFattura.xls errato o mancante")
+            print("file 'formFattura.xlsx' errato o mancante in "+os.getcwd())
             return
     
         sheet=fa.get_sheet_by_name('Sheet1')
     
-        sheet['F3'].value = nFattura
-        sheet['F4'].value = data
+        sheet['H3'].value = nFattura
+        sheet['H4'].value = data
     
         sheet['B2'].value = venditore['venditore']
         sheet['B3'].value = venditore['P-IVA']
@@ -202,32 +198,38 @@ class Produt:
         sheet['B5'].value = venditore['città']
         sheet['B6'].value = venditore['telefono']
     
-        sheet['B8'].value = cliente['azienda']
-        sheet['B9'].value = cliente['pi']
-        sheet['B10'].value = cliente['indirizzo']
-        #sheet['B11'].value = cliente['città']
-        #sheet['B12'].value = cliente['telefono']
+        sheet['B8'].value = cln.azienda
+        sheet['B9'].value = cln.pi
+        sheet['B10'].value = cln.indirizzo
     
-        line=16												# riga primo articolo
+        line=16												
         cntr=0
         total=0
         for riga in righeFattura:
             sheet["B"+str(line+cntr)].value = riga['cod']
-            sheet["C"+str(line+cntr)].value = riga['lotto']
-            sheet["D"+str(line+cntr)].value = riga['ps']
-            sheet["E"+str(line+cntr)].value = riga['css']
-            sheet["F"+str(line+cntr)].value = riga['prz']
-            sheet["G"+str(line+cntr)].value = riga['iva']
+            try:
+                sheet["C"+str(line+cntr)].value = riga['ddt']
+            except:
+                a=10
+            sheet["D"+str(line+cntr)].value = riga['lotto']
+            sheet["E"+str(line+cntr)].value = riga['ps']
+            sheet["F"+str(line+cntr)].value = riga['css']
+            sheet["G"+str(line+cntr)].value = riga['prz']
+            sheet["H"+str(line+cntr)].value = riga['iva']
             subtotale=float(riga['prz'])*float(riga['ps'])
-            sheet["H"+str(line+cntr)].value = subtotale
+            sheet["I"+str(line+cntr)].value = float(subtotale)
             total+=subtotale
             cntr+=1
     
-        sheet["F25"].value = total							# riga totale per il momento hardcoded a cella F25
+        sheet["I25"].value = total							
     
-        fa.save('nuovaFattura.xlsx')
+        try:
+            fa.save('nuovaFattura.xlsx')
+        except:
+            print("file 'nuovaFattura.xls' errato o mancante in "+os.getcwd())
+            return
+    
         subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])
-        
 
     def ScriviSospesa(self,line,sps):
         if(sps!=" "):
@@ -380,22 +382,22 @@ class Produt:
     def DdtEmit(self,ls):
         ddtls=[]
         ls1=[]
-        del ls[0]
         trs=trasporto.objects.filter(status=0).values("ddt","q","prezzo","data","lotto","cassa",
                                 "idcod__cod","cliente__azienda","idcod__genere__iva","status","cliente__azienda")
+        data1=list(trs)
         trstrs=trs.annotate(cod=F("idcod__cod"),ps=F("q"),css=F("cassa"),prz=F("prezzo"),iva=F("idcod__genere__iva")).values("cod",
                                    "ps","css","prz","iva","data","lotto","ddt")
         for item in ls:
-            i=0
+#            i=0
             t=trstrs.filter(ddt=item).values()
             data=list(t)
             t.update(status=1)
             for el in data:
-                if(i==1):
-                    el["ddt"]=""
+                #if(i==1):
+                    #el["ddt"]=""
                 ddtls.append(el)
                 i=1
-            o=trs[0]["cliente__azienda"]
+        o=trs[0]["cliente__azienda"]
         self.Ddt2Fatt(ddtls,o)
         return ddtls
             

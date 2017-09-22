@@ -1,16 +1,15 @@
 var UserTable=$("#mytable");
 var TempUserTable=null;
-var x=0;
 var res="";
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#azienda").click(function(){
-        $("#tbf1").show();
-        $("#cldt2").show();
-        $("#btddt").show();
-        $("#btmrg").show();
-        GetBolla();
+            $("#tbf1").hide();
+            $("#cldt2").hide();
+            $("#btddt").hide();
+            $("#btmrg").hide();        
+            GetBolla();
     });
     $("#btmrg").click(function(){
         Write();
@@ -33,9 +32,15 @@ function GetBolla(){
         "cvc",
         {cln:$("#azienda option:selected").text(),azione:"B"},
         function(ret){
+        if(ret.length!=0){
+            $("#tbf1").show();
+            $("#cldt2").show();
+            $("#btddt").show();
+            $("#btmrg").show();        
             res=ret;    
             $("#dt2").val(res[0].idcod__produttore__margine);
             Write();
+        }
             return;
     });
 };
@@ -68,6 +73,7 @@ function Write() {
 function PushDdt(){
     var ar=[];
     var st=[]
+    var x=0;
     $("#tbf1 :checked").each(function(index){
         x=index+1;
         ar[x]=$(this).val();

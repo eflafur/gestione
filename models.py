@@ -81,6 +81,7 @@ class Carico(models.Model):
 	data=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
 	costo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
+	p=models.BooleanField(default=False)
 	def __str__(self):
 		return "%s %s" % (self.q,self.bolla)	
 	
