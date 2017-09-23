@@ -3,18 +3,12 @@ $(document).ready(function(){
     $.ajaxSetup({cache:false});
 
     $("#clientes").click(function(){
-        $("#dt2").val(" ");
-        $("#dtf").show();
         $("#tbf1").hide();
+        var cl=$("#clientes").val()
+        GetTable(cl);
+        $("#tbf1").show();
     });
     
-    $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",//autoSize:true,appendText: "(yyyy-mm-dd)",// 
-        onSelect: function (date) {
-            var cl=$("#clientes").val()
-            GetTable(date,cl);
-                $("#tbf1").show();
-        }
-    });
     
     $("#tablef").on('click','a',function(){
         a=$(this).text();
@@ -23,10 +17,10 @@ $(document).ready(function(){
     
 });
 
-function GetTable(date,cl){
+function GetTable(cl){
     $.post(
         "lksps",
-        {data:date,cliente:cl},
+        {cliente:cl},
         function(res){
             var label="";
             for (i=0;i<res.length;i++){

@@ -15,6 +15,7 @@ $(document).ready(function(){
         $("#tbf1").hide();
         $("#tbf2").show();
         GetDdt()
+        $("#btddt").hide();
     });
 });
 
@@ -57,10 +58,12 @@ function GetDdt(){
         });
     }
     var t=JSON.stringify(ar);
+    x=0;
     $.post(
         "ddt",
         {ddt:JSON.stringify(ar),action:"ddt"},
         function(res){
+            imp=res[i]["ps"]*res[i]["prz"]*(parseFloat(res[i]["iva"])+1);
             var label="";
             for (i=0;i<res.length;i++){
                 label=label + '<tr>';
@@ -70,6 +73,7 @@ function GetDdt(){
                 label=label + '<td>' + res[i]["css"] + '</td>';
                 label=label + '<td>' + res[i]["prz"] + '</td>';
                 label=label + '<td>' + res[i]["iva"]+ '</td>';
+                label=label + '<td>' + imp + '</td>';
                 label=label + '<td>' + res[i]["data"] + '</td>';
                 label=label + '<td>' + res[i]["lotto"] + '</td>';
                 label=label + '</tr>';

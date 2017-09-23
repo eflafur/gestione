@@ -93,13 +93,14 @@ class Produt:
         self.stampaFattura(fatt,cln,rg)
         return res
     
-    
-    
     def ScriviDDT(self,line,sps):
         i=0
         res=0
         bl=[]
         ls=[]
+        if(sps!=""):
+            rec=Sospese.objects.filter(fatturas=sps)
+            rec.delete()
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         s=trasporto.objects.latest("id")
         f=(s.ddt).split("-")
@@ -239,13 +240,18 @@ class Produt:
         f=(s.fatturas).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
+        lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         for item in line:
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
+            ltcod=lotto.filter(idcod__cod=item["cod"])
+            ltt=ltcod[0].id
             rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
-                        fatturas=fatt,lotto=item["lotto"])
+                        fatturas=fatt,lotto=ltt)
             rec.save()
         return
+    
+    
     
 #evidenzia tutte le righe della sopsesa *1    
     #def GetSospesa(self,message):
@@ -260,9 +266,9 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!=" "):
-            recls=Sospese.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda")
+            recls=Sospese.objects.filter(cliente__azienda=message["cliente"]).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda")
         else:
-            recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda")
+            recls=Sospese.objects.filter().values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda")
         
         for el in recls:
             if(el["fatturas"]=="sc2018-0"):

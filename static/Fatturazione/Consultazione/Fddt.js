@@ -1,4 +1,4 @@
-
+var res=[];
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
 
@@ -17,6 +17,7 @@ $(document).ready(function(){
     $("#tablef").on('click','a',function(){
         y=$(this).text();
         GetFatt(y)
+        $("#pcln").val(res[0].cliente__azienda);
         $("#pfatt").val(y);
         $("#pf").show();
         $("#tbf1").hide();
@@ -28,10 +29,12 @@ $(document).ready(function(){
 });
 
 function GetTable(date){
+    res.length=0;
     $.post(
         "gino",
         {data:date,azione:"table",cliente:""},
-        function(res){
+        function(ret){
+            res=ret;
             var label="";
             for (i=0;i<res.length;i++){
                 label=label + '<tr>';

@@ -103,11 +103,8 @@ def LKCaricoFornitore(request):
         else:        
             mod=Modifica.ModProd()
             prod=mod.GetProduttori()
-            context={"prod":prod,"el":" "}
+            context={"prod":prod,"el":""}
         return render(request,"Magazzino/Modifica/Mfbolle.html",context) 
-
-
-
 
 def LKCaricoProdotto(request):
     if(login==0):
@@ -171,13 +168,26 @@ def Contov(request):
             frn=message["frn"]
             obj=MGetTable.GetData()
             res=obj.PushBollaCv(ret,frn,mrg)
-            
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         obj=Modifica.ModProd()
         res=obj.GetProduttori()
         context={"items":res}
         return render(request,"Magazzino/Consultazione/contov.html",context)
+
+def ContovT(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
+    if(request.method=="POST"):
+        message=request.POST
+        x=message["item"]
+        obj3=MGetTable.GetData()
+        res=obj3.GetCaricoTotaleCv(x)
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        context={"items":""}
+        return render(request,"Magazzino/Consultazione/contovt.html",context)
     
 #test----------------------------------------------
 

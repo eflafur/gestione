@@ -1,4 +1,4 @@
-
+var res=[];
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
 
@@ -17,6 +17,7 @@ $(document).ready(function(){
     $("#tablef").on('click','a',function(){
         a=$(this).text();
         GetFatt(a)
+        $("#pcln").val(res[0].cliente__azienda);
         $("#pfatt").val(a);
         $("#pf").show();
         $("#tbf1").hide();
@@ -28,10 +29,12 @@ $(document).ready(function(){
 });
 
 function GetTable(date){
+    res.length=0;
     $.post(
         "lkftr",
         {data:date,azione:"table",cliente:""},
-        function(res){
+        function(ret){
+            res=ret;
             var label="";
             for (i=0;i<res.length;i++){
                 label=label + '<tr>';
@@ -68,7 +71,7 @@ function GetFatt(num){
                 label=label + '<td>' + res[i].data + '</td>';
                 label=label+'</tr>'
             }
-            label=label + '<td>ToT</td><td></td><td>' + sum + '</td>';
+            label=label + '<td>ToT</td><td></td><td></td><td>' + sum + '</td>';
             label=label+'</tr>'
             $("#tb62").html(label);  
             $("#tb62 tr:last").find("td:last").css("color","blue");

@@ -42,26 +42,26 @@ function Put(item) {
     return;
 };
 
-function BonusLevel(data1) {
-    $.post(
-    "GetOfferta",
-    { date: data1 },
-    function (result) {
+//function BonusLevel(data1) {
+    //$.post(
+    //"GetOfferta",
+    //{ date: data1 },
+    //function (result) {
 
-        if (AdvisorUserTable != null)
-            AdvisorUserTable.destroy();
-            AdvisorUserTable = UserTable.DataTable({
-            "ordering": false,
-            data: eval(result),
-            columns: [
-                {data: "ruolo"},
-                {data: "tipo" },
-                {data  : "qualifica" }
-            ]
-        });
-    });
-    return;
-};
+        //if (AdvisorUserTable != null)
+            //AdvisorUserTable.destroy();
+            //AdvisorUserTable = UserTable.DataTable({
+            //"ordering": false,
+            //data: eval(result),
+            //columns: [
+                //{data: "ruolo"},
+                //{data: "tipo" },
+                //{data  : "qualifica" }
+            //]
+        //});
+    //});
+    //return;
+//};
 
 
 function BonusData(item) {

@@ -296,8 +296,6 @@ def LKDdt(request):
         context={"items":""}
         return render(request,"fatturazione/Consultazione/Fddt.html",context)    
     
-    
-    
 def LKFGraph(request):
     if(login==0):
         context={}

@@ -4,7 +4,6 @@ var TempUserTable=null;
 
 var option=""
 var optionValues=[];
-pvl="";
 var pvl=$("#psps").text();
 
 $(document).ready(function(){

@@ -70,6 +70,7 @@ function GetTable(pr,date){
                 label=label + '<td>' + arr[0] + '</td>';
                 label=label + '<td>' + arr[2] + '</td>';
                 label=label + '<td>' + res[i].q + '</td>';
+                label=label + '<td>' + res[i].cassa + '</td>';
                 label=label + '<td>' +res[i].bolla + '</td>';
                  label=label + '<td>' +res[i].data+ '</td>';
                 label=label + '</tr>';

@@ -16,12 +16,12 @@ $(document).ready(function(){
     $("#cod").hide();
     $("#lt").hide();
 
-
     if(pvl!=""){
         $("#cliente").attr('disabled',true);
         $("#cod").hide();
         $("#dsc").show();
         $("#desc").focus();
+        GetLotto();
         GetSospesa();
     }  
 
@@ -167,7 +167,7 @@ $(document).ready(function(){
             obj['ps'] =$("#peso").val();
             obj['css'] =$("#cassa").val();
             obj['prz'] =$("#prezzo").val();
-            obj["iva"]=parseFloat($("#codice option:selected").val())+1;
+            obj["iva"]=$("#codice option:selected").val();
             obj['lotto']=lt;
             ar1.push(obj);
             lt=""
@@ -207,16 +207,19 @@ function Fill(){
     var sum=0;
     for (i = 0; i < ar1.length; i++) {
         k=k+1
-        sum=sum+ar1[i].prz*ar1[i].ps*ar1[i].iva;
+        imp=ar1[i].prz*ar1[i].ps*(parseFloat(ar1[i].iva)+1)
+        sum=sum+ar1[i].prz*ar1[i].ps*(parseFloat(ar1[i].iva)+1);
         label = label + '<tr>';
         label = label + '<td>' + ar1[i].cod+ '</td>';
         label = label + '<td>' + ar1[i].ps+ '</td>';
         label = label + '<td>' + ar1[i].css+ '</td>';
+        label = label + '<td>' + ar1[i].iva+ '</td>';
         label = label + '<td>' + ar1[i].prz+ '</td>';
+        label = label + '<td>' + imp+ '</td>';
         label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
         label = label + '</tr>';
     }
-    label=label + '<tr><td>TOT</td><td></td><td></td><td>'+sum.toFixed(2)+ '</td></tr>';
+    label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sum.toFixed(2)+ '</td></tr>';
     $("#tbfb").html(label);
     $("#tbfb tr:last").find("td:last").css("color","blue");
     return;
@@ -252,7 +255,7 @@ function GetSospesa(){
                 obj1['css'] =res[i].cassa;
                 obj1['prz'] =res[i].prezzo;
                 obj1['lotto'] =res[i].lotto;
-                obj1["iva"]=parseFloat(res[i].idcod__genere__iva)+1
+                obj1["iva"]=res[i].idcod__genere__iva
                 ar1.push(obj1);
             }
         Fill();
