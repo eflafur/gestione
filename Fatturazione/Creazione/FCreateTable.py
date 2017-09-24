@@ -36,9 +36,10 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps):
+        dc={}
+        overf=[]
         res=0
         i=0
-        vnd={}
         bl=[]
         ls=[]
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
@@ -81,17 +82,19 @@ class Produt:
                 ltid.cassaexit=ltid.cassa
                 ltid.save()
                 res=self.Rec(ltcod,num*(-1),0,ltt,bl,qc,prz)
-                if(res==0):
-                    return
+                if(res>0):
+                    dc["num"]=res
+                    dc["cod"]=item["cod"]
+                    overf.append(dc)    
             rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,
                                     fattura=fatt,lotto=ltt,iva=iva1)
             rec.save()
-            line[i]["lotto"]=str(ltt)
+            line[i]["lotto"]=bl#str(ltt)
             i=i+1
         rg=list(line)
         cln=Cliente.objects.get(azienda=item["cln"])
         self.stampaFattura(fatt,cln,rg)
-        return res
+        return overf
     
     def ScriviDDT(self,line,sps):
         i=0
@@ -139,7 +142,7 @@ class Produt:
             rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,
                         ddt=fatt,lotto=ltt)
             rec.save()
-            line[i]["lotto"]=str(ltt)
+            line[i]["lotto"]=bl#str(ltt)
             i=i+1
         rg=list(line)
         cln=Cliente.objects.get(azienda=item["cln"])
@@ -147,11 +150,11 @@ class Produt:
         return res
     
     def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
-        data=list(lotti)
+#        data=list(lotti)
         try:
             num=lotti[i].cassa-(lotti[i].cassaexit+casse)
         except IndexError:
-            return 0
+            return num
         if(num>=0 and lotti[i].id!=lotto):
             bl.append(lotti[i].id)
 #            lt1=lotti.get(id=lotti[i].id)
@@ -160,7 +163,8 @@ class Produt:
             lotti[i].save()
             #lt1.cassaexit=lotti[i].cassaexit+casse
             #lt1.save()
-            return bl
+#            return bl
+            return 0
         else:
             if(lotti[i].id!=lotto):
                 bl.append(lotti[i].id)
@@ -174,7 +178,7 @@ class Produt:
                 num=casse*(-1)
             i=i+1
             res=self.Rec(lotti,num*(-1),i,lotto,bl,qc,prz)
-        return res
+        return 0
 
     
     def stampaFattura(self,nFattura, cln, righeFattura):
@@ -190,8 +194,8 @@ class Produt:
     
         sheet=fa.get_sheet_by_name('Sheet1')
     
-        sheet['H3'].value = nFattura
-        sheet['H4'].value = data
+        sheet['I3'].value = nFattura
+        sheet['I4'].value = data
     
         sheet['B2'].value = venditore['venditore']
         sheet['B3'].value = venditore['P-IVA']
@@ -212,7 +216,10 @@ class Produt:
                 sheet["C"+str(line+cntr)].value = riga['ddt']
             except:
                 a=10
-            sheet["D"+str(line+cntr)].value = riga['lotto']
+            sheet["D"+str(line+cntr)].value=""
+            for item in riga['lotto']:
+                sheet["D"+str(line+cntr)].value = sheet["D"+str(line+cntr)].value+" "+str(item)
+
             sheet["E"+str(line+cntr)].value = riga['ps']
             sheet["F"+str(line+cntr)].value = riga['css']
             sheet["G"+str(line+cntr)].value = riga['prz']
@@ -222,7 +229,8 @@ class Produt:
             total+=subtotale
             cntr+=1
     
-        sheet["I25"].value = total							
+        sheet["H"+str(line+cntr)].value = "TOTALE"							
+        sheet["I"+str(line+cntr)].value = total							
     
         try:
             fa.save('nuovaFattura.xlsx')

@@ -79,38 +79,32 @@ class GetData:
             c1=c.filter(bolla=item)
             for item1 in c1:
                 ddt={}
-                costo=float(item1["costo"])*(1-float(mrg)/100)
+                ddt['costo']=float(item1["costo"])*(1-float(mrg)/100)
                 ddt["cod"]=item1["idcod__cod"]
                 ddt["lotto"]=item1["bolla"]
                 ddt["ps"]=item1["q"]
                 ddt["css"]=item1["cassa"]
                 ddt["iva"]=item1["idcod__genere__iva"]
-                ddt["prz"]=costo
                 ls.append(ddt)
                 c1.update(p=True)
         self.stampaFattura("vostra fattura",cliente,ls,mrg)
         return
                 
-
-    def stampaFattura(self,nFattura,cln, righeFattura,mrg):
+    def stampaFattura(self,nFattura, cln, righeFattura,mrg):
+        """ produce fattura in excel """
         venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
-        cliente={}
-        cliente["azienda"]=cln.azienda         
-        cliente["pi"]=cln.pi         
-        cliente["indirizzo"]=cln.indirizzo         
-        
+    
         data=time.strftime("%d/%m/%Y")
-        a=os.getcwd()
         try:
             fa=openpyxl.load_workbook('formFattura.xlsx')
         except:
-            print("file formFattura.xls errato o mancante")
+            print("file 'formFattura.xlsx' errato o mancante in "+os.getcwd())
             return
     
         sheet=fa.get_sheet_by_name('Sheet1')
     
-        sheet['F3'].value = "vostro numero"
-        sheet['F4'].value = data
+        sheet['I3'].value = nFattura
+        sheet['I4'].value = data
     
         sheet['B2'].value = venditore['venditore']
         sheet['B3'].value = venditore['P-IVA']
@@ -118,13 +112,11 @@ class GetData:
         sheet['B5'].value = venditore['città']
         sheet['B6'].value = venditore['telefono']
     
-        sheet['B8'].value = cliente['azienda']
-        sheet['B9'].value = cliente['pi']
-        sheet['B10'].value = cliente['indirizzo']
-        #sheet['B11'].value = cliente['città']
-        #sheet['B12'].value = cliente['telefono']
+        sheet['B8'].value = cln.azienda
+        sheet['B9'].value = cln.pi
+        sheet['B10'].value = cln.indirizzo
     
-        line=16												# riga primo articolo
+        line=16												
         cntr=0
         total=0
         for riga in righeFattura:
@@ -132,15 +124,75 @@ class GetData:
             sheet["C"+str(line+cntr)].value = riga['lotto']
             sheet["D"+str(line+cntr)].value = riga['ps']
             sheet["E"+str(line+cntr)].value = riga['css']
-            sheet["F"+str(line+cntr)].value = riga['prz']
-            sheet["G"+str(line+cntr)].value = mrg
-            subtotale=float(riga['prz'])*float(riga['ps'])
-            sheet["H"+str(line+cntr)].value = subtotale
+            sheet["G"+str(line+cntr)].value = riga['iva']
+            sheet["H"+str(line+cntr)].value = mrg
+            subtotale =riga['costo']
+            sheet["I"+str(line+cntr)].value = subtotale
             total+=subtotale
             cntr+=1
+        cntr+=1
+        sheet["H"+str(line+cntr)].value = "TOTALE"							
+        sheet["I"+str(line+cntr)].value = total							
     
-        sheet["F25"].value = total							# riga totale per il momento hardcoded a cella F25
+        try:
+            fa.save('nuovaFattura.xlsx')
+        except:
+            print("file 'nuovaFattura.xls' errato o mancante in "+os.getcwd())
+            return
     
-        fa.save('nuovaFattura.xlsx')
         subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])
+
+
+
+    #def stampaFattura(self,nFattura,cln, righeFattura,mrg):
+        #venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
+        #cliente={}
+        #cliente["azienda"]=cln.azienda         
+        #cliente["pi"]=cln.pi         
+        #cliente["indirizzo"]=cln.indirizzo         
+        
+        #data=time.strftime("%d/%m/%Y")
+        #a=os.getcwd()
+        #try:
+            #fa=openpyxl.load_workbook('formFattura.xlsx')
+        #except:
+            #print("file formFattura.xls errato o mancante")
+            #return
+    
+        #sheet=fa.get_sheet_by_name('Sheet1')
+    
+        #sheet['F3'].value = "vostro numero"
+        #sheet['F4'].value = data
+    
+        #sheet['B2'].value = venditore['venditore']
+        #sheet['B3'].value = venditore['P-IVA']
+        #sheet['B4'].value = venditore['indirizzo']
+        #sheet['B5'].value = venditore['città']
+        #sheet['B6'].value = venditore['telefono']
+    
+        #sheet['B8'].value = cliente['azienda']
+        #sheet['B9'].value = cliente['pi']
+        #sheet['B10'].value = cliente['indirizzo']
+        ##sheet['B11'].value = cliente['città']
+        ##sheet['B12'].value = cliente['telefono']
+    
+        #line=16												# riga primo articolo
+        #cntr=0
+        #total=0
+        #for riga in righeFattura:
+            #sheet["B"+str(line+cntr)].value = riga['cod']
+            #sheet["C"+str(line+cntr)].value = riga['lotto']
+            #sheet["D"+str(line+cntr)].value = riga['ps']
+            #sheet["E"+str(line+cntr)].value = riga['css']
+            #sheet["F"+str(line+cntr)].value = riga['prz']
+            #sheet["G"+str(line+cntr)].value = mrg
+            #subtotale=float(riga['prz'])*float(riga['ps'])
+            #sheet["H"+str(line+cntr)].value = subtotale
+            #total+=subtotale
+            #cntr+=1
+    
+        #sheet["F25"].value = total							# riga totale per il momento hardcoded a cella F25
+    
+        #fa.save('nuovaFattura.xlsx')
+        #subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])
                         
