@@ -33,7 +33,8 @@ function GetBolla(){
         "cvc",
         {cln:$("#azienda option:selected").text(),azione:"B"},
         function(ret){
-        if(ret.length!=0){
+            if(ret.length==0)
+                return
             $("#tbf1").show();
             $("#cldt2").show();
             $("#btddt").show();
@@ -41,9 +42,8 @@ function GetBolla(){
             res=ret;    
             $("#dt2").val(res[0].idcod__produttore__margine);
             Write();
-        }
             return;
-    });
+        });
 };
 
 function Write() {

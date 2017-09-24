@@ -36,8 +36,7 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps):
-        dc={}
-        overf=[]
+        lsecc=[]
         res=0
         i=0
         bl=[]
@@ -56,15 +55,20 @@ class Produt:
             iva1=float(item["iva"])-1
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
             rec1.q=rec1.q-(int(item["css"]))
-            if(rec1.q<0):
-                ls.append(item["cod"])
             rec1.save()
             ltcod=lotto.filter(idcod__cod=item["cod"])
-            data=list(ltcod)
-            if(item["lotto"]!=""):
+            if(item["lotto"]!="" and sps==""):
                 ltt=int(item["lotto"])
             else:
-                ltt=ltcod[0].id
+                try:
+                    ltt=ltcod[0].id
+                except:
+                    #lsecc.clear()
+                    ecc={}
+                    ecc["num"]=item["css"]
+                    ecc["cod"]=item["cod"]
+                    lsecc.append(ecc)
+                    return lsecc
             ltid=ltcod.get(id=ltt)
             bl.append(ltt)
             num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
@@ -82,21 +86,22 @@ class Produt:
                 ltid.cassaexit=ltid.cassa
                 ltid.save()
                 res=self.Rec(ltcod,num*(-1),0,ltt,bl,qc,prz)
-                if(res>0):
-                    dc["num"]=res
-                    dc["cod"]=item["cod"]
-                    overf.append(dc)    
+                if(res!=0 and sps!=""):
+                    ecc={}
+                    ecc["num"]=res
+                    ecc["cod"]=item["cod"]
+                    lsecc.append(ecc)
             rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,
                                     fattura=fatt,lotto=ltt,iva=iva1)
             rec.save()
-            line[i]["lotto"]=bl#str(ltt)
+            line[i]["lotto"]=bl
             i=i+1
         rg=list(line)
-        cln=Cliente.objects.get(azienda=item["cln"])
-        self.stampaFattura(fatt,cln,rg)
-        return overf
+        self.stampaFattura(fatt,c,rg)
+        return lsecc
     
     def ScriviDDT(self,line,sps):
+        lsecc=[]
         i=0
         res=0
         bl=[]
@@ -114,14 +119,20 @@ class Produt:
             cod=IDcod.objects.get(cod=item["cod"])
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
             rec1.q=rec1.q-(int(item["css"]))
-            if(rec1.q<0):
-                ls.append(item["cod"])
             rec1.save()
             ltcod=lotto.filter(idcod__cod=item["cod"])
-            if(item["lotto"]!=""):
+            if(item["lotto"]!="" and sps==""):
                 ltt=int(item["lotto"])
             else:
-                ltt=ltcod[0].id
+                try:
+                    ltt=ltcod[0].id
+                except:
+                  #  lsecc.clear()
+                    ecc={}
+                    ecc["num"]=item["css"]
+                    ecc["cod"]=item["cod"]
+                    lsecc.append(ecc)
+                    return lsecc
             ltid=ltcod.get(id=ltt)
             bl.append(ltt)
             num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
@@ -139,22 +150,26 @@ class Produt:
                 ltid.cassaexit=ltid.cassa
                 ltid.save()
                 res=self.Rec(ltcod,num*(-1),0,ltt,bl,qc,prz)
+                if(res!=0 and sps!=""):
+                    ecc={}
+                    ecc["num"]=res
+                    ecc["cod"]=item["cod"]
+                    lsecc.append(ecc)
             rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,
                         ddt=fatt,lotto=ltt)
             rec.save()
-            line[i]["lotto"]=bl#str(ltt)
+            line[i]["lotto"]=bl
             i=i+1
         rg=list(line)
-        cln=Cliente.objects.get(azienda=item["cln"])
-        self.stampaFattura(fatt,cln,rg)            
-        return res
+        self.stampaFattura(fatt,c,rg)            
+        return lsecc
     
     def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
-#        data=list(lotti)
+        num=0
         try:
             num=lotti[i].cassa-(lotti[i].cassaexit+casse)
         except IndexError:
-            return num
+            return casse
         if(num>=0 and lotti[i].id!=lotto):
             bl.append(lotti[i].id)
 #            lt1=lotti.get(id=lotti[i].id)
@@ -178,7 +193,7 @@ class Produt:
                 num=casse*(-1)
             i=i+1
             res=self.Rec(lotti,num*(-1),i,lotto,bl,qc,prz)
-        return 0
+        return res
 
     
     def stampaFattura(self,nFattura, cln, righeFattura):
@@ -393,14 +408,14 @@ class Produt:
         return data          
     
     
-    def DdtEmit(self,ls):
+    def DdtEmit(self,ls,cln):
         ddtls=[]
         ls1=[]
         trs=trasporto.objects.filter(status=0).values("ddt","q","prezzo","data","lotto","cassa",
                                 "idcod__cod","cliente__azienda","idcod__genere__iva","status","cliente__azienda")
-        data1=list(trs)
+#        data1=list(trs)
         trstrs=trs.annotate(cod=F("idcod__cod"),ps=F("q"),css=F("cassa"),prz=F("prezzo"),iva=F("idcod__genere__iva")).values("cod",
-                                   "ps","css","prz","iva","data","lotto","ddt")
+                                   "ps","css","prz","iva","data","lotto","ddt","cliente__azienda")
         for item in ls:
 #            i=0
             t=trstrs.filter(ddt=item).values()
@@ -411,8 +426,7 @@ class Produt:
                     #el["ddt"]=""
                 ddtls.append(el)
                 i=1
-        o=trs[0]["cliente__azienda"]
-        self.Ddt2Fatt(ddtls,o)
+        self.Ddt2Fatt(ddtls,cln)
         return ddtls
             
         

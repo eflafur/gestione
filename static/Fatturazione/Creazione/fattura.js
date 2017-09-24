@@ -96,8 +96,8 @@ $(document).ready(function(){
     $("#btems").click(function(){
         Invia('I');
         ar1.length=0
-        if(pvl!="")
-            window.location.replace("sospesa");
+        //if(pvl!="")
+            //window.location.replace("sospesa");
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#cliente").focus();
@@ -230,9 +230,12 @@ function Invia(act){
         "fattura",
       {res:JSON.stringify(ar1),azione:act,item:pvl},
     function (result){
-        if(result!=" " && act=='S') 
+        var label=""
+        if(result.length!=0){ 
             for(i=0;i<result.length;i++)
-                alert(result[i]+"negativo")
+                label=label+result[i].num+" eccedenze per articolo: "+ result[i].cod+'\n'
+            alert(label)
+        }
     });
     return;
 };

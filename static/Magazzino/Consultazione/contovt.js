@@ -8,6 +8,7 @@ $(document).ready(function(){
         GetBolla('t');
     });
     $("#btncvc").click(function(){
+        $("#tbfcv1").hide();
         GetBolla('c');
     });
 
@@ -19,6 +20,8 @@ function GetBolla(x) {
       "cvt",
       {item:x},
       function(res){
+        if(res.length==0)
+            return
         var k=0;
         var before="";
         var label="";

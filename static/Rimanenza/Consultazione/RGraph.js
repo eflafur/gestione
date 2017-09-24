@@ -96,21 +96,18 @@ $('#tree1').on('tree.contextmenu',function(event) {
         }
 });
 
-
-
-
 function SetNode(q){
     var arr= new Array();
     arr=node.name.split(':');
+    sl=arr[1]-q
     $.post(
         "lkrgraph",
         {node:node.id,peso:q,act:"set"},
         function(res){
-        
-        });
-    updateNode(arr[0],q)
+        updateNode(arr[0],sl)
         $("#ps").hide();
         $("#go").hide();
+    });
 };
  
  function updateNode(cod,p){

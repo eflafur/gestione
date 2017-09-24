@@ -8,7 +8,7 @@ $(document).ready(function(){
         $("#btddt").hide();
         $("#tbf1").hide();
         $("#tbf2").hide();
-        GetTable($("#clientes").val());
+        GetTable($("#clientes option:selected").val());
     });
     
    $("#btddt").click(function(){
@@ -61,9 +61,9 @@ function GetDdt(){
     x=0;
     $.post(
         "ddt",
-        {ddt:JSON.stringify(ar),action:"ddt"},
+        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val()},
         function(res){
-            imp=res[i]["ps"]*res[i]["prz"]*(parseFloat(res[i]["iva"])+1);
+//            imp=res[i]["ps"]*res[i]["prz"]*(parseFloat(res[i]["iva"])+1);
             var label="";
             for (i=0;i<res.length;i++){
                 label=label + '<tr>';
