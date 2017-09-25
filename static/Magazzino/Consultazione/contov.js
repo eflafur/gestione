@@ -13,7 +13,7 @@ $(document).ready(function(){
     });
     $("#btmrg").click(function(){
         Write();
-        alert("Reimposta la selezione") 
+//        alert("Reimposta la selezione") 
     });
     $("#btddt").click(function(){
         PushDdt();

@@ -63,7 +63,6 @@ class Produt:
                 try:
                     ltt=ltcod[0].id
                 except:
-                    #lsecc.clear()
                     ecc={}
                     ecc["num"]=item["css"]
                     ecc["cod"]=item["cod"]
@@ -108,13 +107,14 @@ class Produt:
         ls=[]
         if(sps!=""):
             rec=Sospese.objects.filter(fatturas=sps)
-            rec.delete()
+    #        rec.delete()
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         s=trasporto.objects.latest("id")
         f=(s.ddt).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
         for item in line:
+            csssps=0
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
@@ -154,8 +154,11 @@ class Produt:
                     ecc={}
                     ecc["num"]=res
                     ecc["cod"]=item["cod"]
+                    csssps=css-res
                     lsecc.append(ecc)
-            rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,
+            #if(csssps>0):
+                #css=csssps
+            rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-csssps,
                         ddt=fatt,lotto=ltt)
             rec.save()
             line[i]["lotto"]=bl
@@ -172,23 +175,25 @@ class Produt:
             return casse
         if(num>=0 and lotti[i].id!=lotto):
             bl.append(lotti[i].id)
-#            lt1=lotti.get(id=lotti[i].id)
-            lotti[i].cassaexit=lotti[i].cassaexit+casse
-            lotti[i].costo=lotti[i].costo+prz*qc*casse
-            lotti[i].save()
-            #lt1.cassaexit=lotti[i].cassaexit+casse
-            #lt1.save()
+            lt1=lotti.get(id=lotti[i].id)
+            #lotti[i].cassaexit=lotti[i].cassaexit+casse
+            #lotti[i].costo=lotti[i].costo+prz*qc*casse
+            #lotti[i].save()
+            lt1.costo=lotti[i].costo+prz*qc*casse
+            lt1.cassaexit=lotti[i].cassaexit+casse
+            lt1.save()
 #            return bl
             return 0
         else:
             if(lotti[i].id!=lotto):
                 bl.append(lotti[i].id)
-                #lt1=lotti.get(id=lotti[i].id)
-                #lt1.cassaexit=lotti[i].cassa
-                #lt1.save()
-                lotti[i].costo=lotti[i].costo+prz*qc*(num+casse)
-                lotti[i].cassaexit=lotti[i].cassa
-                lotti[i].save()
+                lt1=lotti.get(id=lotti[i].id)
+                lt1.costo=lotti[i].costo+prz*qc*(num+casse)
+                lt1.cassaexit=lotti[i].cassa
+                lt1.save()
+                #lotti[i].costo=lotti[i].costo+prz*qc*(num+casse)
+                #lotti[i].cassaexit=lotti[i].cassa
+                #lotti[i].save()
             else:
                 num=casse*(-1)
             i=i+1
