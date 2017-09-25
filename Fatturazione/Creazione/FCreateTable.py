@@ -1,5 +1,5 @@
-import django
-django.setup()
+#import django
+#django.setup()
 from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
 from decimal import Decimal
 from django.db.models import Q,F
@@ -44,18 +44,16 @@ class Produt:
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         if(sps!=""):
             rec=Sospese.objects.filter(fatturas=sps)
-            rec.delete()
+    #        rec.delete()
         s=Scarico.objects.latest("id")
         f=(s.fattura).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
         for item in line:
+            bl.clear()
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
             iva1=float(item["iva"])-1
-            rec1=Saldo.objects.get(idcod__cod=item["cod"])
-            rec1.q=rec1.q-(int(item["css"]))
-            rec1.save()
             ltcod=lotto.filter(idcod__cod=item["cod"])
             if(item["lotto"]!="" and sps==""):
                 ltt=int(item["lotto"])
@@ -74,12 +72,13 @@ class Produt:
             prz=Decimal(item["prz"])
             ps=Decimal(item["ps"])
             css=int(item["css"])
+            csssps=css
+            qc=ps/css
             if(num>=0):
                 ltid.cassaexit=css+ltid.cassaexit
                 ltid.costo=ltid.costo+ps*prz
                 ltid.save()
             else:
-                qc=ps/css
                 cst=ltid.costo+prz*qc*(num+css)
                 ltid.costo=cst
                 ltid.cassaexit=ltid.cassa
@@ -89,11 +88,18 @@ class Produt:
                     ecc={}
                     ecc["num"]=res
                     ecc["cod"]=item["cod"]
+                    csssps=css-res
                     lsecc.append(ecc)
-            rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,
+            qsps=qc*csssps
+            rec1=Saldo.objects.get(idcod__cod=item["cod"])
+            rec1.q=rec1.q-csssps
+            rec1.save()
+            rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qsps,cassa=csssps,
                                     fattura=fatt,lotto=ltt,iva=iva1)
             rec.save()
-            line[i]["lotto"]=bl
+            line[i]["lotto"]=bl.copy()
+            line[i]["css"]=csssps
+            line[i]["ps"]=qc*csssps
             i=i+1
         rg=list(line)
         self.stampaFattura(fatt,c,rg)
@@ -114,12 +120,10 @@ class Produt:
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
         for item in line:
+            bl.clear()
             csssps=0
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
-            rec1=Saldo.objects.get(idcod__cod=item["cod"])
-            rec1.q=rec1.q-(int(item["css"]))
-            rec1.save()
             ltcod=lotto.filter(idcod__cod=item["cod"])
             if(item["lotto"]!="" and sps==""):
                 ltt=int(item["lotto"])
@@ -139,12 +143,13 @@ class Produt:
             prz=Decimal(item["prz"])
             ps=Decimal(item["ps"])
             css=int(item["css"])
+            csssps=css
+            qc=ps/css
             if(num>=0):
                 ltid.cassaexit=css+ltid.cassaexit
                 ltid.costo=ltid.costo+ps*prz
                 ltid.save()
             else:
-                qc=ps/css
                 cst=ltid.costo+prz*qc*(num+css)
                 ltid.costo=cst
                 ltid.cassaexit=ltid.cassa
@@ -156,12 +161,16 @@ class Produt:
                     ecc["cod"]=item["cod"]
                     csssps=css-res
                     lsecc.append(ecc)
-            #if(csssps>0):
-                #css=csssps
-            rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-csssps,
+            qsps=qc*csssps
+            rec1=Saldo.objects.get(idcod__cod=item["cod"])
+            rec1.q=rec1.q-csssps
+            rec1.save()
+            rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=qsps,cassa=csssps,
                         ddt=fatt,lotto=ltt)
             rec.save()
-            line[i]["lotto"]=bl
+            line[i]["lotto"]=bl.copy()
+            line[i]["css"]=csssps
+            line[i]["ps"]=qc*csssps
             i=i+1
         rg=list(line)
         self.stampaFattura(fatt,c,rg)            
@@ -169,6 +178,7 @@ class Produt:
     
     def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
         num=0
+        data=list(lotti)
         try:
             num=lotti[i].cassa-(lotti[i].cassaexit+casse)
         except IndexError:

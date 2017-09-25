@@ -31,20 +31,20 @@ class MRim:
         except IndexError:
             return num
         if(num>=0 and lotti[i].id!=lotto):
-#            lt1=lotti.get(id=lotti[i].id)
-            lotti[i].cassaexit=lotti[i].cassaexit+casse
-            lotti[i].save()
-            #lt1.cassaexit=lotti[i].cassaexit+casse
-            #lt1.save()
+            lt1=lotti.get(id=lotti[i].id)
+            #lotti[i].cassaexit=lotti[i].cassaexit+casse
+            #lotti[i].save()
+            lt1.cassaexit=lotti[i].cassaexit+casse
+            lt1.save()
 #            return bl
             return 0
         else:
             if(lotti[i].id!=lotto):
-                #lt1=lotti.get(id=lotti[i].id)
-                #lt1.cassaexit=lotti[i].cassa
-                #lt1.save()
-                lotti[i].cassaexit=lotti[i].cassa
-                lotti[i].save()
+                lt1=lotti.get(id=lotti[i].id)
+                lt1.cassaexit=lotti[i].cassa
+                lt1.save()
+                #lotti[i].cassaexit=lotti[i].cassa
+                #lotti[i].save()
             else:
                 num=casse*(-1) 
             i=i+1

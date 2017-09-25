@@ -4,7 +4,7 @@ flag=$("#fl").text();
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    $("#fl").hide();
+    $("#ggraph").hide();
     $("#go").click(function(){
         SetNode($("#peso").val());
     });
