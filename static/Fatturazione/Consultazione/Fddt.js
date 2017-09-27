@@ -1,17 +1,16 @@
 var res=[];
+var dt1;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-
-   
-    
+    $("#bt4").hide()
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01", 
         onSelect: function (date) {
+            dt1=date;
             $("#tb62").html(" ");
             $("#tbf2").hide();
             GetTable(date);
             $("#pf").hide();
- 
-        }
+         }
     });
     
     $("#tablef").on('click','a',function(){
@@ -22,8 +21,15 @@ $(document).ready(function(){
         $("#pf").show();
         $("#tbf1").hide();
         $("#tbf2").show();
-        
+        $("#bt4").show();
        // window.location.replace("fattura?nome="+a+"&azione=ftr");
+    });
+    $("#btddt2").click(function(){
+        $("#bt4").hide()
+        $("#tb62").html(" ");
+        $("#tbf2").hide();
+        GetTable(dt1);
+        $("#pf").hide();
     });
     
 });

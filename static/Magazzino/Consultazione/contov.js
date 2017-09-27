@@ -56,14 +56,14 @@ function Write() {
         if( res[i].bolla!=before)
             label=label + '<td><input type="checkbox" value='+res[i].bolla+'></td>';
         else
-            label=label + '<td></td>';
+        label=label + '<td></td>';
         label=label + '<td>' +res[i].bolla+ '</td>';
         label=label + '<td>' + res[i].idcod__cod+ '</td>';
         label=label + '<td>' + res[i].q+ '</td>';
         label=label + '<td>' + res[i].cassa + '</td>';
         label=label + '<td>' + res[i].data+ '</td>';
         label=label + '<td>' +res[i].costo+ '</td>';
-        label=label + '<td>' +nt+ '</td>';
+        label=label + '<td>' +nt.toFixed(2)+ '</td>';
         label=label + '</tr>';
         before=res[i].bolla;
     }

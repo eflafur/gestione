@@ -13,9 +13,9 @@ $(document).ready(function(){
     
    $("#btddt").click(function(){
         $("#tbf1").hide();
-        $("#tbf2").show();
         GetDdt()
         $("#btddt").hide();
+//        $("#tbf2").hide();
     });
 });
 
@@ -73,12 +73,13 @@ function GetDdt(){
                 label=label + '<td>' + res[i]["css"] + '</td>';
                 label=label + '<td>' + res[i]["prz"] + '</td>';
                 label=label + '<td>' + res[i]["iva"]+ '</td>';
-                label=label + '<td>' + imp + '</td>';
+//                label=label + '<td>' + imp + '</td>';
                 label=label + '<td>' + res[i]["data"] + '</td>';
                 label=label + '<td>' + res[i]["lotto"] + '</td>';
                 label=label + '</tr>';
             }
             $("#tb7").html(label);
+            $("#tbf2").show();
         });
 };
 
