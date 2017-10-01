@@ -34,6 +34,7 @@ urlpatterns = [
     url('gioco',Mviews.Gioco),
     url('cvc',Mviews.Contov),
     url('cvt',Mviews.ContovT),
+    url('fattfrn',Mviews.FattFrn),
 
 #    url('lkprodotto',Mviews.LKCaricoProdotto),
 
@@ -50,8 +51,12 @@ urlpatterns = [
     url('ddt',Fviews.DDT),
     url('gino',Fviews.LKDdt),
     
-    #URL DI RIMANENZA
+    #URL DI BILANCIO
     url('lkrgraph',Rviews.LKRGraph),
     url('rim',Rviews.RBase),
+    url('rtotart',Rviews.RTotArt),
+    url('rart',Rviews.RArt),
+    url('rfrn',Rviews.RFrn),
+    url('rtot',Rviews.RTot),
    
 ]

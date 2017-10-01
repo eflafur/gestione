@@ -1,0 +1,59 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-2">
+   <div class="row">
+        <div class="col-md-8"><h4>Ricerca per Cliente</h4> </div>      
+    </div>
+    </br>
+
+    <div class="row">
+        <div class="col-md-3" id="cl">  
+                <p>Fornitore<select class="form-control" id="azienda"></p> 
+                    {% for entry in items %}
+                        <option value="{{entry.azienda}}">{{entry.azienda}}</option>
+                    {%endfor%}
+            </select> 
+        </div>
+        <div class="col-md-2" >  
+          <div class="input-group" id="cldt2">
+            <p>Margine:<input type = "number" id = "dt2"  class="form-control"></p>
+            </div>   
+        </div>
+    </br>
+    
+        <div class="btn-group">
+            <button type="button" class="btn  btn-success" id="btmrg">Cambia</button>
+            <button type="button" class="btn  btn-success" id="btddt">Emetti</button>
+        </div>
+    </div>
+    </br>
+    
+     <div class="row">
+        <div class=" col-md-11" id="tbf1" >
+            <table id="tablef"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th></th>
+                        <th>Bolla</th>
+                        <th>Articolo</th>
+                        <th>Peso</th>
+                        <th>Casse</th>
+                        <th>Data</th>
+                        <th>Importo</th>
+                        <th>Netto a Pagare</th>
+                    </tr>
+                </thead>
+                <tbody id="tb6"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Magazzino/Consultazione/contov.js' %}" ></script>
+{% endblock %}

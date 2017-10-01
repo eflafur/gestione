@@ -46,11 +46,11 @@ $(document).ready(function(){
              //});
  
                 
-                //$('#idLKP11 tr').each(function() {
-                    //var customerId = $(this).find("td:first").html(); 
-                    //$("pp").val(customerId);
-                    //alert (customerId);
-                //});
+                $('#idLKP11 tr').each(function() {
+                    var customerId = $(this).find("td:first").html(); 
+                    $("pp").val(customerId);
+                    alert (customerId);
+                });
                 
                 //LightTd();
                 //LightLi();
@@ -93,21 +93,21 @@ $(document).ready(function(){
             
             //$("#indice").children().css("color", "blue");
             
-            var es=$("#menu2 ul>li");
-           var d=$(es).find("li:first-child").find("li").first();
-           // var  dd=$(es).children().find("li").first().next();//.find("li:eq(1)");//.children();//.find("li:first-child");
-            es.css("color","yellow");
-            $(d).each(function(index){
-//                    $(this).text("pipo");
-  //                  alert($(this).text())
-            });
+            //var es=$("#menu2 ul>li");"input"
+           //var d=$(es).find("li:first-child").find("li").first();
+           //// var  dd=$(es).children().find("li").first().next();//.find("li:eq(1)");//.children();//.find("li:first-child");
+            //es.css("color","yellow");
+            //$(d).each(function(index){
+////                    $(this).text("pipo");
+  ////                  alert($(this).text())
+            //});
             
-            $("#btl").on(click,"td",function(){
-                $("#ct option").each(function(){
-                        var a=$(this).text();
-                        alert (a)
-                });
-            });
+            //$("#btl").on(click,"td",function(){
+                //$("#ct option").each(function(){
+                        //var a=$(this).text();
+                        //alert (a)
+                //});
+            //});
 
 
             //var a=$("#menu2").children();
@@ -118,8 +118,8 @@ $(document).ready(function(){
         // $("#menu2 li").each(function(index){
               //alert(index);
          // });
-         $("#tbf1").show();
-         GetBolla();
+         //$("#tbf1").show();
+         //GetBolla();
 
     });
             

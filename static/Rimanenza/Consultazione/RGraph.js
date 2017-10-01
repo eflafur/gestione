@@ -27,9 +27,6 @@ $(document).ready(function(){
         $("#ggrapht").hide();
         $("#ggraph").show();
     });
-    
-
-    
 });
 
     function GetGraph(fl){

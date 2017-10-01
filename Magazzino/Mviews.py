@@ -133,15 +133,10 @@ def EliminaBolla(request):
         res=message["a1"]
 #        res=re.sub('[" "]',"",message["a1"])
         var=res.split(":")
-        if((message["a2"]=="js")):
-            obj1=MGetTable.GetData()
-            res=obj1.GetBolla(var)
-            return JsonResponse(res,safe=False)
-        elif ((message["a2"]!="js")):
-            obj5=MModifica.ModProd()
-            res=obj5.DelBolla(var)
-        obj3=MGetTable.GetData()
-        res=obj3.GetCarico()
+        obj5=MModifica.ModProd()
+        res=obj5.DelBolla(var)
+        obj5=MGetTable.GetData()
+        res=obj5.GetCarico()
         context={"items":res}
         return render(request,"Magazzino/Modifica/eliminabolla.html",context)
     if(request.method=="GET"):
@@ -156,14 +151,14 @@ def Contov(request):
         return render(request,"Validazione/login.html",context)         
     if(request.method=="POST"):
         message=request.POST
-        if(message["azione"]=="B"):
+        if(message["azione"]=="b"):
             obj=MGetTable.GetData()
             v=message["cln"]
             res=obj.GetBollaCv(v)
-        if(message["azione"]=="P"):
-            ret=jsonpickle.decode(message["ddt"])
-            if(ret[0]==None):
-                ret.pop(0);
+        if(message["azione"]=="p"):
+            ret=jsonpickle.decode(message["data"])
+            #if(ret[0]==None):
+                #ret.pop(0);
             mrg=message["mrg"]
             frn=message["frn"]
             obj=MGetTable.GetData()
@@ -188,8 +183,58 @@ def ContovT(request):
     if(request.method=="GET"):
         context={"items":""}
         return render(request,"Magazzino/Consultazione/contovt.html",context)
+
+
+def FattFrn(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
+    if(request.method=="POST"):
+        message=request.POST
+        if(message["azione"]=="g"):
+            v=message["cln"]
+            obj=MGetTable.GetData()
+            res=obj.GetCvbyPrd(v)
+        elif(message["azione"]=="v"):
+            v=message["cvd"]
+            obj=MGetTable.GetData()
+            res=obj.GetCvFatt(v)
+        elif(message["azione"]=="p"):
+            ret=jsonpickle.decode(message["data"])
+            fatt=message["fatt"]
+            frn=message["frn"]
+            obj=MGetTable.GetData()
+            res=obj.SaveCvFatt(ret,fatt,frn)
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        obj=Modifica.ModProd()
+        res=obj.GetProduttori()
+        context={"prod":res}
+        return render(request,"Magazzino/Bilancio/fattfrn.html",context)
     
 #test----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def Gioco(request):
     res=""

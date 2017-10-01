@@ -15,8 +15,8 @@ function Put(item) {
         "elimina",
         { a1: item,a2:"js"},
         function (result) {
-        $("#tbf1").show();
-            Write(result)
+        //$("#tbf1").show();
+            //Write(result)
     });
     return;
 };

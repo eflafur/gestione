@@ -1,0 +1,53 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-2">
+   <div class="row">
+        <div class="col-md-8 "><h4>Bilancio: Saldo per tutti gli Articoli</h4> </div>      
+    </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-2">     
+            <div class="input-group" id="dtft">
+                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>   
+        </br>
+        <div class="col-md-3 col-md-offset-1" id="btt">     
+            <div class="btn-group">
+                     <button type="button" class="btn  btn-success  btn-default" id="btsps">Totale</button>
+                     <button type="button" class="btn  btn-success  btn-default" id="btems">Venduto</button>
+             </div>
+       </div>
+    </div>
+        <!--<div class="col-md-2" id="pf">-->
+            <!--<p>Saldo:<input type = "text" id = "btot" readonly></p>-->
+        <!--</div>-->
+    <!--</div>-->
+    
+    <div class="row">
+          <div class=" col-md-8" id="tbtart" >
+            <table id="mytable1"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Fornitore</th>
+                        <th>Articolo</th>
+                        <th>Saldo €</th>
+                        <th>Colli Giacenza</th>
+                    </tr>
+                </thead>
+                <tbody id="tbtart1"></tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Rimanenza/Report/Rtotart.js' %}" ></script>
+{% endblock %}

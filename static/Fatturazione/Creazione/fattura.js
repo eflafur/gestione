@@ -187,6 +187,11 @@ $(document).ready(function(){
         return;
     });
 
+    //$("#btstp").click(function(){
+        //Invia('p');
+    //});
+
+
     $("#lotto").on('click',function(){
         lt=$(this).val();
     });

@@ -1,0 +1,41 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-2">
+   <div class="row">
+        <div class="col-md-8 "><h4>Bilancio: Saldo per Articolo</h4> </div>      
+    </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-4" id="bcod">     
+            <p>Codice<select class="form-control" name="a1" id="bcodice"></p>
+                {% for entry in items %}
+                   <option value="{{ entry.id}}">{{ entry.cod}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">     
+            <div class="input-group" id="dtft">
+                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>
+        <!--<div class="col-md-3 col-md-offset-1" >  -->
+          <!--<div class="btn-group" id="btcv">-->
+            <!--<button type="button" class="btn  btn-warning" id="btddt">Invia</button>-->
+          <!--</div>-->
+       <!--</div>-->
+        <div class="col-md-2" id="pf">
+            <p>Saldo:<input type = "text" id = "btot" readonly></p>
+        </div>
+    </div>
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Rimanenza/Report/Rart.js' %}" ></script>
+{% endblock %}

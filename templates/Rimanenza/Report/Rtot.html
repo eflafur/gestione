@@ -1,0 +1,41 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-2">
+   <div class="row">
+        <div class="col-md-8 "><h4>Bilancio: Saldo Totale</h4> </div>      
+    </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-2">     
+            <div class="input-group" id="dtft">
+                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>
+     </br>   
+     <div class="col-md-3 col-md-offset-1" id="btt">     
+        <div class="btn-group">
+                 <button type="button" class="btn  btn-success  btn-sm" id="btsps">Totale</button>
+                 <button type="button" class="btn  btn-success  btn-sm" id="btems">Venduto</button>
+         </div>
+     </div>
+   </div>
+   </br>
+    <div class="row">
+        <div class="col-md-2" id="pf">
+            <p>Saldo €:<input type = "text" id = "btot" readonly></p>
+       </div>
+       <div class="col-md-2" id="pf1">
+            <p>Colli Rimasti:<input type = "text" id = "btotcl" readonly></p>
+       </div>
+    </div>
+  </div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Rimanenza/Report/Rtot.js' %}" ></script>
+{% endblock %}

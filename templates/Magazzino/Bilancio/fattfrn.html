@@ -9,9 +9,14 @@
     <!--</div>-->
 
     <div class="row">
-      <div class="col-md-3" id="cl0">  
+     <div class="col-md-2" id="nmft">  
+       <div class="input-group">
+          <p>Num Fattura<input type="text" id="numfatt" class="form-control" name="a9" placeholder="Num Fattura"></p>
+       </div>
+     </div>
+      <div class="col-md-3" id="cl">  
             <p>Fornitore<select class="form-control" id="azienda"></p> 
-                {% for entry in items %}
+                {% for entry in prod %}
                     <option value="{{entry.azienda}}">{{entry.azienda}}</option>
                 {%endfor%}
             </select> 
@@ -25,7 +30,7 @@
         <div class="col-md-2" >  
           <div class="input-group" id="cldt6">
             <p>Importo:<input type = "number" id = "dt6"  class="form-control" readonly></p>
-            <button type="button" class="btn  btn-success btn-sm" id="btcrc">Ricalcola</button>
+            <button type="button" class="btn  btn-success btn-sm" id="btcrc" >Ricalcola</button>
           </div>   
         </div>
         <div class="col-md-2" >  
@@ -59,20 +64,25 @@
        </div>
   </div>  
       </br>
-  <div class=row>
-       <div class="col-md-1" >  
-          <div class="btn-group" id="btslz">
-            <button type="button" class="btn  btn-xs btn-warning" id="btsel">Seleziona</button>
-          </div>
-       </div>
-      </div>
-        
+  
+     <div class="row">
+        <div class=" col-md-7" id="tbf1" >
+            <table id="tablef"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>C.V.</th>
+                        <th>Bolla</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="tb6"></tbody>
+            </table>
+        </div>
         
         <div class=" col-md-12" id="tbf2" >
             <table id="tablef2"  class="table table-hover">
                 <thead id="thd">
                     <tr>
-                        <th></th>
                         <th>Bolla</th>
                         <th>Data</th>
                         <th>Peso</th>
@@ -92,6 +102,5 @@
 {%endblock%}
 
 {%block script%}
-  <script src="{% static 'Magazzino/Consultazione/contov.js' %}" ></script>
+  <script src="{% static 'Magazzino/Bilancio/fattfrn.js' %}" ></script>
 {% endblock %}
-s

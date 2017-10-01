@@ -103,9 +103,11 @@ class Produt:
             i=i+1
         rg=list(line)
         self.stampaFattura(fatt,c,rg)
+#        os.system("
         return lsecc
     
     def ScriviDDT(self,line,sps):
+        c=""
         lsecc=[]
         i=0
         res=0
@@ -125,6 +127,8 @@ class Produt:
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
             ltcod=lotto.filter(idcod__cod=item["cod"])
+            vv=list(ltcod)
+            
             if(item["lotto"]!="" and sps==""):
                 ltt=int(item["lotto"])
             else:
@@ -154,6 +158,8 @@ class Produt:
                 ltid.costo=cst
                 ltid.cassaexit=ltid.cassa
                 ltid.save()
+                vv1=list(ltcod)
+                
                 res=self.Rec(ltcod,num*(-1),0,ltt,bl,qc,prz)
                 if(res!=0 and sps!=""):
                     ecc={}
@@ -179,6 +185,7 @@ class Produt:
     def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
         num=0
         data=list(lotti)
+        dd=lotti[i].id
         try:
             num=lotti[i].cassa-(lotti[i].cassaexit+casse)
         except IndexError:

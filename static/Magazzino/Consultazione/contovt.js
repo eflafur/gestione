@@ -5,11 +5,15 @@ $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#tbfcv1").hide();
     $("#btncvt").click(function(){
-        GetBolla('t');
+        GetBolla('p');
     });
     $("#btncvc").click(function(){
         $("#tbfcv1").hide();
         GetBolla('c');
+    });
+    $("#btnf").click(function(){
+        $("#tbfcv1").hide();
+        GetBolla('f');
     });
 
 });
@@ -20,11 +24,9 @@ function GetBolla(x) {
       "cvt",
       {item:x},
       function(res){
-        if(res.length==0)
-            return
+        var label="";
         var k=0;
         var before="";
-        var label="";
         $("#tbfcv1").show();
         for (i=0;i<res.length;i++){
             label=label + '<tr>';
@@ -42,28 +44,29 @@ function GetBolla(x) {
             before=res[i].bolla;
         }
         $("#tbcv6").html(label);
+        $("#tbcv6 tr:first").find("td:first").css("color","blue");
     });
         return
 };
 
- function GetBollaDt(){
-    $.post(
-      "cvt",
-      function(result){
-        if (TempUserTable!=null)
-          TempUserTable.destroy();
-          TempUserTable=UserTable.DataTable({
-            "ordering":false,
-            data:eval(result),
-            columns:[
-              {data:"bolla"},
-              {data:"idcod__cod"},
-              {data:"q"},
-              {data:"cassa"},
-              {data:"cassaexit"},
-              {data:"data"}
-            ]
-          });
-      });
-      return;
-  };
+ //function GetBollaDt(){
+    //$.post(
+      //"cvt",
+      //function(result){
+        //if (TempUserTable!=null)
+          //TempUserTable.destroy();
+          //TempUserTable=UserTable.DataTable({
+            //"ordering":false,
+            //data:eval(result),
+            //columns:[
+              //{data:"bolla"},
+              //{data:"idcod__cod"},
+              //{data:"q"},
+              //{data:"cassa"},
+              //{data:"cassaexit"},
+              //{data:"data"}
+            //]
+          //});
+      //});
+      //return;
+  //};

@@ -172,6 +172,8 @@ def Fattura(request):
             itm=message["item"]
             objf=FGetTable.GetData()
             res=objf.GetClienteByNumSospese(itm)
+        elif (message["azione"]=="p"):
+            itm=message["item"]
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         message=request.GET

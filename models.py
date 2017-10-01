@@ -81,7 +81,11 @@ class Carico(models.Model):
 	data=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
 	costo=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True,default=0)
-	p=models.BooleanField(default=False)
+	p=models.SmallIntegerField(default=0)
+	cv=models.IntegerField(null=True,blank=True,default=0)
+	mrg=models.SmallIntegerField(default=0)
+	fattimp=models.DecimalField(max_digits=14,decimal_places=2,null=True,blank=True,default=0)
+	fatt=models.CharField(max_length=10,null=True)
 	def __str__(self):
 		return "%s %s" % (self.q,self.bolla)	
 	
