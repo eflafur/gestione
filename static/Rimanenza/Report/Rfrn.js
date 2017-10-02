@@ -47,7 +47,6 @@ function GetTotArt(ctr){
                 else
                     label=label + '<td></td>';
 //                label=label + '<td><a href="#">' + res[i].ddt + '</a></td>';
-                label=label + '<td>' + res[i].cod + '</td>';
                 label=label + '<td>' +res[i].diff+ '</td>';
                 label=label + '<td>' +res[i].diffcasse+ '</td>';
                 label=label + '</tr>';

@@ -63,9 +63,9 @@ function GetDdt(){
         "ddt",
         {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val()},
         function(res){
-//            imp=res[i]["ps"]*res[i]["prz"]*(parseFloat(res[i]["iva"])+1);
             var label="";
             for (i=0;i<res.length;i++){
+                imp=parseFloat(res[i]["ps"])*parseFloat(res[i]["prz"])*(parseFloat(res[i]["iva"])+1);
                 label=label + '<tr>';
                 label=label + '<td>'+res[i]["ddt"]+'</td>';
                 label=label + '<td>' + res[i]["cod"] + '</td>';
@@ -73,7 +73,7 @@ function GetDdt(){
                 label=label + '<td>' + res[i]["css"] + '</td>';
                 label=label + '<td>' + res[i]["prz"] + '</td>';
                 label=label + '<td>' + res[i]["iva"]+ '</td>';
-//                label=label + '<td>' + imp + '</td>';
+                label=label + '<td>' + imp + '</td>';
                 label=label + '<td>' + res[i]["data"] + '</td>';
                 label=label + '<td>' + res[i]["lotto"] + '</td>';
                 label=label + '</tr>';

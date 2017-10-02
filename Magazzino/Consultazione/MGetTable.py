@@ -145,24 +145,25 @@ class GetData:
         rec=Carico.objects.filter(cv=cvd).values("id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         data=list(rec)
         return data
-    def SaveCvFatt(self,cvls,ft,frn):
+    def SaveCvFatt(self,cvls,ft,frn,mrgg):
         cst=0
         res=Carico.objects.filter(Q(p__lte=1),Q(idcod__produttore__azienda=frn))
         #try:
             #r=res.get(fatt=ft)
-        #except IndexError:
+        #except:
             #return 1
-        r=res.filter(fatt=ft)
-        if (r.exists()):
-            for item in cvls:
-                rec=res.get(id=item["id"])
-                cst=float(item["cst"])
-                rec.fattimp=cst
-                rec.fatt=ft
-                rec.p=2
-                rec.save()
-        else:
-            return 1
+        #r=res.filter(fatt=ft)
+        #if (r.exists()):
+            #return 1
+        #else:
+        for item in cvls:
+            rec=res.get(id=item["id"])
+            cst=float(item["cst"])
+            rec.fattimp=cst
+            rec.fatt=ft
+            rec.mrg=mrgg
+            rec.p=2
+            rec.save()
         return 0
 
     def stampaFattura(self,nFattura, cln, righeFattura,mrg):

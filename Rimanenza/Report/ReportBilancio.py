@@ -52,7 +52,7 @@ class GetReport:
                 dic["diff"]=sumcs-sumft
                 dic["diffcasse"]=sumcasse-sumcassex
                 dic["cod"]=cod
-                dic["frn"]=frn
+                dic["frn"]=item["idcod__produttore__azienda"]
                 ls.append(dic)
                 sumcs=item["costo"]
                 sumft=item["fattimp"]
@@ -60,7 +60,6 @@ class GetReport:
                 sumcassex=sumcassex+item["cassaexit"]
             before=item["idcod__id"]
             cod=item["idcod__cod"]
-            frn=item["idcod__produttore__azienda"]
         return ls
 
     def BFrn(self,line):
@@ -72,7 +71,7 @@ class GetReport:
         sumcassex=0
         frn=""
         cod="" 
-        rec=Carico.objects.filter(Q(data__gte=line["data"]),Q(p__gte=line["tipo"])).values("cassa","cassaexit","idcod__produttore__azienda","costo","fattimp","idcod__cod","idcod__id").order_by("idcod__produttore__id")#,"q","cassa","cassaexit","bolla","data")
+        rec=Carico.objects.filter(Q(data__gte=line["data"]),Q(p__gte=line["tipo"])).values("cassa","cassaexit","idcod__produttore__azienda","costo","fattimp","idcod__cod","idcod__produttore__id").order_by("idcod__produttore__id")#,"q","cassa","cassaexit","bolla","data")
         for item in rec:
             dic={}
             if(before==item["idcod__produttore__id"] or before==""):
@@ -83,14 +82,11 @@ class GetReport:
             else:
                 dic["diff"]=sumcs-sumft
                 dic["diffcasse"]=sumcasse-sumcassex
-                dic["cod"]=cod
-                dic["frn"]=frn
+                dic["frn"]=item["idcod__produttore__azienda"]
                 ls.append(dic)
                 sumcs=item["costo"]
                 sumft=item["fattimp"]
                 sumcasse=sumcasse+item["cassa"]
                 sumcassex=sumcassex+item["cassaexit"]
             before=item["idcod__produttore__id"]
-            cod=item["idcod__cod"]
-            frn=item["idcod__produttore__azienda"]
         return ls

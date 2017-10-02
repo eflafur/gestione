@@ -67,8 +67,8 @@ class Design:
               msp.children.append(msid)               
           mss.children.append(msp)
         msg.children.append(mss)
-        tree.children.append(msg)
-      ls.append(tree)
+      tree.children.append(msg)
+    ls.append(tree)
     return ls  
     
                 

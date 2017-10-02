@@ -167,7 +167,7 @@ function PushDdt(ret){
     ar=JSON.stringify(ret);
     $.post(
         "fattfrn",
-        {data:ar,fatt:$("#numfatt").val(),azione:"p",frn:$("#azienda option:selected").val()},
+        {data:ar,fatt:$("#numfatt").val(),azione:"p",frn:$("#azienda option:selected").val(),mrg:$("#dt2").val()},
         function(ret){
             if(ret==1)
                 alert("Fattura: "+$("#numfatt").val()+" già esistente")
