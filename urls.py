@@ -43,6 +43,8 @@ urlpatterns = [
     url('lkftr',Fviews.LKFattura),
     url('lksps',Fviews.SospesabyCliente),
     url('fattura',Fviews.Fattura),
+    url('recfatt',Fviews.RecFatt),
+    url('recddt',Fviews.RecDdt),
     url('sospesa',Fviews.Sospesa),
     #url('fatt',Fviews.FBase),
     url('ca',Fviews.CreaAnagrafica),

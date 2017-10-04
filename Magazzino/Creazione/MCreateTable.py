@@ -8,7 +8,7 @@ import sys
 import io
 
 class CreateData:
-    def EntrataBolla(self,ls,bl):
+    def EntrataBolla(self,ls,bl,dt):
         before=" "
         tot=0
         totcss=0
@@ -16,7 +16,8 @@ class CreateData:
         seg=line[0]["cod"].split('-')
         p=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__azienda=seg[0]))
         if(p):
-            p1=p.filter().values("q","cassa","idcod__id")
+            p1=p.filter().values("q","cassa","idcod__id","data")
+            dt=p1[0]["data"]
             for itm in p1:
                 rec1=Saldo.objects.get(idcod__id=itm["idcod__id"])
                 rec1.q=rec1.q-itm["cassa"]
@@ -31,7 +32,7 @@ class CreateData:
                     totcss=totcss+int(item["css"])
                 else:
                     codid=IDcod.objects.get(id=before)
-                    rec=Carico(q=tot,cassa=totcss,bolla=bl,idcod=codid)
+                    rec=Carico(q=tot,cassa=totcss,bolla=bl,idcod=codid,data=dt)
                     rec.save()
                     rec1=Saldo.objects.get(idcod__cod=codid)
                     rec1.q=rec1.q+totcss
@@ -45,7 +46,7 @@ class CreateData:
                 totcss=totcss+int(item["css"])
             before=item["id"]
         codid=IDcod.objects.get(id=before)
-        rec=Carico(q=tot,cassa=totcss,bolla=bl,idcod=codid)
+        rec=Carico(q=tot,cassa=totcss,bolla=bl,idcod=codid,data=dt)
         rec.save()
         rec1=Saldo.objects.get(idcod=codid)
         rec1.q=rec1.q+totcss

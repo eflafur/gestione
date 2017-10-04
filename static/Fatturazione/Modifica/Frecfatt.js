@@ -1,6 +1,6 @@
 
-var UserTable=$("#mytable");
-var TempUserTable=null;
+//var UserTable=$("#mytable");
+//var TempUserTable=null;
 
 var option=""
 var optionValues=[];
@@ -16,19 +16,20 @@ $(document).ready(function(){
     
     $("#tablef").on('click','a',function(){
         a=$(this).text();
-        window.location.replace("fattura?nome="+a+"&azione=sps");
+        window.location.replace("fattura?nome="+a+"&azione=ftr");
     });
+    
 });
 
 function GetTable(date){
     $.post(
-        "sospesa",
+        "recfatt",
         {data:date,cliente:" "},
         function(res){
             var label="";
             for (i=0;i<res.length;i++){
                 label=label + '<tr>';
-                label=label + '<td><a href="#">' + res[i].fatturas + '</a></td>';
+                label=label + '<td><a href="#">' + res[i].fattura + '</a></td>';
                 label=label + '<td>' + res[i].cliente__azienda + '</td>';
                 label=label + '<td>' + res[i].valore+ '</td>';
                 label=label + '<td>' +res[i].data + '</td>';

@@ -3,6 +3,7 @@ var sum;
 var i=0;
 var cliente;
 var pvl=$("#psps").text();
+var tipo=pvl.substr(0,2)
 var lotto=[];    
 var lt="";
 $(document).ready(function(){
@@ -15,15 +16,33 @@ $(document).ready(function(){
     $("#pgm").hide();
     $("#cod").hide();
     $("#lt").hide();
-
-    if(pvl!=""){
+    
+    if(tipo=="dd" ){
         $("#cliente").attr('disabled',true);
         $("#cod").hide();
-        $("#dsc").show();
-        $("#desc").focus();
+        $("#dsc").hide();
+        $("#btsps").hide();
+        $("#btems").hide();
         GetLotto();
         GetSospesa();
     }  
+    else if(tipo=="fc" ){
+        $("#cliente").attr('disabled',true);
+        $("#cod").hide();
+        $("#dsc").hide();
+        $("#btsps").hide();
+        $("#ddtft").hide();
+        GetLotto();
+        GetSospesa();
+    } 
+    else if(tipo=="sc" ){
+        $("#cliente").attr('disabled',true);
+        $("#dsc").show();
+        $("#btsps").show();
+        $("#ddtft").show();
+        GetLotto();
+        GetSospesa();
+    } 
 
     $("#cliente").click(function(){
         GetLotto();
@@ -43,7 +62,7 @@ $(document).ready(function(){
     $("#pagam").click(function(){
         $("#cod").show();
     });
-    
+
      $("#codice").click(function(){
         var cod=$("#codice option:selected").text();
         SelLotto(cod);
@@ -80,68 +99,31 @@ $(document).ready(function(){
         ar1.length=0
         if(pvl!="")
             window.location.replace("sospesa");
-        $("#tbf").hide("");
-        $("#cliente").attr('disabled',false);
-        $("#cliente").focus();
-        $("#cod").hide();
-        $("#css").hide();
-        $("#ps").hide();
-        $("#prz").hide();
-        $("#btadd").hide();
-        $("#dsc").hide();
-        $("#pgm").hide();
-        $("#lt").hide();
+        Eval();
     });
     
     $("#btems").click(function(){
         Invia('I');
         ar1.length=0
+        Eval();
+
         //if(pvl!="")
             //window.location.replace("sospesa");
-        $("#tbf").hide("");
-        $("#cliente").attr('disabled',false);
-        $("#cliente").focus();
-        $("#cod").hide("");
-        $("#ps").hide();
-        $("#css").hide();
-        $("#prz").hide();  
-        $("#btadd").hide();
-        $("#dsc").hide();
-        $("#pgm").hide();
-        $("#lt").hide();
+
     });
     
       $("#ddtft").click(function(){
         Invia('D');
         ar1.length=0
-        $("#tbf").hide("");
-        $("#cliente").attr('disabled',false);
-        $("#cliente").focus();
-        $("#cod").hide("");
-        $("#ps").hide();
-        $("#css").hide();
-        $("#prz").hide();  
-        $("#btadd").hide();
-        $("#dsc").hide();
-        $("#pgm").hide();
-        $("#lt").hide();
+        Eval();
     });
     
     $("#btanl").click(function(){
         ar1.length=0
         if(pvl!="")
             window.location.replace("sospesa");
-        $("#tbf").hide("");
-        $("#cliente").attr('disabled',false);
-        $("#cliente").focus();
-        $("#cod").hide("");
-        $("#ps").hide();
-        $("#css").hide();
-        $("#prz").hide();  
-        $("#btadd").hide();
-        $("#dsc").hide();
-        $("#pgm").hide();
-        $("#lt").hide();
+         Eval();
+
     });
     
     $("#btadd").click(function(){
@@ -172,6 +154,7 @@ $(document).ready(function(){
             ar1.push(obj);
             lt=""
             Fill();
+            $("#codice").attr('disabled',false);
             $("#tbf").show("");
             $("#peso").val("");
             $("#cassa").val("");
@@ -196,15 +179,31 @@ $(document).ready(function(){
         lt=$(this).val();
     });
 
-    $('#tbfb').on('click','a',function(){
+
+   $('#tbfb').on('click','a',function(){
         var arr= [];
         arr=$(this).text().split('-');   
         if(arr[1]=='E')
             DeleteRow(arr[0]);
+        else if(arr[1]=='A')
+            AddRow(arr[0]);
     });
-    return;
 });
 
+
+function Eval(){
+    $("#tbf").hide("");
+    $("#cliente").attr('disabled',false);
+    $("#cliente").focus();
+    $("#cod").hide("");
+    $("#ps").hide();
+    $("#css").hide();
+    $("#prz").hide();  
+    $("#btadd").hide();
+    $("#dsc").hide();
+    $("#pgm").hide();
+    $("#lt").hide();
+};
 
 function Fill(){
     var label="";
@@ -221,7 +220,9 @@ function Fill(){
         label = label + '<td>' + ar1[i].iva+ '</td>';
         label = label + '<td>' + ar1[i].prz+ '</td>';
         label = label + '<td>' + imp+ '</td>';
+        label = label + '<td>' + ar1[i].lotto+ '</td>';
         label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
+        label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
         label = label + '</tr>';
     }
     label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sum.toFixed(2)+ '</td></tr>';
@@ -242,12 +243,29 @@ function Invia(act){
             alert(label)
         }
     });
-    return;
+    return;    $("#dsc").hide();
+
 };
 
 function DeleteRow(row){
     ar1.splice(row-1,1);
     Fill();
+};
+function AddRow(row){
+    t=ar1[row-1].cod;
+    lt=ar1[row-1].lotto;
+    DeleteRow(row)
+//    if(tipo!="sc"){
+        $("#ps").show();
+        $("#css").show();
+        $("#prz").show();
+        $("#btadd").show();
+        $("#cod").show();
+        $("#pgm").hide();
+  //  }
+     $("#codice").attr('disabled',true);
+     $("#codice option:contains("+t+")").prop('selected', true)
+//    $("#codice option:selected").text(t);
 };
 
 function GetSospesa(){

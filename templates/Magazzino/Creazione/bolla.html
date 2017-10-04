@@ -7,17 +7,17 @@
  <div class="row">
   <div class="col-md-8 col-md-offset-2"><h4>Nuova Bolla</h4> </div>      
  </div>
- <br/>
  
   <div class="row">
+
    <div class="col-md-5">
      <div class="row">
       <div class="col-md-5"> 
        <div class="input-group" id="bl">
         <p>Bolla<input type="text" id="bolla" class="form-control" name="a2" ></p>
        </div>
-      </div> 
-
+    </div> 
+ </br>
      <div class="btn-group">
               <button type="button" class="btn  btn-success" id="btems">Emissione</button>
               <button type="button" class="btn  btn-success" id="btanl">Annulla</button>
@@ -27,7 +27,8 @@
 
  
   <div class="row">
-   <div class="col-md-7">  
+
+   <div class="col-md-5">  
     <div class="input-group" id="cln">
      <p>Cliente<select class="form-control" name="cln" id="cliente"></p>
        {% for entry in prod %}
@@ -36,6 +37,11 @@
      </select>
     </div>
    </div>
+     <div class="col-md-2">     
+            <div class="input-group" id="dtft">
+                <p>Data:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>     
   </div>
   </br>
   

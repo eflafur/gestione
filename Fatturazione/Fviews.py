@@ -185,15 +185,40 @@ def Fattura(request):
         if(request.GET.get("azione")):
             dc={} 
             ls=[]
-            if(message["azione"]=="sps"):
-                res1=objf.GetClienteByNumSospese(message["nome"])
+            res1=objf.GetClienteByNumSospese(message["nome"])
             dc["azienda"]=res1[0]["cliente__azienda"]
             ls.append(dc)
             context={"items":res,"itemsd":res2,"itemsp":res3,"itemsf":ls,"el":message["nome"]}
-            return render(request,"fatturazione/Creazione/fattura.html",context)
-        res1=objf.GetCliente()
-        context={"items":res,"itemsf":res1,"itemsd":res2,"itemsp":res3}
+        else:
+            res1=objf.GetCliente()
+            context={"items":res,"itemsf":res1,"itemsd":res2,"itemsp":res3}
         return render(request,"fatturazione/Creazione/fattura.html",context)
+    
+def RecFatt(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)
+    if(request.method=="POST"):
+        message=request.POST
+        objf=FCreateTable.Produt()
+        res=objf.RecFatt(message);
+        return JsonResponse(res,safe=False)
+    if(request.method=="GET"):
+        context={"items":""}
+        return render(request,"fatturazione/Modifica/Frecfatt.html",context)
+
+def RecDdt(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)
+    if(request.method=="POST"):
+        message=request.POST
+        objf=FCreateTable.Produt()
+        res=objf.RecDdt(message);
+        return JsonResponse(res,safe=False)
+    if(request.method=="GET"):
+        context={"items":""}
+        return render(request,"fatturazione/Modifica/Frecddt.html",context)    
 
 def Sospesa(request):
     if(login==0):
@@ -201,8 +226,6 @@ def Sospesa(request):
         return render(request,"Validazione/login.html",context)
     if(request.method=="POST"):
         message=request.POST
-        #if(message["azione"]=="reopen"):
-            #return JsonResponse(res,safe=False)
         objf=FCreateTable.Produt()
         res=objf.GetSospesa(message);
         return JsonResponse(res,safe=False)

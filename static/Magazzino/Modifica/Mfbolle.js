@@ -4,15 +4,9 @@ var TempUserTable=null;
 
 var option=""
 var optionValues=[];
-var pvl=$("#psps").text();
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    if (pvl!=""){
-        var ddt="2017-01-01";
-        $("#dt2").val(ddt);
-        GetTable(ddt)
-    }
 
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",onSelect: function (date) {
             GetTable(date);
@@ -34,7 +28,7 @@ $(document).ready(function(){
 function GetTable(date){
     $.post(
         "lkfornitore",
-        {res:$("#lkfrn option:selected").text(),res1:date,prs:pvl},
+        {res:$("#lkfrn option:selected").text(),res1:date},
         function(res){
             var below=" ";
             var label="";

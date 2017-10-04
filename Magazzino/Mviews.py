@@ -22,21 +22,19 @@ H4=0
 def CreaBolla(request):
     dc={} 
     ls=[]
-    ls1=[]
+#    ls1=[]
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)        
     if(request.method=="POST"):
-        ls1.clear()
+#        ls1.clear()
         message=request.POST
         if(message["azione"]=="gid"):
-            ls1.append(message["bolla"])
-            ls1.append(message["cliente"])
+            #ls1.append(message["bolla"])
+            #ls1.append(message["cliente"])
             objf=MGetTable.GetData()
-            res1=objf.GetBolla(ls1)         
-            if(res1 and message["dod"]==""):
-                res="full"
-            elif (res1 and message["dod"]!=""):
+            res1=objf.GetBolla(message)         
+            if(res1):
                 obj1=GetProduct.LKPData()
                 res2=obj1.GetIDcodbyProvider(message)            
                 res={}
@@ -48,8 +46,9 @@ def CreaBolla(request):
         elif(message["azione"]=="I"):
             lst = jsonpickle.decode(message['res'])
             bolla=message["bolla"]
+            dt=message["dt"]
             obj1=MCreateTable.CreateData()
-            res=obj1.EntrataBolla(lst,bolla)
+            res=obj1.EntrataBolla(lst,bolla,dt)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         message=request.GET
@@ -87,23 +86,23 @@ def LKCaricoFornitore(request):
     if(request.method=="POST"):
         message=request.POST
         objm=MGetTable.GetData()
-        if(message["prs"]!=""):
-            ls1.append(message["prs"])
-            ls1.append(message["res"])
-            res=objm.GetBolla(ls1)
-        else:
-            res=objm.GetIdCod(message);
+        #if(message["prs"]!=""):
+            #ls1.append(message["prs"])
+            #ls1.append(message["res"])
+            #res=objm.GetBolla(ls1)
+        #else:
+        res=objm.GetIdCod(message);
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         message=request.GET
-        if(request.GET.get("azione")):
-            dc["azienda"]=message["cliente"]
-            ls.append(dc)
-            context={"prod":ls,"el":message["bolla"]}
-        else:        
-            mod=Modifica.ModProd()
-            prod=mod.GetProduttori()
-            context={"prod":prod,"el":""}
+        #if(request.GET.get("azione")):
+            #dc["azienda"]=message["cliente"]
+            #ls.append(dc)
+            #context={"prod":ls,"el":message["bolla"]}
+        #else:        
+        mod=Modifica.ModProd()
+        prod=mod.GetProduttori()
+        context={"prod":prod,"el":""}
         return render(request,"Magazzino/Modifica/Mfbolle.html",context) 
 
 def LKCaricoProdotto(request):

@@ -19,7 +19,7 @@ class GetData:
         data=list(rec)
         return data    
     def GetBolla(self,line):
-        rec=Carico.objects.filter(Q(bolla=line[0]), Q(idcod__produttore__azienda=line[1])).values("idcod__id","idcod__cod","q","cassa","data","bolla")
+        rec=Carico.objects.filter(Q(bolla=line["bolla"]), Q(idcod__produttore__azienda=line["cliente"])).values("idcod__id","idcod__cod","q","cassa","data","bolla")
         data=list(rec)
         return data 
     def GetIdCodbyProdotto(self,message):
