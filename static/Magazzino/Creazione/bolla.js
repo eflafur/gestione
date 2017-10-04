@@ -57,8 +57,8 @@ $(document).ready(function(){
     
     $("#btems").click(function(){
         Invia('I');
-        if(pvl)
-            window.location.replace("base");
+        if(pvl!="")
+            window.location.replace("lktotale");
         ar1.length=0
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
@@ -201,9 +201,8 @@ function Invia(act){
     $.post(
         "entrata",
         {res:JSON.stringify(ar1),bolla:str,azione:act,dt:dt1},
-    function (result){
-
-    });
+        function(res){
+        });
     return;
 };
 
