@@ -44,7 +44,7 @@ class Produt:
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         if(sps[:2]=="sp"):
             rec=Sospese.objects.filter(fatturas=sps)
-      #      rec.delete()
+            rec.delete()
         elif(sps[:2]=="fc"):
             rec=Scarico.objects.filter(fattura=sps)
             rec.delete()
@@ -81,7 +81,7 @@ class Produt:
                         ecc["cod"]=item["cod"]
                         lsecc.append(ecc)
                         return lsecc
-                ltid=ltcod.get(id=ltt)
+                ltid=ltcod[0]
                 bl.append(ltt)
                 num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
                 csssps=css
@@ -128,7 +128,7 @@ class Produt:
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         if(sps[:2]=="sp"):
             rec=Sospese.objects.filter(fatturas=sps)
-        #      rec.delete()
+            rec.delete()
         elif(sps[:2]=="dd"):
             rec=trasporto.objects.filter(ddt=sps)
             rec.delete()
@@ -166,7 +166,8 @@ class Produt:
                         ecc["cod"]=item["cod"]
                         lsecc.append(ecc)
                         return lsecc
-                ltid=ltcod.get(id=ltt)
+#                ltid=ltcod.get(id=ltt)
+                ltid=ltcod[0]
                 bl.append(ltt)
                 num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
                 csssps=css
@@ -180,7 +181,7 @@ class Produt:
                     ltid.costo=cst
                     ltid.cassaexit=ltid.cassa
                     ltid.save()
-                    vv1=list(ltcod)
+           #         vv1=list(ltcod)
                     
                     res=self.Rec(ltcod,num*(-1),0,ltt,bl,qc,prz)
                     if(res!=0 and sps!=""):
@@ -206,7 +207,7 @@ class Produt:
     
     def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
         num=0
-        data=list(lotti)
+ #       data=list(lotti)
         try:
             dd=lotti[i].id
         except IndexError:
@@ -300,13 +301,15 @@ class Produt:
         subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])
 
     def ScriviSospesa(self,line,sps):
-        if(sps!=" "):
+        if(sps!=""):
             rec=Sospese.objects.filter(fatturas=sps)
             rec.delete()        
-        s=Sospese.objects.latest("id")
-        f=(s.fatturas).split("-")
-        r=int(f[1])+1
-        fatt=f[0]+"-"+str(r)
+            fatt=sps
+        else:
+            s=Sospese.objects.latest("id")
+            f=(s.fatturas).split("-")
+            r=int(f[1])+1
+            fatt=f[0]+"-"+str(r)
 #        lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         for item in line:
             c=Cliente.objects.get(azienda=item["cln"])

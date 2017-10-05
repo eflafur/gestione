@@ -2,7 +2,6 @@ var ar1= [];
 var i=0;
 var pvl=$("#psps").text();
 var dt1="";   
-var cl=$("#cliente").val();
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     if(pvl!=""){
@@ -135,7 +134,8 @@ $(document).ready(function(){
 });
 
 function GetCod(){
-    str = ($("#bolla").val()).replace(/\s/g, '');
+    var cl=$("#cliente option:selected").val();
+    var str = ($("#bolla").val()).replace(/\s/g, '');
     $.post(
         "entrata",
         {cliente:cl,bolla:str,azione:"gid",dod:pvl},

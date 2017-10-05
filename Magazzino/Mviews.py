@@ -22,16 +22,12 @@ H4=0
 def CreaBolla(request):
     dc={} 
     ls=[]
-#    ls1=[]
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)        
     if(request.method=="POST"):
-#        ls1.clear()
         message=request.POST
         if(message["azione"]=="gid"):
-            #ls1.append(message["bolla"])
-            #ls1.append(message["cliente"])
             objf=MGetTable.GetData()
             res1=objf.GetBolla(message)         
             if(res1):

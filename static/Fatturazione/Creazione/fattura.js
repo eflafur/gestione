@@ -40,6 +40,7 @@ $(document).ready(function(){
         $("#dsc").show();
         $("#btsps").show();
         $("#ddtft").show();
+        $("#btems").show();
         GetLotto();
         GetSospesa();
     } 
