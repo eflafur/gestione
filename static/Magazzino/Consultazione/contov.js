@@ -37,14 +37,15 @@ $(document).ready(function(){
         var sumcst=0;
         ret=ReadChange();
         for (i=0;i<ret.length;i++){
-            sum=sum+parseFloat(ret[i].cst);
-            sumcst=sumcst+parseFloat(ret[i].vnd)
+            sum=sum+parseFloat(ret[i].vnd);
+            sumcst=sumcst+parseFloat(ret[i].prz)*parseFloat(ret[i].ps)
         }
-            $("#dt6").val(sum);
-            $("#dt7").val(sumcst-sum);
+            $("#dt6").val(sumcst);
+            $("#dt7").val(sum-sumcst);
     });
     
     $("#btsel").click(function(){
+        $("#btmrg").hide();
         $("#btslz").hide();
         ret=GetCheched();
         WriteChecked(ret);
@@ -96,7 +97,8 @@ function Write(mrg){
     var sum=0;
     var sumcst=0;
     for (i=0;i<res1.length-1;i++){
-        nt=res1[i].costo*(1-mrg/100);
+        nt1=res1[i].costo/res1[i].q*(1-mrg/100);
+        nt=nt1*res1[i].q;
         sum=sum+nt;
         sumcst=sumcst+parseFloat(res1[i].costo);
         label=label + '<tr>';
@@ -112,7 +114,8 @@ function Write(mrg){
         label=label + '<td>' + res1[i].cassa+ '</td>';
         label=label + '<td>' + res1[i].idcod__cod+ '</td>';
         label=label + '<td>' + res1[i].costo+ '</td>';
-        label=label + '<td><input class="tst" type=number value='+nt.toFixed(2)+'></input></td>';
+        label=label + '<td><input class="prz" type=number value='+nt1.toFixed(2)+'></input></td>';
+        label=label + '<td>'+nt.toFixed(2)+'</td>';
         label=label + '<td style="display: none">' + res1[i].id+ '</td>';
         label=label + '</tr>';
         before=res1[i].bolla;
@@ -134,21 +137,28 @@ function Write(mrg){
 };
 
 function WriteChecked(ret){
+    var sumfatt=0;
+    var sumvnd=0;
     var label="";
     label='<tr>'
-    for (i=0;i<ret.length;i++)
-        label=label+ret[i];
+    for (i=0;i<ret.length;i++){
+        sumfatt=sumfatt+parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());    
+        sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
+        label=label+ret[i].html();
+    }
     label=label+'</tr>'
     $("tb62").html(label);
+    $("#dt6").val(sumfatt);
+    $("#dt7").val(sumvnd-sumfatt);
 };
 
 function ReadChange(){
     var ls=[];
     $("#tb62 tr").each(function(){
          var dc={}
-         dc["id"]=$(this).find("td:last").text();
-         dc["cst"]=$(this).find("input.tst").val();
          dc["vnd"]=$(this).find("td:eq(7)").text();
+         dc["prz"]=$(this).find("input.prz").val();
+         dc["ps"]=$(this).find("td:eq(4)").text();
          ls.push(dc);
      });
      //if(xx==0)
@@ -182,14 +192,14 @@ function GetCheched(){
              r=$(this).find("td:eq(2)").text();
              for (i=0;i<ar.length;i++){
                  if(r==ar[i]){
-                     lsck.push($(this).html());
+                     lsck.push($(this));
                      t=1;
                      break;
                  }
                  continue;
              }
              if(t==0)
-                 $(this).remove()
+                 $(this).remove();
              t=0;
          });
         return lsck;

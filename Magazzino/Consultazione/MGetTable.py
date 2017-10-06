@@ -55,7 +55,7 @@ class GetData:
         for  item in cm2:
             ls.append(item["bolla"])
         cm1=c.filter(Q(cassa=F("cassaexit"))).values("id",
-                                   "idcod__cod","q","cassa","data","bolla","costo","idcod__produttore__margine").order_by("bolla")
+                                   "idcod__cod","q","cassa","data","bolla","costo").order_by("bolla")
         for item in cm1:
             if(item["bolla"] in ls):
                 continue

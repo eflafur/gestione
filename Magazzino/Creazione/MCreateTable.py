@@ -117,20 +117,20 @@ class CreateData:
         pc=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__azienda=seg[0]))
         if(pc):
             p=pc.filter().values("q","cassa","cassaexit","idcod__id","data")
-            dt=p[0]["data"]
+            data=list(p)
+            pc.delete()
+            dt=data[0]["data"]
         s=Saldo.objects.all()
         cod=IDcod.objects.all()
   
         for item in line:
             diff=int(item["css"])
             csx=0
-            if(pc):
-                for itemp in p:
+            if(data):
+                for itemp in data:
                     if (int(item["id"])==int(itemp["idcod__id"])):
                         csx=int(itemp["cassaexit"])
                         diff=int(item["css"])-int(itemp["cassa"])
-                        pc[i].delete()
-                        i=i+1
             s1=s.get(idcod_id=item["id"])
             qs=s1.q
             s1.q=qs+diff
@@ -139,3 +139,5 @@ class CreateData:
             rec=Carico(q=item["ps"],cassa=item["css"],bolla=bl,idcod=codid,data=dt,cassaexit=csx)
             rec.save()
         return 2        
+    
+ 
