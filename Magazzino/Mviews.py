@@ -187,9 +187,8 @@ def FattFrn(request):
     if(request.method=="POST"):
         message=request.POST
         if(message["azione"]=="g"):
-            v=message["cln"]
             obj=MGetTable.GetData()
-            res=obj.GetCvbyPrd(v)
+            res=obj.GetCvbyPrd(message)
         elif(message["azione"]=="v"):
             v=message["cvd"]
             obj=MGetTable.GetData()

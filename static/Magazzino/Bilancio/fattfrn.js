@@ -38,17 +38,11 @@ $(document).ready(function(){
         WriteCv($("#dt2").val());
     });
     $("#btcrc").click(function(){
-        var sum=0,sumcst=0;
-        ret=ReadChange();
-        for (i=0;i<ret.length;i++){
-            sum=sum+parseFloat(ret[i].cst);
-            sumcst=sumcst+parseFloat(ret[i].vnd)
-        }
-        $("#dt6").val(sum);
-        $("#dt7").val(sumcst-sum);
+        ret=ReadChange(0);
+        WriteChecked(ret);    
     });
     $("#btddt").click(function(){
-        ret=ReadChange();
+        ret=ReadChange(1);
         PushDdt(ret);
         $("#tbf1").hide();
         $("#cldt2").hide();
@@ -73,8 +67,12 @@ function Evidance(){
 function GetCv(){
     $.post(
         "fattfrn",
-        {cln:$("#azienda option:selected").text(),azione:"g"},
+        {cln:$("#azienda option:selected").text(),fatt:$("#numfatt").val(),azione:"g"},
         function(res){
+            if(res==1){
+                alert("Fattura: "+$("#numfatt").val()+" già esistente")
+                window.location.replace("fattfrn");
+            }
             Write(res);
             return;
         });
@@ -87,7 +85,7 @@ function Write(res) {
     for (i=0;i<res.length-1;i++){
         label=label + '<tr>';
         if(res[i].cv!=before)
-            label=label+'<td><a href="#">' + res[i].cv+ '</a></td>';
+            label=label+'<td color="#FF0000"><a href="#">' + res[i].cv+ '</a></td>';
         else
             label=label + '<td></td>';
         label=label + '<td>' + res[i].bolla+ '</td>';
@@ -97,7 +95,7 @@ function Write(res) {
     }
     $("#tbf1").show();  
     $("#tb6").html(label);  
-    $("#tb6 tr:first").css("color","blue");//.find("td:last").css("color","blue");
+//    $("#tb6 tr:first").css("color","blue");//.find("td:last").css("color","blue");
 
     $("#dt2").val(res[i].mrg);
     $("#cldt2").show();
@@ -126,40 +124,63 @@ function PushCv(cv){
 function WriteCv(mrgg){
     var label="";
     var sum=0;
-    var sumcst=0;
+    var sumcosto=0;
     for (i=0;i<res1.length;i++){
-            nt=res1[i].fattimp*(1-mrgg/100);
+        nt1=res1[i].fattimp/res1[i].q*(1-mrgg/100);
+        nt=nt1*res1[i].q;
         sum=sum+nt;
-        sumcst=sumcst+parseFloat(res1[i].costo);
+//        sumcosto=sumcosto+res1[i].costo;
         label=label + '<tr>';
-        label=label + '<td >' + res1[i].id+ '</td>';
+        label=label + '<td style="display: none">' + res1[i].id+ '</td>';
         label=label + '<td>' + res1[i].bolla+ '</td>';
         label=label + '<td>' + res1[i].data+ '</td>';
         label=label + '<td>' + res1[i].q+ '</td>';
         label=label + '<td>' + res1[i].cassa+ '</td>';
         label=label + '<td>' + res1[i].idcod__cod+ '</td>';
-        label=label + '<td>' + res1[i].costo+ '</td>';
-        label=label + '<td><input class="tst" type=number value='+nt+'></input></td>';
+        label=label + '<td><input class="prz" type=number value='+nt1.toFixed(2)+'></input></td>';
+        label=label + '<td>'+nt.toFixed(2)+'</td>';
         label=label + '</tr>';
     }
     $("#tbf2").show();  
     $("#tb62").html(label);  
     $("#dt6").val(sum);
-    $("#dt7").val(sumcst-sum);
+ //   $("#dt7").val(sumcosto-sum);
 };
 
 
-function ReadChange(){
+function ReadChange(n){
     var ls=[];
-   $("#tb62 tr").each(function(){
+    $("#tb62 tr").each(function(){
+    if(n==0)
+        ls.push($(this));
+    else if(n==1){
         var dc={}
         dc["id"]=$(this).find("td:first").text();
-        dc["cst"]=$(this).find("input.tst").val();
-        dc["vnd"]=$(this).find("td:eq(6)").text();
+//        dc["prz"]=$(this).find("input.prz").val();
+        dc["vnd"]=$(this).find("td:eq(7)").text();
         ls.push(dc);
+    }
     });
 //    ls.splice(0,1)
     return ls;
+};
+
+function WriteChecked(ret){
+    var sumfatt=0;
+    var sumvnd=0;
+    var label="";
+    label='<tr>'
+    for (i=0;i<ret.length;i++){
+        ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(3)").text());
+        r=ret[i].find("td:eq(7)").text(ft);
+        label=label+r.html();
+        sumfatt=sumfatt+ft;    
+        sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
+    }
+    label=label+'</tr>'
+    $("tb62").html(label);
+    $("#dt6").val(sumfatt);
+    $("#dt7").val(sumvnd-sumfatt);
 };
 
 function PushDdt(ret){

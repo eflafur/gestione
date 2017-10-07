@@ -2,7 +2,7 @@
 //var TempUserTable=null;
 var res1="";
 var xx=0;
-//var cntrl=0;
+var cntrl=0;
 $(document).ready(function(){
 //    $.ajaxSetup({cache:false});
     Evidance();
@@ -19,10 +19,10 @@ $(document).ready(function(){
         $("#cldt5").show();
         $("#cldt6").show();
         $("#cldt7").show();
-//        if(cntrl==0){
+        if(cntrl==0){
             GetCv();
-            //return;
-        //}
+            return;
+        }
         Write($("#dt2").val());
     });
     
@@ -33,8 +33,15 @@ $(document).ready(function(){
             return;
     });
     $("#btcrc").click(function(){
-        ret=ReadChange(0);
-        WriteChecked(ret);
+        var sum=0;
+        var sumcst=0;
+        ret=ReadChange();
+        for (i=0;i<ret.length;i++){
+            sum=sum+parseFloat(ret[i].vnd);
+            sumcst=sumcst+parseFloat(ret[i].prz)*parseFloat(ret[i].ps)
+        }
+            $("#dt6").val(sumcst);
+            $("#dt7").val(sum-sumcst);
     });
     
     $("#btsel").click(function(){
@@ -46,7 +53,7 @@ $(document).ready(function(){
 });
 
     $("#btddt").click(function(){
-        ret=ReadChange(1);
+        ret=ReadChange();
         PushDdt(ret);
         $("#tbf1").hide();
         $("#cldt2").hide();
@@ -69,7 +76,7 @@ function Evidance(){
 };
 
 function GetCv(){
-//    cntrl=1;
+    cntrl=1;
     $.post(
         "cvc",
         {cln:$("#azienda option:selected").text(),azione:"b"},
@@ -135,11 +142,9 @@ function WriteChecked(ret){
     var label="";
     label='<tr>'
     for (i=0;i<ret.length;i++){
-        ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());
-        r=ret[i].find("td:eq(9)").text(ft);
-        label=label+r.html();
-        sumfatt=sumfatt+ft;    
+        sumfatt=sumfatt+parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());    
         sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
+        label=label+ret[i].html();
     }
     label=label+'</tr>'
     $("tb62").html(label);
@@ -147,18 +152,14 @@ function WriteChecked(ret){
     $("#dt7").val(sumvnd-sumfatt);
 };
 
-function ReadChange(n){
+function ReadChange(){
     var ls=[];
     $("#tb62 tr").each(function(){
-        if(n==0)
-            ls.push($(this));
-        else if(n==1){
-            var dc={}
-             dc["id"]=$(this).find("td:last").text();
-             dc["prz"]=$(this).find("input.prz").val();
-             dc["fatt"]=$(this).find("td:eq(9)").text();
-             ls.push(dc);
-        } 
+         var dc={}
+         dc["vnd"]=$(this).find("td:eq(7)").text();
+         dc["prz"]=$(this).find("input.prz").val();
+         dc["ps"]=$(this).find("td:eq(4)").text();
+         ls.push(dc);
      });
      //if(xx==0)
          //ls.splice(0,1)
@@ -209,5 +210,8 @@ function GetCheched(){
             ar[x]=$(this).val();
         });
     }
+    //$.post(
+        //"cvc",
+        //{ddt:JSON.stringify(ar),mrg:$("#dt2").val(),frn:$("#azienda option:selected").text(),azione:"P"},
     return ;
 };

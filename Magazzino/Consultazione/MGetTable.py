@@ -109,15 +109,15 @@ class GetData:
                                    "idcod__cod","q","cassa","data","bolla","costo","idcod__genere__iva").order_by("bolla")
         fatt=ccv["cv"]+1
         for item in line:
-            ddt={}
             c1=c.filter(id=item["id"])
-            ddt['costo']=float(item["cst"])
+            ddt={}
+            ddt['costo']=item["fatt"]
             ddt["cod"]=c1[0]["idcod__cod"]
-            ddt["lotto"]=c1[0]["bolla"]
+            ddt["lotto"]=c1[0]["id"]
             ddt["ps"]=c1[0]["q"]
             ddt["css"]=c1[0]["cassa"]
             ddt["iva"]=c1[0]["idcod__genere__iva"]
-            c1.update(fattimp=float(item["cst"]),mrg=mrgn,p=1,cv=fatt)
+            c1.update(fattimp=item["fatt"],mrg=mrgn,p=1,cv=fatt)
             ls.append(ddt)
         self.stampaFattura("vostra fattura",cliente,ls,mrgn)
         return
@@ -129,15 +129,19 @@ class GetData:
             c1.update(p=2,fatt=ft,mrg=mrgn,fattimp=cst)
         return
     
-    def GetCvbyPrd(self,cln):
+    def GetCvbyPrd(self,line):
         dic={}
-        rec=Carico.objects.filter(Q(idcod__produttore__azienda=cln),Q(p=1)).values("bolla","cv","mrg","data").order_by("cv").distinct()
-        frn=Produttore.objects.get(azienda=cln)
+        rec=Carico.objects.filter(p__gte=1)
+        r1=rec.filter(fatt=line["fatt"])
+        if(r1):
+            return 1
+        r2=rec.filter(Q(idcod__produttore__azienda=line["cln"]),Q(p=1)).values("bolla","cv","mrg","data").order_by("cv").distinct()
+        frn=Produttore.objects.get(azienda=line["cln"])
         dic["ct"]=frn.citta
         dic["pi"]=frn.pi
         dic["mrg"]=frn.margine
         dic["rg"]=frn.regione
-        data=list(rec)
+        data=list(r2)
         data.append(dic)
         return data 
     
@@ -158,8 +162,7 @@ class GetData:
         #else:
         for item in cvls:
             rec=res.get(id=item["id"])
-            cst=float(item["cst"])
-            rec.fattimp=cst
+            rec.fattimp=float(item["vnd"])
             rec.fatt=ft
             rec.mrg=mrgg
             rec.p=2
@@ -204,7 +207,7 @@ class GetData:
             sheet["H"+str(line+cntr)].value = mrg
             subtotale =riga['costo']
             sheet["I"+str(line+cntr)].value = subtotale
-            total+=subtotale
+            total+=float(subtotale)
             cntr+=1
         cntr+=1
         sheet["H"+str(line+cntr)].value = "TOTALE"							
