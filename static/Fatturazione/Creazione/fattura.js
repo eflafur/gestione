@@ -5,6 +5,7 @@ var cliente;
 var pvl=$("#psps").text();
 var tipo=pvl.substr(0,2)
 var lotto=[];    
+var sos=[];    
 var lt="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
@@ -16,7 +17,7 @@ $(document).ready(function(){
     $("#pgm").hide();
     $("#cod").hide();
     $("#lt").hide();
-    
+    $("#btltsos").hide();    
     if(tipo=="dd" ){
         $("#cliente").attr('disabled',true);
         $("#cod").hide();
@@ -64,7 +65,12 @@ $(document).ready(function(){
         $("#cod").show();
     });
 
+     $("#btltsos").click(function(){
+        var cod=$("#codice option:selected").text();
+        SelLottoSos(cod);
+    });
      $("#codice").click(function(){
+        $("#btltsos").hide();    
         var cod=$("#codice option:selected").text();
         SelLotto(cod);
         $("#ps").show();
@@ -167,6 +173,7 @@ $(document).ready(function(){
             $("#cod").focus();
             $("#cliente").attr('disabled',true);
             $("#lt").hide();
+            $("#btltsos").hide();    
         }
         return;
     });
@@ -295,18 +302,51 @@ function GetLotto(){
         "fattura",
         {azione:"L"},
         function(res){
-            lotto=res;
+            sos=res["sp"];
+            lotto=res["cr"];
         });
 };
 
 function SelLotto(cod){
     var option=" ";
+    var cassat=0,cassat1=0;
     sum=0;
-    for (var i=0;i<lotto.length;i++)
-        if(lotto[i].idcod__cod==cod){
-            sum=sum+lotto[i].cassa-lotto[i].cassaexit
-            option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +lotto[i].cassa+ ":"+lotto[i].cassaexit + '</option>';
+    for (k=0;k<sos.length;k++)
+        if(sos[k].idcod__cod==cod){
+            cassat=sos[k].css_sum;
+            cassat1=sos[k].css_sum;
+            $("#btltsos").show();    
+            break;
         }
+    for (var i=0;i<lotto.length;i++){
+        if(lotto[i].idcod__cod==cod){
+            cassa=lotto[i].cassa-lotto[i].cassaexit;
+            if(cassat>0){
+                if(cassat>=cassa){
+                    cassat=cassat-cassa;
+                    cassa=0;
+                }
+                else{
+                    cassa=cassa-cassat;
+                    cassat=0
+                }
+            }
+            sum=sum+lotto[i].cassa-lotto[i].cassaexit
+            option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +cassa + '</option>';
+        }
+    }
+        sum=sum-cassat1
     $('#lotto').html(option);
     };
 
+function SelLottoSos(cod){
+    var option=" ";
+    sum=0;
+    for (var i=0;i<lotto.length;i++)
+        if(lotto[i].idcod__cod==cod){
+            cassa=lotto[i].cassa-lotto[i].cassaexit;
+            sum=sum+lotto[i].cassa-lotto[i].cassaexit
+            option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +cassa+ '</option>';
+        }
+    $('#lotto').html(option);
+    };

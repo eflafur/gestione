@@ -162,14 +162,14 @@ class Produt:
                     except:
                       #  lsecc.clear()
                         ecc={}
-                        ecc["num"]=item["css"]
+                        ecc["num"]=css
                         ecc["cod"]=item["cod"]
                         lsecc.append(ecc)
                         return lsecc
-#                ltid=ltcod.get(id=ltt)
-                ltid=ltcod[0]
+                ltid=ltcod.get(id=ltt)
+#                ltid=ltcod[0]
                 bl.append(ltt)
-                num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
+                num=ltid.cassa-(css+ltid.cassaexit)
                 csssps=css
                 qc=ps/css
                 if(num>=0):
@@ -182,7 +182,6 @@ class Produt:
                     ltid.cassaexit=ltid.cassa
                     ltid.save()
            #         vv1=list(ltcod)
-                    
                     res=self.Rec(ltcod,num*(-1),0,ltt,bl,qc,prz)
                     if(res!=0 and sps!=""):
                         ecc={}
@@ -215,25 +214,25 @@ class Produt:
         num=lotti[i].cassa-(lotti[i].cassaexit+casse)
         if(num>=0 and lotti[i].id!=lotto):
             bl.append(lotti[i].id)
-            lt1=lotti.get(id=lotti[i].id)
-            #lotti[i].cassaexit=lotti[i].cassaexit+casse
-            #lotti[i].costo=lotti[i].costo+prz*qc*casse
-            #lotti[i].save()
-            lt1.costo=lotti[i].costo+prz*qc*casse
-            lt1.cassaexit=lotti[i].cassaexit+casse
-            lt1.save()
+#            lt1=lotti.get(id=dd)
+            lotti[i].cassaexit=lotti[i].cassaexit+casse
+            lotti[i].costo=lotti[i].costo+prz*qc*casse
+            lotti[i].save()
+            #lt1.costo=lotti[i].costo+prz*qc*casse
+            #lt1.cassaexit=lotti[i].cassaexit+casse
+            #lt1.save()
 #            return bl
             return 0
         else:
             if(lotti[i].id!=lotto):
                 bl.append(lotti[i].id)
-                lt1=lotti.get(id=lotti[i].id)
-                lt1.costo=lotti[i].costo+prz*qc*(num+casse)
-                lt1.cassaexit=lotti[i].cassa
-                lt1.save()
-                #lotti[i].costo=lotti[i].costo+prz*qc*(num+casse)
-                #lotti[i].cassaexit=lotti[i].cassa
-                #lotti[i].save()
+                #lt1=lotti.get(id=dd)
+                #lt1.costo=lotti[i].costo+prz*qc*(num+casse)
+                #lt1.cassaexit=lotti[i].cassa
+                #lt1.save()
+                lotti[i].costo=lotti[i].costo+prz*qc*(num+casse)
+                lotti[i].cassaexit=lotti[i].cassa
+                lotti[i].save()
             else:
                 num=casse*(-1)
             i=i+1
@@ -557,3 +556,95 @@ class Produt:
             cln=Cliente.objects.get(azienda=cliente)
         self.stampaFattura(fatt,cln,line)
         return ls        
+    
+    
+    
+    
+    
+    
+    #def ScriviDDT(self,line,sps):
+        #c=""
+        #lsecc=[]
+        #i=0
+        #res=0
+        #bl=[]
+        #ls=[]
+        #lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
+        #if(sps[:2]=="sp"):
+            #rec=Sospese.objects.filter(fatturas=sps)
+            #rec.delete()
+        #elif(sps[:2]=="dd"):
+            #rec=trasporto.objects.filter(ddt=sps)
+            #rec.delete()
+            #fatt=sps
+        #else:
+            #s=trasporto.objects.latest("id")
+            #f=(s.ddt).split("-")
+            #r=int(f[1])+1
+            #fatt=f[0]+"-"+str(r)
+        #for item in line:
+            #bl.clear()
+            #prz=Decimal(item["prz"])
+            #ps=Decimal(item["ps"])
+            #css=int(item["css"])
+            #csssps=0
+            #c=Cliente.objects.get(azienda=item["cln"])
+            #cod=IDcod.objects.get(cod=item["cod"])
+            #ltcod=lotto.filter(idcod__cod=item["cod"])
+            #if(sps[:2]=="dd"):    
+                #rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,
+                      #ddt=fatt,lotto=item["lotto"])
+                #csssps=css
+                #qc=ps/css
+                #bl.append(item["lotto"])
+            #else:                            
+                #if(item["lotto"]!="" and sps==""):
+                    #ltt=int(item["lotto"])
+                #else:
+                    #try:
+                        #ltt=ltcod[0].id
+                    #except:
+                      ##  lsecc.clear()
+                        #ecc={}
+                        #ecc["num"]=item["css"]
+                        #ecc["cod"]=item["cod"]
+                        #lsecc.append(ecc)
+                        #return lsecc
+##                ltid=ltcod.get(id=ltt)
+                #ltid=ltcod[0]
+                #bl.append(ltt)
+                #num=ltid.cassa-(int(item["css"])+ltid.cassaexit)
+                #csssps=css
+                #qc=ps/css
+                #if(num>=0):
+                    #ltid.cassaexit=css+ltid.cassaexit
+                    #ltid.costo=ltid.costo+ps*prz
+                    #ltid.save()
+                #else:
+                    #cst=ltid.costo+prz*qc*(num+css)
+                    #ltid.costo=cst
+                    #ltid.cassaexit=ltid.cassa
+                    #ltid.save()
+           ##         vv1=list(ltcod)
+                    
+                    #res=self.Rec(ltcod,num*(-1),0,ltt,bl,qc,prz)
+                    #if(res!=0 and sps!=""):
+                        #ecc={}
+                        #ecc["num"]=res
+                        #ecc["cod"]=item["cod"]
+                        #csssps=css-res
+                        #lsecc.append(ecc)
+                #qsps=qc*csssps
+                #rec1=Saldo.objects.get(idcod__cod=item["cod"])
+                #rec1.q=rec1.q-csssps
+                #rec1.save()
+                #rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=qsps,cassa=csssps,
+                            #ddt=fatt,lotto=ltt)
+            #rec.save()
+            #line[i]["lotto"]=bl.copy()
+            #line[i]["css"]=csssps
+            #line[i]["ps"]=qc*csssps
+            #i=i+1
+        #rg=list(line)
+        #self.stampaFattura(fatt,c,rg)            
+        #return lsecc    

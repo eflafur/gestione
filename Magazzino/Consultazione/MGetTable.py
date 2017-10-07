@@ -1,7 +1,7 @@
 #import django
 #django.setup()
-from gestione.models import Produttore,IDcod,Carico
-from django.db.models import Q,F
+from gestione.models import Produttore,IDcod,Carico,Sospese
+from django.db.models import Q,F,Sum
 import os,time,openpyxl,subprocess,decimal
 
 class GetData:
@@ -42,9 +42,14 @@ class GetData:
         data=list(rec)
         return data    
     def GetCaricobyIdcod(self):
-        rec=Carico.objects.filter(cassa__gt=F("cassaexit")).values("bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
-        data=list(rec)
-        return data
+        dic={}
+        s=Sospese.objects.values("idcod__cod").annotate(css_sum=Sum("cassa")).exclude(id=158)
+        c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
+        d1=list(s)
+        dic["sp"]=d1
+        d2=list(c)
+        dic["cr"]=d2
+        return dic
     def GetBollaCv(self,nome):
         dic={}
         ls=[]
