@@ -119,13 +119,10 @@ class Produt:
         return lsecc
     
     def ScriviDDT(self,line,sps):
-        c=""
         lsecc=[]
-        i=0
-        res=0
         bl=[]
         ls=[]
-        lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
+        lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).values("q","costo").order_by("id")
         if(sps[:2]=="sp"):
             rec=Sospese.objects.filter(fatturas=sps)
             rec.delete()
@@ -139,70 +136,89 @@ class Produt:
             r=int(f[1])+1
             fatt=f[0]+"-"+str(r)
         for item in line:
+            lsecc.clear()
             bl.clear()
+            ecc={}
             prz=Decimal(item["prz"])
             ps=Decimal(item["ps"])
             css=int(item["css"])
-            csssps=0
+            qc=ps/css
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
-            ltcod=lotto.filter(idcod__cod=item["cod"])
+            ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
             if(sps[:2]=="dd"):    
-                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,
-                      ddt=fatt,lotto=item["lotto"])
-                csssps=css
-                qc=ps/css
+                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=item["lotto"])
                 bl.append(item["lotto"])
-            else:                            
+            else:      
+                rim=css
                 if(item["lotto"]!="" and sps==""):
                     ltt=int(item["lotto"])
+                    lt1=ltcod.get(id=ltt)
+                    bl.append(ltt)
+                    rim=css-lt1.cassa-lt1.cassaexit
+                    if(rim<=0):
+                        lt1.cassaexit+=css
+                        lt1.q=qc*css
+                        lt1.costo=lt1.q*prz
+                        lt1.save()
+                    else:
+                        lt1.cassaexit=lt1.cassa
+                        lt1.q=qc*(lt1.cassa-lt1.cassaexit)
+                        lt1.costo=lt1.q*prz
+                        lt1.save()
+                        for item1 in ltcod:
+                            if(rim<=0):
+                                break
+                            if(item1.id==lt1.id):
+                                continue
+                            rimp=rim
+                            rim=rimp-item1.cassa-item1.cassaexit
+                            if (rim<=0):
+                                item1.cassaexit+=rimp
+                                item1.q=qc*rimp
+                                item1.costo=item1.q*prz
+                                item1.save()
+                            else:
+                                item1.cassaexit=item1.cassa
+                                item1.q=qc*(lt1.cassa-lt1.cassaexit)
+                                item1.costo=item1.q*prz
+                                item1.save()
+                            bl.append(item1.id)
                 else:
-                    try:
-                        ltt=ltcod[0].id
-                    except:
-                      #  lsecc.clear()
-                        ecc={}
-                        ecc["num"]=css
-                        ecc["cod"]=item["cod"]
-                        lsecc.append(ecc)
-                        return lsecc
-                ltid=ltcod.get(id=ltt)
-#                ltid=ltcod[0]
-                bl.append(ltt)
-                num=ltid.cassa-(css+ltid.cassaexit)
-                csssps=css
-                qc=ps/css
-                if(num>=0):
-                    ltid.cassaexit=css+ltid.cassaexit
-                    ltid.costo=ltid.costo+ps*prz
-                    ltid.save()
-                else:
-                    cst=ltid.costo+prz*qc*(num+css)
-                    ltid.costo=cst
-                    ltid.cassaexit=ltid.cassa
-                    ltid.save()
-           #         vv1=list(ltcod)
-                    res=self.Rec(ltcod,num*(-1),0,ltt,bl,qc,prz)
-                    if(res!=0 and sps!=""):
-                        ecc={}
-                        ecc["num"]=res
-                        ecc["cod"]=item["cod"]
-                        csssps=css-res
-                        lsecc.append(ecc)
-                qsps=qc*csssps
-                rec1=Saldo.objects.get(idcod__cod=item["cod"])
-                rec1.q=rec1.q-csssps
-                rec1.save()
-                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=qsps,cassa=csssps,
-                            ddt=fatt,lotto=ltt)
-            rec.save()
-            line[i]["lotto"]=bl.copy()
-            line[i]["css"]=csssps
-            line[i]["ps"]=qc*csssps
-            i=i+1
-        rg=list(line)
-        self.stampaFattura(fatt,c,rg)            
-        return lsecc
+                    for item1 in ltcod:
+                        if(rim<=0):
+                            break
+                        rimp=rim
+                        rim=rimp-item1.cassa-item1.cassaexit                        
+                        if (rim<=0):
+                            item1.cassaexit+=rimp
+                            item1.q=qc*rimp
+                            item1.costo=item1.q*prz
+                            item1.save()
+                        else:
+                            item1.cassaexit=item1.cassa
+                            item1.q=qc*(item1.cassa-item1.cassaexit)
+                            item1.costo=item1.q*prz
+                            item1.save()    
+                        bl.append(item1.id)
+                    #ltt=ltcod[0].id
+                #if(rim>0):
+                    #ecc["num"]=rim
+                    #ecc["cod"]=item["cod"]
+                    #lsecc.append(ecc)
+                #rec1=Saldo.objects.get(idcod__cod=item["cod"])
+                #rec1.q=rec1.q-css-rim
+                #rec1.save()
+                #rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=qc*re1.q,cassa=css-rim,ddt=fatt,lotto=ltt)
+            #rec.save()
+            #line[i]["lotto"]=bl.copy()
+            #line[i]["css"]=re1.q
+            #line[i]["ps"]=qc*rec1.q
+            #i=i+1
+        #rg=list(line)
+        #self.stampaFattura(fatt,c,rg)            
+        return lsecc    
+
     
     def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
         num=0
