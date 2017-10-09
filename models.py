@@ -87,7 +87,7 @@ class Carico(models.Model):
 	fattimp=models.DecimalField(max_digits=14,decimal_places=2,null=True,blank=True,default=0)
 	fatt=models.CharField(max_length=10,null=True)
 	def __str__(self):
-		return "%s %s" % (self.q,self.bolla)	
+		return "%s" % (self.bolla)	
 	
 	
 class Saldo(models.Model):

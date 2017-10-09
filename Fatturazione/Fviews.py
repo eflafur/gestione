@@ -153,7 +153,7 @@ def Fattura(request):
     if(request.method=="POST"):
         message=request.POST
         objf=FCreateTable.Produt()
-        if(message["azione"]=='L'):
+        if(message["azione"]=='l'):
             obj=MGetTable.GetData()
             res=obj.GetCaricobyIdcod()
         if(message["azione"]=="I"):

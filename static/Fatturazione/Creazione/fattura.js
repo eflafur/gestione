@@ -7,6 +7,7 @@ var tipo=pvl.substr(0,2)
 var lotto=[];    
 var sos=[];    
 var lt="";
+var f;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
  //   cliente=$("#cliente option:selected").text();
@@ -45,7 +46,6 @@ $(document).ready(function(){
         GetLotto();
         GetSospesa();
     } 
-
     $("#cliente").click(function(){
         GetLotto();
         $("#dsc").show();
@@ -67,7 +67,10 @@ $(document).ready(function(){
 
      $("#btltsos").click(function(){
         var cod=$("#codice option:selected").text();
-        SelLottoSos(cod);
+        if(f==0)
+            SelLotto(cod);
+        else
+            SelLottoSos(cod);
     });
      $("#codice").click(function(){
         $("#btltsos").hide();    
@@ -119,7 +122,7 @@ $(document).ready(function(){
 
     });
     
-      $("#ddtft").click(function(){
+    $("#ddtft").click(function(){
         Invia('D');
         ar1.length=0
         Eval();
@@ -229,8 +232,12 @@ function Fill(){
         label = label + '<td>' + ar1[i].prz+ '</td>';
         label = label + '<td>' + imp+ '</td>';
         label = label + '<td>' + ar1[i].lotto+ '</td>';
-        label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
-        label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
+        if(pvl==""){
+            label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
+            label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
+        }
+        else
+            label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
         label = label + '</tr>';
     }
     label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sum.toFixed(2)+ '</td></tr>';
@@ -300,7 +307,7 @@ function GetSospesa(){
 function GetLotto(){
     $.post(
         "fattura",
-        {azione:"L"},
+        {azione:"l"},
         function(res){
             sos=res["sp"];
             lotto=res["cr"];
@@ -314,8 +321,9 @@ function SelLotto(cod){
     for (k=0;k<sos.length;k++)
         if(sos[k].idcod__cod==cod){
             cassat=sos[k].css_sum;
-            cassat1=sos[k].css_sum;
-            $("#btltsos").show();    
+            cassat1=cassat;
+            $("#btltsos").show();
+            f=1;
             break;
         }
     for (var i=0;i<lotto.length;i++){
@@ -342,6 +350,7 @@ function SelLotto(cod){
 function SelLottoSos(cod){
     var option=" ";
     sum=0;
+    f=0;
     for (var i=0;i<lotto.length;i++)
         if(lotto[i].idcod__cod==cod){
             cassa=lotto[i].cassa-lotto[i].cassaexit;
