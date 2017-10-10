@@ -43,7 +43,11 @@ class GetData:
         return data    
     def GetCaricobyIdcod(self):
         dic={}
-        s=Sospese.objects.values("idcod__cod").annotate(css_sum=Sum("cassa")).exclude(id=158)
+        #if(dt!=""):
+            #ss=Sospese.objects.filter(data__lte=dt)
+            #s=ss.values("idcod__cod").annotate(css_sum=Sum("cassa")).exclude(id=188)
+        #else:
+        s=Sospese.objects.values("idcod__cod").annotate(css_sum=Sum("cassa")).exclude(id=188)
         c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
         d1=list(s)
         dic["sp"]=d1

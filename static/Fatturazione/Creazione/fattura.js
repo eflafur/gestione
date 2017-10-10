@@ -25,7 +25,6 @@ $(document).ready(function(){
         $("#dsc").hide();
         $("#btsps").hide();
         $("#btems").hide();
-        GetLotto();
         GetSospesa();
     }  
     else if(tipo=="fc" ){
@@ -34,7 +33,6 @@ $(document).ready(function(){
         $("#dsc").hide();
         $("#btsps").hide();
         $("#ddtft").hide();
-        GetLotto();
         GetSospesa();
     } 
     else if(tipo=="sc" ){
@@ -43,7 +41,6 @@ $(document).ready(function(){
         $("#btsps").show();
         $("#ddtft").show();
         $("#btems").show();
-        GetLotto();
         GetSospesa();
     } 
     $("#cliente").click(function(){
@@ -116,10 +113,6 @@ $(document).ready(function(){
         Invia('I');
         ar1.length=0
         Eval();
-
-        //if(pvl!="")
-            //window.location.replace("sospesa");
-
     });
     
     $("#ddtft").click(function(){
@@ -154,6 +147,7 @@ $(document).ready(function(){
         }
         else {
             var obj={}
+            obj['diff']=0;
             obj['cln'] =$("#cliente").val();
             obj['cod'] =$("#codice option:selected").text();
             obj['ps'] =$("#peso").val();
@@ -162,7 +156,7 @@ $(document).ready(function(){
             obj["iva"]=$("#codice option:selected").val();
             obj['lotto']=lt;
             ar1.push(obj);
-            lt=""
+            lt="";
             Fill();
             $("#codice").attr('disabled',false);
             $("#tbf").show("");
@@ -180,11 +174,6 @@ $(document).ready(function(){
         }
         return;
     });
-
-    //$("#btstp").click(function(){
-        //Invia('p');
-    //});
-
 
     $("#lotto").on('click',function(){
         lt=$(this).val();
@@ -231,13 +220,14 @@ function Fill(){
         label = label + '<td>' + ar1[i].iva+ '</td>';
         label = label + '<td>' + ar1[i].prz+ '</td>';
         label = label + '<td>' + imp+ '</td>';
-        label = label + '<td>' + ar1[i].lotto+ '</td>';
-        if(pvl==""){
+//        label = label + '<td>' + ar1[i].lotto+ '</td>';
+        if(pvl=="" || tipo=="sc"){
             label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
             label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
         }
         else
             label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
+        label = label + '<td>' + ar1[i].diff+ '</td>';
         label = label + '</tr>';
     }
     label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sum.toFixed(2)+ '</td></tr>';
@@ -280,22 +270,47 @@ function AddRow(row){
   //  }
      $("#codice").attr('disabled',true);
      $("#codice option:contains("+t+")").prop('selected', true)
+     $("#lt").show();
+     SelLottoSos(t);
 //    $("#codice option:selected").text(t);
 };
+
+
 
 function GetSospesa(){
     $.post(
         "fattura",
         {item:pvl,azione:"reazione"},
-        function(res){
+        function(ret){
+            var obj1={}  
+            var res=ret["doc"];
+            lotto=ret["cr"];
+            var t=0;
+            var ctr=0;
             for (i=0;i<res.length;i++){
-                var obj1={}  
+                obj1['diff']=0
+                for (k=0;k<lotto.length;k++)
+                    if(res[i].idcod__cod==lotto[k].idcod__cod){
+                        t+=lotto[k].cassa-lotto[k].cassaexit;
+                        ctr=1;
+                    }
+                if(ctr==1){
+                    if(t>res[i].cassa)
+                        obj1['css']=res[i].cassa;
+                    else{
+                        obj1['css']=t;
+                        obj1['diff']=t-res[i].cassa
+                    }
+                }
+                else
+                    obj1['css'] =res[i].cassa;
+                ctr=0
+                obj1['lotto'] =lt;
                 obj1['cln'] =$("#cliente").val();
                 obj1['cod'] =res[i].idcod__cod;
                 obj1['ps'] =res[i].q;
-                obj1['css'] =res[i].cassa;
                 obj1['prz'] =res[i].prezzo;
-                obj1['lotto'] =res[i].lotto;
+//                obj1['lotto'] =res[i].lotto;
                 obj1["iva"]=res[i].idcod__genere__iva
                 ar1.push(obj1);
             }
@@ -305,13 +320,14 @@ function GetSospesa(){
 };
 
 function GetLotto(){
-    $.post(
+   $.post(
         "fattura",
         {azione:"l"},
-        function(res){
-            sos=res["sp"];
-            lotto=res["cr"];
+        function(res1){
+            sos=res1["sp"];
+            lotto=res1["cr"];
         });
+            return;
 };
 
 function SelLotto(cod){
@@ -359,3 +375,6 @@ function SelLottoSos(cod){
         }
     $('#lotto').html(option);
     };
+    
+    
+    

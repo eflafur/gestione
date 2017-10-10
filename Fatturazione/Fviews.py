@@ -186,7 +186,7 @@ def Fattura(request):
             dc={} 
             ls=[]
             res1=objf.GetClienteByNumSospese(message["nome"])
-            dc["azienda"]=res1[0]["cliente__azienda"]
+            dc["azienda"]=res1["doc"][0]["cliente__azienda"]
             ls.append(dc)
             context={"items":res,"itemsd":res2,"itemsp":res3,"itemsf":ls,"el":message["nome"]}
         else:

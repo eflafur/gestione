@@ -71,27 +71,27 @@ class Produt:
                 bl.append(item["lotto"])
             else:      
                 rim=css
-                if(item["lotto"]!="" and sps==""):
-                    ltt=int(item["lotto"])
+                if(item["lotto"]!=""):
+                    ltt=item["lotto"]
+                    ltt1=ltt
                     lt1=ltcod.get(id=ltt)
                     bl.append(ltt)
                     rimp=rim
-                    rim=rimp-lt1.cassa-lt1.cassaexit
+                    rim=rimp-(lt1.cassa-lt1.cassaexit)
                     if(rim<=0):
                         lt1.cassaexit+=css
                         lt1.q+=qc*css
                         lt1.costo+=lt1.q*prz
                         lt1.save()
+                        rim=0
                     else:
                         lt1.cassaexit=lt1.cassa
                         lt1.q+=qc*(rimp-rim)
                         lt1.costo+=lt1.q*prz
                         lt1.save()
                 if(rim>0):
-                    ltt1=ltcod[0].id
                     for item1 in ltcod:
-                        if(item1.id==ltt):
-                            ltt1=ltt
+                        if(item1.id==ltt1):
                             continue
                         rimp=rim
                         rim=rimp-(item1.cassa-item1.cassaexit)
@@ -117,17 +117,15 @@ class Produt:
                 rec1=Saldo.objects.get(idcod__cod=item["cod"])
                 rec1.q=rec1.q-css+rim
                 rec1.save()
-                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt1)
+                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt)
                 rec.save()
-
-            #ls1[i]["lotto"]=bl.copy()
-            #ls1[i]["css"]=css
-            #ls1[i]["ps"]=ps
-            #i=i+1
-        #rg=list(line)
-        #      self.stampaFattura(fatt,c,rg)            
-        return lsecc    
-
+                #ls1[i]["lotto"]=bl.copy()
+                #ls1[i]["css"]=css
+                #ls1[i]["ps"]=ps
+                #i=i+1
+            #rg=list(line)
+            #      self.stampaFattura(fatt,c,rg)            
+            return lsecc    
     
     def ScriviDDT(self,line,sps):
         c=""
@@ -141,12 +139,11 @@ class Produt:
         fatt=""
         if(sps[:2]=="sc"):
             rec=Sospese.objects.filter(fatturas=sps)
-            rec.delete()
-        else:
-            s=trasporto.objects.latest("id")
-            f=(s.ddt).split("-")
-            r=int(f[1])+1
-            fatt=f[0]+"-"+str(r)
+ #           rec.delete()
+        s=trasporto.objects.latest("id")
+        f=(s.ddt).split("-")
+        r=int(f[1])+1
+        fatt=f[0]+"-"+str(r)
         for item in line:
             lsecc.clear()
             bl.clear()
@@ -167,18 +164,19 @@ class Produt:
                 bl.append(item["lotto"])
             else:      
                 rim=css
-                if(item["lotto"]!="" and sps==""):
+                if(item["lotto"]!=""):
                     ltt=item["lotto"]
                     ltt1=ltt
                     lt1=ltcod.get(id=ltt)
                     bl.append(ltt)
                     rimp=rim
-                    rim=rimp-lt1.cassa-lt1.cassaexit
+                    rim=rimp-(lt1.cassa-lt1.cassaexit)
                     if(rim<=0):
                         lt1.cassaexit+=css
                         lt1.q+=qc*css
                         lt1.costo+=lt1.q*prz
                         lt1.save()
+                        rim=0
                     else:
                         lt1.cassaexit=lt1.cassa
                         lt1.q+=qc*(rimp-rim)
@@ -389,7 +387,7 @@ class Produt:
         if(message["cliente"]!=" "):
             recls=Sospese.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"])).exclude(id=158).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         else:
-            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=158).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=197).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         
         for el in recls:
             iva=el["idcod__genere__iva"]+1
