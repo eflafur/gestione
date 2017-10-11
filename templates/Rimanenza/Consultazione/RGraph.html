@@ -1,4 +1,3 @@
-
 {% extends 'gestione/layout.html'%}
 {% load static %}
 
@@ -31,9 +30,13 @@
          <div class="col-md-3" >
             <input type="number" id="peso" class="form-control" name="a10" min="0">
           </div>
-         <div class="col-md-1" >
-            <button type="submit" class="btn btn-primary" id="go">Invia</button>
-        </div>        
+          
+      <div class="col-md-3" id="lt">
+        <select class="form-control" name="a5" id="lotto">
+        </select>
+      </div>
+
+          
       </div>        
     </div>   
     
@@ -52,4 +55,10 @@
 
   
 {% endblock %}
+
+
+
+
+
+
 

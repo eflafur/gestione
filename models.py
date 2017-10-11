@@ -147,3 +147,8 @@ class trasporto(models.Model):
 	lotto=models.CharField(max_length=5,null=True)
 	status=models.SmallIntegerField(default=0)
 	
+	
+class Tara(models.Model):
+	cont=models.CharField(max_length=20,null=True)
+	q=models.DecimalField(max_digits=3,decimal_places=2,null=True,blank=True,default=0)
+	

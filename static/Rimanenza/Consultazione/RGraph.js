@@ -5,9 +5,6 @@ flag=$("#fl").text();
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#ggraph").hide();
-    $("#go").click(function(){
-        SetNode($("#peso").val());
-    });
     if(flag=='m'){
         $("#ggraph").hide();
         GetGraph(flag);
@@ -27,6 +24,10 @@ $(document).ready(function(){
         $("#ggrapht").hide();
         $("#ggraph").show();
     });
+    
+   $("#lotto").click(function(){
+        PushLotto();
+   });
 });
 
     function GetGraph(fl){
@@ -85,6 +86,7 @@ $('#tree1').on('tree.contextmenu',function(event) {
             $("#ps").show();
             $("#go").show();
             $("#peso").focus();
+            GetLotto();
         }
         else{
             $("#peso").val(" ");
@@ -93,19 +95,51 @@ $('#tree1').on('tree.contextmenu',function(event) {
         }
 });
 
+function GetLotto(){
+    $.post(
+     "lkrgraph",
+     {idnode:node.id,act:"lotto"},
+     function(res){
+        var label="";
+        for (i=0;i<res.length;i++){
+            label=label+'<option value="'+res[i].id+'">'+res[i].bolla+'</option>';
+        }
+        $("#lt").show();
+        $("#lotto").html(label);
+     });
+}
+
+function PushLotto(){
+    $.post(
+     "lkrgraph",
+     {lotto:$("#lt option:selected").val(),css:$("#peso").val(),cod:node.id,act:"push"},
+     function(res){
+     SetNode($("#peso").val())
+     });
+}
+
+
 function SetNode(q){
     var arr= new Array();
     arr=node.name.split(':');
     sl=arr[1]-q
-    $.post(
-        "lkrgraph",
-        {node:node.id,peso:q,act:"set"},
-        function(res){
-        updateNode(arr[0],sl)
-        $("#ps").hide();
-        $("#go").hide();
-    });
+    updateNode(arr[0],sl)
+    $("#ps").hide();
 };
+
+//function SetNode(q){
+    //var arr= new Array();
+    //arr=node.name.split(':');
+    //sl=arr[1]-q
+    //$.post(
+        //"lkrgraph",
+        //{node:node.id,peso:q,act:"set"},
+        //function(res){
+        //updateNode(arr[0],sl)
+        //$("#ps").hide();
+        //$("#go").hide();
+    //});
+//};
  
  function updateNode(cod,p){
     var name=cod+"  :  "+p;
@@ -116,5 +150,21 @@ function SetNode(q){
     $(a).focus();
     return
  };
- 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

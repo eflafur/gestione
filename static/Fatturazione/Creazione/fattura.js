@@ -19,6 +19,7 @@ $(document).ready(function(){
     $("#cod").hide();
     $("#lt").hide();
     $("#btltsos").hide();    
+    $("#tr").hide();
     if(tipo=="dd" ){
         $("#cliente").attr('disabled',true);
         $("#cod").hide();
@@ -55,6 +56,9 @@ $(document).ready(function(){
     });
 
     $("#dsc").click(function(){
+        $("#tr").show();
+    });
+    $("#tara").click(function(){
         $("#pgm").show();
     });
 

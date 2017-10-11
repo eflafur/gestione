@@ -1,6 +1,6 @@
 import django
 django.setup()
-from gestione.models import Produttore,Settore,Genere,Area,Sito,Specifica,IDcod,Prodotto,Pagamento
+from gestione.models import Produttore,Settore,Genere,Area,Sito,Specifica,IDcod,Prodotto,Pagamento,Tara
 from django.db.models import Q
 
 class LKPData:
@@ -95,5 +95,9 @@ class LKPData:
     def GetProdotto(self):
         s=Prodotto.objects.filter().values("tipo")
         data=list(s)
+        return data
+    def GetTara(self):
+        t=Tara.objects.all()
+        data=list(t)
         return data
     

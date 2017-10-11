@@ -25,6 +25,13 @@ def LKRGraph(request):
             p=message["peso"]
             objr=RModifica.MRim()
             ret=objr.ModPeso(n,p)
+        elif(message["act"]=="lotto"):
+            node=message["idnode"]
+            objr=RModifica.MRim()
+            ret=objr.GetLotto(node)
+        elif(message["act"]=="push"):
+            objr=RModifica.MRim()
+            ret=objr.PushLotto(message)            
         return JsonResponse(ret,safe=False)             
     if(request.method=="GET"):
         if(request.GET.get("opr")):    

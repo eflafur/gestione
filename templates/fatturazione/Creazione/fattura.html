@@ -35,7 +35,7 @@
     </br>
    
      <div class="row">
-       <div class="col-md-6">  
+       <div class="col-md-5">  
        <div class="input-group" id="dsc">
         <p>Descrizione<select class="form-control" name="a5" id="desc"></p>
           {% for entry in itemsd %}
@@ -44,16 +44,24 @@
         </select>
        </div>
       </div> 
-
-       <div class="col-md-6">  
+  <div class="col-md-5" id="tr">  
+        <p>Tara<select class="form-control" name="a7" id="tara"></p>
+          {% for entry in itemtr %}
+              <option value="{{ entry.q}}">{{ entry.cont}} </option>
+          {% endfor %}
+        </select>
+      </div>
+       <div class="col-md-4">  
        <div class="input-group" id="pgm">
-        <p>Termini di pagamento<select class="form-control" name="a6" id="pagam"></p>
+        <p>Pagamento<select class="form-control" name="a6" id="pagam"></p>
           {% for entry in itemsp %}
               <option value="{{ entry.tipo}}">{{ entry.tipo}} </option>
           {% endfor %}
         </select>
        </div>
       </div>
+      
+   
      </div>
      </br> 
   
