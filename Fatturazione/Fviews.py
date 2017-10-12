@@ -158,8 +158,9 @@ def Fattura(request):
             res=obj.GetCaricobyIdcod()
         if(message["azione"]=="I"):
             itm=message["item"]
+            pgm=message["pgm"]
             lst = jsonpickle.decode(message['res'])
-            res=objf.ScriviFattura(lst,itm)
+            res=objf.ScriviFattura(lst,itm,pgm)
         elif (message["azione"]=="S"):
             itm=message["item"]
             lst = json.loads(message['res'])

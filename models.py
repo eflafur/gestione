@@ -7,6 +7,7 @@ class Prodotto(models.Model):
 
 class Pagamento(models.Model):
 	tipo=models.CharField(max_length=30)
+	giorni=models.IntegerField(default=0)
 
 class Genere(models.Model):
 	nome=models.CharField(max_length=50)
@@ -120,7 +121,9 @@ class Scarico(models.Model):
 	fattura=models.TextField(max_length=10,null=True,blank=True)
 	lotto=models.CharField(max_length=5,null=True)
 	iva=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
-	
+	scadenza=models.DateField(default=date.today)	
+	pagato=models.BooleanField(default=0)
+	note=models.TextField(max_length=30,null=True)
 
 
 class Sospese(models.Model):

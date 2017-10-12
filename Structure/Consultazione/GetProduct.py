@@ -89,7 +89,7 @@ class LKPData:
         data=list(s)
         return data    
     def GetTerminiPag(self):
-        s=Pagamento.objects.filter().values("tipo")
+        s=Pagamento.objects.filter().values("tipo","giorni")
         data=list(s)
         return data
     def GetProdotto(self):

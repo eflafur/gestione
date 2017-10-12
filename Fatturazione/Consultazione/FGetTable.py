@@ -19,13 +19,13 @@ class GetData:
         dic={}
         if(nome[:2]=="sc"):
             rec=Sospese.objects.filter(fatturas=nome).values("cliente__azienda","data","fatturas","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
+            c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
+            d2=list(c)
+            dic["cr"]=d2
         elif(nome[:2]=="fc"):
             rec=Scarico.objects.filter(fattura=nome).values("cliente__azienda","data","fattura","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
         else:
             rec=trasporto.objects.filter(ddt=nome).values("cliente__azienda","data","ddt","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
-        c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
         d1=list(rec)
         dic["doc"]=d1
-        d2=list(c)
-        dic["cr"]=d2
         return dic

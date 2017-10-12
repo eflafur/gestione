@@ -42,7 +42,7 @@ $(document).ready(function(){
         $("#btsps").show();
         $("#ddtft").show();
         $("#btems").show();
-        GetSospesa();
+        GetSospesaSos();
     } 
     $("#cliente").click(function(){
         GetLotto();
@@ -212,11 +212,11 @@ function Eval(){
 function Fill(){
     var label="";
     var k=0;
-    var sum=0;
+    var sumf=0;
     for (i = 0; i < ar1.length; i++) {
         k=k+1
         imp=ar1[i].prz*ar1[i].ps*(parseFloat(ar1[i].iva)+1)
-        sum=sum+ar1[i].prz*ar1[i].ps*(parseFloat(ar1[i].iva)+1);
+        sumf=sumf+ar1[i].prz*ar1[i].ps*(parseFloat(ar1[i].iva)+1);
         label = label + '<tr>';
         label = label + '<td>' + ar1[i].cod+ '</td>';
         label = label + '<td>' + ar1[i].ps+ '</td>';
@@ -234,7 +234,7 @@ function Fill(){
         label = label + '<td>' + ar1[i].diff+ '</td>';
         label = label + '</tr>';
     }
-    label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sum.toFixed(2)+ '</td></tr>';
+    label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sumf.toFixed(2)+ '</td></tr>';
     $("#tbfb").html(label);
     $("#tbfb tr:last").find("td:last").css("color","blue");
     return;
@@ -243,7 +243,7 @@ function Fill(){
 function Invia(act){
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act,item:pvl},
+      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:$("#pagam").val()},
     function (result){
         var label=""
         if(result.length!=0){ 
@@ -275,23 +275,50 @@ function AddRow(row){
      $("#codice").attr('disabled',true);
      $("#codice option:contains("+t+")").prop('selected', true)
      $("#lt").show();
-     SelLottoSos(t);
+     if((tipo=="dd") | (tipo=="fc"))
+        sum=ar1[row-1].css
+     else   
+        SelLottoSos(t);
 //    $("#codice option:selected").text(t);
 };
-
-
 
 function GetSospesa(){
     $.post(
         "fattura",
         {item:pvl,azione:"reazione"},
         function(ret){
-            var obj1={}  
+            var res=ret["doc"];
+            for (i=0;i<res.length;i++){
+                var obj1={}  
+                obj1['diff']=0
+                obj1['cln'] =$("#cliente").val();
+                obj1['cod'] =res[i].idcod__cod;
+                obj1['ps'] =res[i].q;
+                obj1['prz'] =res[i].prezzo;
+                obj1['css'] =res[i].cassa;
+                obj1['lotto']=res[i].lotto;
+                obj1["iva"]=parseFloat(res[i].idcod__genere__iva)+1
+                ar1.push(obj1);
+            }
+        Fill();
+        $("#cod").show("");
+        $("#tbf").show("");
+        });
+};
+
+
+function GetSospesaSos(){
+    $.post(
+        "fattura",
+        {item:pvl,azione:"reazione"},
+        function(ret){
             var res=ret["doc"];
             lotto=ret["cr"];
             var t=0;
             var ctr=0;
             for (i=0;i<res.length;i++){
+                var obj1={}  
+                t=0
                 obj1['diff']=0
                 for (k=0;k<lotto.length;k++)
                     if(res[i].idcod__cod==lotto[k].idcod__cod){

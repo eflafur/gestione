@@ -110,14 +110,24 @@ function GetLotto(){
 }
 
 function PushLotto(){
+    var ps=parseInt($("#peso").val());
+    var mul=node.name.split(":");
+    ltot=parseInt(mul[1])
+    if(ps>ltot){
+        alert ("Lotti insufficienti. Valore ammesso: "+mul[i] ) 
+        $("#peso").val(" ")
+        $("#peso").focus()
+        return;
+    }
+
     $.post(
      "lkrgraph",
-     {lotto:$("#lt option:selected").val(),css:$("#peso").val(),cod:node.id,act:"push"},
+     {lotto:$("#lt option:selected").val(),css:ps,cod:node.id,act:"push"},
      function(res){
-     SetNode($("#peso").val())
+        SetNode($("#peso").val())
      });
+     return;
 }
-
 
 function SetNode(q){
     var arr= new Array();

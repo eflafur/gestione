@@ -4,6 +4,7 @@ from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
 from decimal import Decimal
 from django.db.models import Q,F
 import openpyxl,time,os,subprocess
+from datetime import datetime,timedelta
 
 class Modelddt:
     def __init__(self,ddt,cod,q,prezzo,data,lotto,cassa,iva):
@@ -35,23 +36,26 @@ class Produt:
         )
         return (1)
     
-    def ScriviFattura(self,line,sps):
-        ltt=0
+    def ScriviFattura(self,line,sps,pgm):
         c=""
         i=0
         ls1=[]
         lsecc=[]
         bl=[]
         ls=[]
+        ltt1=0
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
-        if(sps[:2]=="sp"):
+        fatt=""
+        if(sps[:2]=="sc"):
             rec=Sospese.objects.filter(fatturas=sps)
+        #           rec.delete()
+        elif(sps[:2]=="fc"):    
+            rec=Scarico.objects.filter(fattura=sps)
             rec.delete()
-        else:
-            s=Scarico.objects.latest("id")
-            f=(s.fattura).split("-")
-            r=int(f[1])+1
-            fatt=f[0]+"-"+str(r)
+        s=Scarico.objects.latest("id")
+        f=(s.fattura).split("-")
+        r=int(f[1])+1
+        fatt=f[0]+"-"+str(r)
         for item in line:
             lsecc.clear()
             bl.clear()
@@ -63,13 +67,15 @@ class Produt:
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
             ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
+            ltt=ltcod[0].id
             if(sps[:2]=="fc"):    
-                rec=Scarico.objects.filter(fattura=sps)
-                rec.delete()
-                fatt=sps
+                fatt=sps                
                 rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,fattura=fatt,lotto=item["lotto"])
                 bl.append(item["lotto"])
             else:      
+                if (int(pgm)!=0):
+                    pg=1
+                gg=date.today()+timedelta(int(pgm))
                 rim=css
                 if(item["lotto"]!=""):
                     ltt=item["lotto"]
@@ -117,15 +123,16 @@ class Produt:
                 rec1=Saldo.objects.get(idcod__cod=item["cod"])
                 rec1.q=rec1.q-css+rim
                 rec1.save()
-                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt)
-                rec.save()
-                #ls1[i]["lotto"]=bl.copy()
-                #ls1[i]["css"]=css
-                #ls1[i]["ps"]=ps
-                #i=i+1
-            #rg=list(line)
-            #      self.stampaFattura(fatt,c,rg)            
-            return lsecc    
+                gg=datetime.now()+timedelta(int(pgm))
+                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg)
+            rec.save()
+            #ls1[i]["lotto"]=bl.copy()
+            #ls1[i]["css"]=css
+            #ls1[i]["ps"]=ps
+            #i=i+1
+        #rg=list(line)
+        #      self.stampaFattura(fatt,c,rg)            
+        return lsecc    
     
     def ScriviDDT(self,line,sps):
         c=""
@@ -140,6 +147,9 @@ class Produt:
         if(sps[:2]=="sc"):
             rec=Sospese.objects.filter(fatturas=sps)
  #           rec.delete()
+        elif(sps[:2]=="dd"):    
+            rec=trasporto.objects.filter(ddt=sps)
+            rec.delete()
         s=trasporto.objects.latest("id")
         f=(s.ddt).split("-")
         r=int(f[1])+1
@@ -157,8 +167,6 @@ class Produt:
             ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
             ltt=ltcod[0].id
             if(sps[:2]=="dd"):    
-                rec=trasporto.objects.filter(ddt=sps)
-                rec.delete()
                 fatt=sps                
                 rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=item["lotto"])
                 bl.append(item["lotto"])
@@ -211,7 +219,7 @@ class Produt:
                 rec1.q=rec1.q-css+rim
                 rec1.save()
                 rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,ddt=fatt,lotto=ltt)
-                rec.save()
+            rec.save()
             #ls1[i]["lotto"]=bl.copy()
             #ls1[i]["css"]=css
             #ls1[i]["ps"]=ps
@@ -385,9 +393,9 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!=" "):
-            recls=Sospese.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"])).exclude(id=158).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"])).exclude(id=199).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         else:
-            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=197).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=199).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         
         for el in recls:
             iva=el["idcod__genere__iva"]+1
