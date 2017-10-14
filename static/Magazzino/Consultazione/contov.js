@@ -113,10 +113,11 @@ function Write(mrg){
         label=label + '</tr>';
         before=res1[i].bolla;
     }
+    i++;
     $("#cldt2").show();
-    $("#dt3").val(res1[i].ct);
-    $("#dt4").val(res1[i].rg);
-    $("#dt5").val(res1[i].pi);
+//    $("#dt3").val(res1[i].ct);
+    //$("#dt4").val(res1[i].rg);
+    //$("#dt5").val(res1[i].pi);
     $("#dt6").val(sum);
     $("#cldt2").show();
     $("#cldt3").show();

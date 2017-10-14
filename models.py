@@ -123,7 +123,7 @@ class Scarico(models.Model):
 	iva=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	scadenza=models.DateField(default=date.today)	
 	pagato=models.BooleanField(default=0)
-	note=models.TextField(max_length=30,null=True)
+	note=models.TextField(max_length=30,default="")
 
 
 class Sospese(models.Model):

@@ -299,8 +299,12 @@ def LKFattura(request):
         return render(request,"Validazione/login.html",context)     
     if(request.method=="POST"):
         message=request.POST
-        objf=FCreateTable.Produt()
-        res=objf.GetFattura(message);
+        if(message["azione"]=="t"):
+            objf=FCreateTable.Produt()
+            res=objf.GetFattura(message);
+        if(message["azione"]=="p"):
+            objf=FCreateTable.Produt()
+            res=objf.Pagato(message);
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         context={"items":""}

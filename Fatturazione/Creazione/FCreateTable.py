@@ -3,8 +3,8 @@
 from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
 from decimal import Decimal
 from django.db.models import Q,F
-import openpyxl,time,os,subprocess
-from datetime import datetime,timedelta
+import openpyxl,time,os,subprocess,datetime
+from datetime import datetime,timedelta,date
 
 class Modelddt:
     def __init__(self,ddt,cod,q,prezzo,data,lotto,cassa,iva):
@@ -37,6 +37,7 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps,pgm):
+        pg=0
         c=""
         i=0
         ls1=[]
@@ -57,6 +58,7 @@ class Produt:
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
         for item in line:
+            iva=Decimal(item["iva"])+1
             lsecc.clear()
             bl.clear()
             ecc={}
@@ -64,6 +66,7 @@ class Produt:
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qc=ps/css
+            tara=Decimal(item["tara"])*css
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
             ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
@@ -86,14 +89,12 @@ class Produt:
                     rim=rimp-(lt1.cassa-lt1.cassaexit)
                     if(rim<=0):
                         lt1.cassaexit+=css
-                        lt1.q+=qc*css
-                        lt1.costo+=lt1.q*prz
+                        lt1.costo+=ps*prz
                         lt1.save()
                         rim=0
                     else:
                         lt1.cassaexit=lt1.cassa
-                        lt1.q+=qc*(rimp-rim)
-                        lt1.costo+=lt1.q*prz
+                        lt1.costo+=prz*qc*(rimp-rim)
                         lt1.save()
                 if(rim>0):
                     for item1 in ltcod:
@@ -103,35 +104,22 @@ class Produt:
                         rim=rimp-(item1.cassa-item1.cassaexit)
                         if (rim<=0 and rimp>0):
                             item1.cassaexit+=rimp
-                            item1.q+=qc*rimp
-                            item1.costo+=item1.q*prz
+                            item1.costo+=qc*rimp*prz
                             item1.save()
                             rim=0
                             bl.append(item1.id)
                             break
                         else:
                             item1.cassaexit=item1.cassa
-                            item1.q+=qc*(rimp-rim)
-                            item1.costo+=item1.q*prz
+                            item1.costo+=prz*qc*(rimp-rim)
                             item1.save()
                         bl.append(item1.id)
-                    if(rim>0):
-                        ecc={}
-                        ecc["num"]=rim
-                        ecc["cod"]=item["cod"]
-                        lsecc.append(ecc)
                 rec1=Saldo.objects.get(idcod__cod=item["cod"])
                 rec1.q=rec1.q-css+rim
                 rec1.save()
                 gg=datetime.now()+timedelta(int(pgm))
                 rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg)
             rec.save()
-            #ls1[i]["lotto"]=bl.copy()
-            #ls1[i]["css"]=css
-            #ls1[i]["ps"]=ps
-            #i=i+1
-        #rg=list(line)
-        #      self.stampaFattura(fatt,c,rg)            
         return lsecc    
     
     def ScriviDDT(self,line,sps):
@@ -181,14 +169,12 @@ class Produt:
                     rim=rimp-(lt1.cassa-lt1.cassaexit)
                     if(rim<=0):
                         lt1.cassaexit+=css
-                        lt1.q+=qc*css
-                        lt1.costo+=lt1.q*prz
+                        lt1.costo+=ps*prz
                         lt1.save()
                         rim=0
                     else:
                         lt1.cassaexit=lt1.cassa
-                        lt1.q+=qc*(rimp-rim)
-                        lt1.costo+=lt1.q*prz
+                        lt1.costo+=prz*qc*(rimp-rim)
                         lt1.save()
                 if(rim>0):
                     for item1 in ltcod:
@@ -198,23 +184,16 @@ class Produt:
                         rim=rimp-(item1.cassa-item1.cassaexit)
                         if (rim<=0 and rimp>0):
                             item1.cassaexit+=rimp
-                            item1.q+=qc*rimp
-                            item1.costo+=item1.q*prz
+                            item1.costo+=qc*rimp*prz
                             item1.save()
                             rim=0
                             bl.append(item1.id)
                             break
                         else:
                             item1.cassaexit=item1.cassa
-                            item1.q+=qc*(rimp-rim)
-                            item1.costo+=item1.q*prz
+                            item1.costo+=prz*qc*(rimp-rim)
                             item1.save()
                         bl.append(item1.id)
-                    if(rim>0):
-                        ecc={}
-                        ecc["num"]=rim
-                        ecc["cod"]=item["cod"]
-                        lsecc.append(ecc)
                 rec1=Saldo.objects.get(idcod__cod=item["cod"])
                 rec1.q=rec1.q-css+rim
                 rec1.save()
@@ -395,7 +374,7 @@ class Produt:
         if(message["cliente"]!=" "):
             recls=Sospese.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"])).exclude(id=199).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         else:
-            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=199).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=204).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         
         for el in recls:
             iva=el["idcod__genere__iva"]+1
@@ -427,9 +406,9 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!= ""):
-            recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         else:
-            recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         
         for el in recls:
             if(el["fattura"]=="fc2018-0"):
@@ -458,6 +437,8 @@ class Produt:
             before=item["fattura"]
         return ss        
     
+    def Pagato(self,line):
+        Scarico.objects.filter(fattura=line["pg"]).update(pagato=0,note=line["nt"])
     def GetFatturabyNum(self,num):
         recls=Scarico.objects.filter(fattura=num).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
         data=list(recls)

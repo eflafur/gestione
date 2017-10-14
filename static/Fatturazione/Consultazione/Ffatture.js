@@ -1,4 +1,6 @@
 var res=[];
+var d = new Date();
+var strDate = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
 
@@ -14,7 +16,7 @@ $(document).ready(function(){
         }
     });
     
-    $("#tablef").on('click','a',function(){
+    $("#tb6").on('click','a',function(){
         a=$(this).text();
         GetFatt(a)
         $("#pcln").val(res[0].cliente__azienda);
@@ -22,17 +24,36 @@ $(document).ready(function(){
         $("#pf").show();
         $("#tbf1").hide();
         $("#tbf2").show();
-        
-       // window.location.replace("fattura?nome="+a+"&azione=ftr");
+    });
+    
+    $("#tb6").on('click','button',function(){
+        p=$(this).val();
+        Pagato(p);
     });
     
 });
 
+function Pagato(pgm){
+    var txt="";
+   $("#tb6 tr").each(function(index){
+        ft=$(this).find("td:eq(0)").text();
+        if(ft==pgm){
+            txt=$(this).find("input").val();//.find("td:eq(6)").text()
+            return false;
+        }
+    });
+    $.post(
+    "lkftr",
+    {pg:ft,nt:txt,azione:"p"},
+    function(){
+    });
+}
+    
 function GetTable(date){
     res.length=0;
     $.post(
         "lkftr",
-        {data:date,azione:"table",cliente:""},
+        {data:date,azione:"t",cliente:""},
         function(ret){
             res=ret;
             var label="";
@@ -42,6 +63,13 @@ function GetTable(date){
                 label=label + '<td>' + res[i].cliente__azienda + '</td>';
                 label=label + '<td>' + res[i].valore+ '</td>';
                 label=label + '<td>' +res[i].data + '</td>';
+                label=label + '<td>' +res[i].scadenza+ '</td>';
+                label=label + '<td>' +res[i].pagato+ '</td>';
+                label=label + '<td><input type="text" value="'+res[i].note+'"></input></td>';
+                if(res[i].pagato==1 & strDate>res[i].scadenza)
+                    label=label + '<td><button class="btn-danger btn-sm" value="'+res[i].fattura +'"></button></td>';
+                else
+                    label=label + '<td><button class="btn-success btn-sm" value="'+res[i].fattura +'"></button></td>';
                 label=label + '</tr>';
             }
             $("#tbf1").show();

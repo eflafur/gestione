@@ -22,6 +22,7 @@ $(document).ready(function(){
     $("#tr").hide();
     if(tipo=="dd" ){
         $("#cliente").attr('disabled',true);
+        $("#codice").attr('disabled',true);
         $("#cod").hide();
         $("#dsc").hide();
         $("#btsps").hide();
@@ -158,6 +159,7 @@ $(document).ready(function(){
             obj['css'] =$("#cassa").val();
             obj['prz'] =$("#prezzo").val();
             obj["iva"]=$("#codice option:selected").val();
+            obj['tara']=$("#tara option:selected").val();
             obj['lotto']=lt;
             ar1.push(obj);
             lt="";

@@ -126,11 +126,13 @@ class CreateData:
         for item in line:
             diff=int(item["css"])
             csx=0
-            if(data):
+            try:
                 for itemp in data:
                     if (int(item["id"])==int(itemp["idcod__id"])):
                         csx=int(itemp["cassaexit"])
                         diff=int(item["css"])-int(itemp["cassa"])
+            except:
+                data=""
             s1=s.get(idcod_id=item["id"])
             qs=s1.q
             s1.q=qs+diff
