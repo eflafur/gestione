@@ -1,6 +1,7 @@
 //var UserTable=$("#mytable");
 //var TempUserTable=null;
 var res1="";
+var sumcosto=0;
 $(document).ready(function(){
 //    $.ajaxSetup({cache:false});
     $("#azienda").hide();
@@ -34,13 +35,15 @@ $(document).ready(function(){
         PushCv(a)
     });
     
-    $("#btmrg").click(function(){
-        WriteCv($("#dt2").val());
-    });
+    //$("#btmrg").click(function(){
+        //WriteCv($("#dt2").val());
+    //});
+
     $("#btcrc").click(function(){
         ret=ReadChange(0);
         WriteChecked(ret);    
     });
+
     $("#btddt").click(function(){
         ret=ReadChange(1);
         PushDdt(ret);
@@ -124,12 +127,11 @@ function PushCv(cv){
 function WriteCv(mrgg){
     var label="";
     var sum=0;
-    var sumcosto=0;
     for (i=0;i<res1.length;i++){
-        nt1=res1[i].fattimp/res1[i].q*(1-mrgg/100);
-        nt=nt1*res1[i].q;
+        nt1=res1[i].fattimp/res1[i].q//*(1-mrgg/100);
+        nt=parseFloat(res1[i].fattimp);
         sum=sum+nt;
-//        sumcosto=sumcosto+res1[i].costo;
+        sumcosto=sumcosto+parseFloat(res1[i].costo);
         label=label + '<tr>';
         label=label + '<td style="display: none">' + res1[i].id+ '</td>';
         label=label + '<td>' + res1[i].bolla+ '</td>';
@@ -144,6 +146,7 @@ function WriteCv(mrgg){
     $("#tbf2").show();  
     $("#tb62").html(label);  
     $("#dt6").val(sum);
+    $("#dt7").val(sumcosto-sum);
  //   $("#dt7").val(sumcosto-sum);
 };
 
@@ -156,7 +159,6 @@ function ReadChange(n){
     else if(n==1){
         var dc={}
         dc["id"]=$(this).find("td:first").text();
-//        dc["prz"]=$(this).find("input.prz").val();
         dc["vnd"]=$(this).find("td:eq(7)").text();
         ls.push(dc);
     }
@@ -175,12 +177,12 @@ function WriteChecked(ret){
         r=ret[i].find("td:eq(7)").text(ft);
         label=label+r.html();
         sumfatt=sumfatt+ft;    
-        sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
+//        sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
     }
     label=label+'</tr>'
     $("tb62").html(label);
     $("#dt6").val(sumfatt);
-    $("#dt7").val(sumvnd-sumfatt);
+    $("#dt7").val(sumcosto-sumfatt);
 };
 
 function PushDdt(ret){

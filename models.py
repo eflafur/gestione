@@ -124,6 +124,7 @@ class Scarico(models.Model):
 	scadenza=models.DateField(default=date.today)	
 	pagato=models.BooleanField(default=0)
 	note=models.TextField(max_length=30,default="")
+	tara=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 
 
 class Sospese(models.Model):
@@ -135,6 +136,7 @@ class Sospese(models.Model):
 	data=models.DateField(default=date.today)
 	fatturas=models.TextField(max_length=10,null=True,blank=True)
 	lotto=models.CharField(max_length=5,null=True)
+	tara=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	def __str__(self):
 		return "%s" % (self.fatturas)	
 	
@@ -149,6 +151,7 @@ class trasporto(models.Model):
 	ddt=models.TextField(max_length=10,null=True,blank=True)
 	lotto=models.CharField(max_length=5,null=True)
 	status=models.SmallIntegerField(default=0)
+	tara=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	
 	
 class Tara(models.Model):

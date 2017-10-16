@@ -4,6 +4,7 @@ from . import views
 from Magazzino import Mviews
 from Fatturazione import Fviews
 from Rimanenza import Rviews
+from Economic import Eviews
 urlpatterns = [
     url('logout',views.Logout),
     url('login',views.Login),

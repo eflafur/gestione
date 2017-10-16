@@ -4,6 +4,7 @@ from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
 from decimal import Decimal
 from django.db.models import Q,F
 import openpyxl,time,os,subprocess,datetime
+import Registra
 from datetime import datetime,timedelta,date
 
 class Modelddt:
@@ -37,6 +38,10 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps,pgm):
+        res=Registra.Cliente(100,200,"3.1")
+        return 
+        imp=0
+        erario=0
         pg=0
         c=""
         i=0
@@ -66,19 +71,16 @@ class Produt:
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qc=ps/css
-            tara=Decimal(item["tara"])*css
+            tara=Decimal(item["tara"])
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
             ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
             ltt=ltcod[0].id
             if(sps[:2]=="fc"):    
                 fatt=sps                
-                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,fattura=fatt,lotto=item["lotto"])
+                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,fattura=fatt,lotto=item["lotto"],tara=tara)
                 bl.append(item["lotto"])
             else:      
-                if (int(pgm)!=0):
-                    pg=1
-                gg=date.today()+timedelta(int(pgm))
                 rim=css
                 if(item["lotto"]!=""):
                     ltt=item["lotto"]
@@ -118,8 +120,16 @@ class Produt:
                 rec1.q=rec1.q-css+rim
                 rec1.save()
                 gg=datetime.now()+timedelta(int(pgm))
-                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg)
+                if (int(pgm)!=0):
+                    pg=1
+                gg=date.today()+timedelta(int(pgm))
+                imp+=imp+prz*qc*(css-rim)
+                erario+=erario+Decimal(item["iva"])*imp
+                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim)-tara,cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
+                imp=prz*qc*(css-rim)
+                erario=Decimal(item["iva"])*imp
             rec.save()
+        Registra.Cliente(imp,erario,"3.1")
         return lsecc    
     
     def ScriviDDT(self,line,sps):
@@ -143,6 +153,7 @@ class Produt:
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
         for item in line:
+            iva=Decimal(item["iva"])+1
             lsecc.clear()
             bl.clear()
             ecc={}
@@ -150,13 +161,14 @@ class Produt:
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qc=ps/css
+            tara=Decimal(item["tara"])
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
             ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
             ltt=ltcod[0].id
             if(sps[:2]=="dd"):    
                 fatt=sps                
-                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=item["lotto"])
+                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=item["lotto"],tara=tara)
                 bl.append(item["lotto"])
             else:      
                 rim=css
@@ -197,7 +209,7 @@ class Produt:
                 rec1=Saldo.objects.get(idcod__cod=item["cod"])
                 rec1.q=rec1.q-css+rim
                 rec1.save()
-                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,ddt=fatt,lotto=ltt)
+                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,ddt=fatt,lotto=ltt,tara=tara)
             rec.save()
             #ls1[i]["lotto"]=bl.copy()
             #ls1[i]["css"]=css
@@ -283,7 +295,7 @@ class Produt:
 #            ltcod=lotto.filter(idcod__cod=item["cod"])
  #           ltt=ltcod[0].id
             rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
-                        fatturas=fatt)
+                        fatturas=fatt,tara=Decimal(item["tara"]))
             rec.save()
         return
     
@@ -339,9 +351,9 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!=" "):
-            recls=trasporto.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"]),Q(status=0)).exclude(id=1).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
+            recls=trasporto.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"]),Q(status=0)).exclude(id=1).values("tara","idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
         else:
-            recls=trasporto.objects.filter(Q(data__gte=message["data"]),Q(status=0)).exclude(id=1).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
+            recls=trasporto.objects.filter(Q(data__gte=message["data"]),Q(status=0)).exclude(id=1).values("tara","idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
         for el in recls:
             iva=el["idcod__genere__iva"]+1
             if(el["ddt"]!=before):
@@ -372,9 +384,9 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!=" "):
-            recls=Sospese.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"])).exclude(id=199).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"])).exclude(id=199).values("tara","idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         else:
-            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=204).values("idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=209).values("tara","idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         
         for el in recls:
             iva=el["idcod__genere__iva"]+1
@@ -406,9 +418,9 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!= ""):
-            recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         else:
-            recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         
         for el in recls:
             if(el["fattura"]=="fc2018-0"):
@@ -619,38 +631,38 @@ class Produt:
         #return lsecc    
         
         
-    def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
-        num=0
- #       data=list(lotti)
-        try:
-            dd=lotti[i].id
-        except IndexError:
-            return casse
-        num=lotti[i].cassa-(lotti[i].cassaexit+casse)
-        if(num>=0 and lotti[i].id!=lotto):
-            bl.append(lotti[i].id)
-#            lt1=lotti.get(id=dd)
-            lotti[i].cassaexit=lotti[i].cassaexit+casse
-            lotti[i].costo=lotti[i].costo+prz*qc*casse
-            lotti[i].save()
-            #lt1.costo=lotti[i].costo+prz*qc*casse
-            #lt1.cassaexit=lotti[i].cassaexit+casse
-            #lt1.save()
-#            return bl
-            return 0
-        else:
-            if(lotti[i].id!=lotto):
-                bl.append(lotti[i].id)
-                #lt1=lotti.get(id=dd)
-                #lt1.costo=lotti[i].costo+prz*qc*(num+casse)
-                #lt1.cassaexit=lotti[i].cassa
-                #lt1.save()
-                lotti[i].costo=lotti[i].costo+prz*qc*(num+casse)
-                lotti[i].cassaexit=lotti[i].cassa
-                lotti[i].save()
-            else:
-                num=casse*(-1)
-            i=i+1
-            res=self.Rec(lotti,num*(-1),i,lotto,bl,qc,prz)
-        return res
+    #def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
+        #num=0
+ ##       data=list(lotti)
+        #try:
+            #dd=lotti[i].id
+        #except IndexError:
+            #return casse
+        #num=lotti[i].cassa-(lotti[i].cassaexit+casse)
+        #if(num>=0 and lotti[i].id!=lotto):
+            #bl.append(lotti[i].id)
+##            lt1=lotti.get(id=dd)
+            #lotti[i].cassaexit=lotti[i].cassaexit+casse
+            #lotti[i].costo=lotti[i].costo+prz*qc*casse
+            #lotti[i].save()
+            ##lt1.costo=lotti[i].costo+prz*qc*casse
+            ##lt1.cassaexit=lotti[i].cassaexit+casse
+            ##lt1.save()
+##            return bl
+            #return 0
+        #else:
+            #if(lotti[i].id!=lotto):
+                #bl.append(lotti[i].id)
+                ##lt1=lotti.get(id=dd)
+                ##lt1.costo=lotti[i].costo+prz*qc*(num+casse)
+                ##lt1.cassaexit=lotti[i].cassa
+                ##lt1.save()
+                #lotti[i].costo=lotti[i].costo+prz*qc*(num+casse)
+                #lotti[i].cassaexit=lotti[i].cassa
+                #lotti[i].save()
+            #else:
+                #num=casse*(-1)
+            #i=i+1
+            #res=self.Rec(lotti,num*(-1),i,lotto,bl,qc,prz)
+        #return res
         

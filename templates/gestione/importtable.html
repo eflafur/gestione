@@ -1,4 +1,32 @@
 
-{%for item in vari%}
-    <p> {{item}} </p>
-    {%endfor%}
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+
+    
+   
+            
+<div class="container col-md-offset-2">
+    <div class="row">
+        <div class="col-xs-2 "><h4>Nuovo Fornitore</h4> </div>      
+    </div>
+    <br/>
+   
+  
+        
+        <div class="input-group">
+          <p>P.I.<input type="text" id="c1" class="form-control" name="a13" placeholder="PI" maxlength="11" min="11"></p>
+       </div>
+       <br/>
+        <button type="button" class="btn  btn-success" id="b1">Sospesa</button>
+
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'gestione/extend.js' %}" ></script>
+{% endblock %}
+
+
