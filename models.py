@@ -153,8 +153,17 @@ class trasporto(models.Model):
 	status=models.SmallIntegerField(default=0)
 	tara=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	
-	
 class Tara(models.Model):
 	cont=models.CharField(max_length=20,null=True)
 	q=models.DecimalField(max_digits=3,decimal_places=2,null=True,blank=True,default=0)
+	
+class sp(models.Model):
+	cod=models.CharField(max_length=20,null=True)
+	attivo=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	passivo=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	
+class ce(models.Model):
+	cod=models.CharField(max_length=20,null=True)
+	costi=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	ricavi=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
 	

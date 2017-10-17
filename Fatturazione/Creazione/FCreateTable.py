@@ -38,8 +38,6 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps,pgm):
-        res=Registra.Cliente(100,200,"3.1")
-        return 
         imp=0
         erario=0
         pg=0
@@ -119,17 +117,14 @@ class Produt:
                 rec1=Saldo.objects.get(idcod__cod=item["cod"])
                 rec1.q=rec1.q-css+rim
                 rec1.save()
-                gg=datetime.now()+timedelta(int(pgm))
                 if (int(pgm)!=0):
                     pg=1
                 gg=date.today()+timedelta(int(pgm))
                 imp+=imp+prz*qc*(css-rim)
                 erario+=erario+Decimal(item["iva"])*imp
                 rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim)-tara,cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
-                imp=prz*qc*(css-rim)
-                erario=Decimal(item["iva"])*imp
             rec.save()
-        Registra.Cliente(imp,erario,"3.1")
+        Registra.CLienti(imp,erario,"3.1")
         return lsecc    
     
     def ScriviDDT(self,line,sps):
@@ -500,41 +495,45 @@ class Produt:
         return data          
     
     
-    def DdtEmit(self,ls,cln):
+    def DdtEmit(self,ls,cln,pgm):
         ddtls=[]
         ls1=[]
-        trs=trasporto.objects.filter(status=0).values("ddt","q","prezzo","data","lotto","cassa",
+        trs=trasporto.objects.filter(status=0).values("tara","ddt","q","prezzo","data","lotto","cassa",
                                 "idcod__cod","cliente__azienda","idcod__genere__iva","status","cliente__azienda")
-#        data1=list(trs)
         trstrs=trs.annotate(cod=F("idcod__cod"),ps=F("q"),css=F("cassa"),prz=F("prezzo"),iva=F("idcod__genere__iva")).values("cod",
-                                   "ps","css","prz","iva","data","lotto","ddt","cliente__azienda")
+                                   "ps","css","prz","iva","data","lotto","ddt","cliente__azienda","tara")
         for item in ls:
-#            i=0
             t=trstrs.filter(ddt=item).values()
             data=list(t)
             t.update(status=1)
             for el in data:
-                #if(i==1):
-                    #el["ddt"]=""
                 ddtls.append(el)
-                i=1
-        self.Ddt2Fatt(ddtls,cln)
+        self.Ddt2Fatt(ddtls,cln,pgm)
         return ddtls
             
         
-    def Ddt2Fatt(self,line,cliente):
+    def Ddt2Fatt(self,line,cliente,pgm):
+        erario=0
+        imp=0
+        pg=0
         ls=[]
         s=Scarico.objects.latest("id")
         f=(s.fattura).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
         cln=Cliente.objects.get(azienda=cliente)
+        if (int(pgm)!=0):
+            pg=1
+        gg=datetime.now()+timedelta(int(pgm))
         for item in line:
             cod=IDcod.objects.get(cod=item["cod"])
             rec=Scarico(idcod=cod,cliente=cln,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
-                                    fattura=fatt,lotto=item["lotto"],iva=item["iva"])
+                                    fattura=fatt,lotto=item["lotto"],iva=item["iva"],pagato=pg,scadenza=gg,tara=item["tara"])
             rec.save()
             cln=Cliente.objects.get(azienda=cliente)
+            imp+=imp+Decimal(item["prz"])*(Decimal(item["ps"])-Decimal(item["tara"]))
+            erario+=erario+(Decimal(item["iva"])+1)*imp
+        Registra.Clienti(imp,erario,"3.1")
         self.stampaFattura(fatt,cln,line)
         return ls        
     

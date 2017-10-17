@@ -17,10 +17,17 @@
                     {%endfor%}
             </select> 
         </div>
-          
-       <div class="col-sm-2"> 
-         <button type="submit" class="btn btn-primary" id="btddt">Emetti </button>  
-     </div>
+        <div class="col-md-3" id="pgm">  
+            <p>Pagamento<select class="form-control" name="a6" id="pagam"></p>
+              {% for entry in itemtp %}
+                  <option value="{{ entry.giorni}}">{{ entry.tipo}} </option>
+            {% endfor %}
+            </select>
+        </div>
+        </br>
+        <div class="col-sm-2"> 
+            <button type="submit" class="btn btn-primary" id="btddt">Emetti </button>  
+        </div>
     </div>
     </br>
 

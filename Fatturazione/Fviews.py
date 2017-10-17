@@ -263,14 +263,15 @@ def DDT(request):
             objf=FCreateTable.Produt()
             ddtls=jsonpickle.decode(message["ddt"])
             cln=message["cln"]
-            if(ddtls[0]==None):
-                ddtls.pop(0);            
-            res=objf.DdtEmit(ddtls,cln)
+            pgm=message["pgm"]
+            res=objf.DdtEmit(ddtls,cln,pgm)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
+        obj=GetProduct.LKPData()
+        res3=obj.GetTerminiPag()        
         objf=FGetTable.GetData()
         res=objf.GetCliente()
-        context={"items":res}
+        context={"items":res,"itemtp":res3}
         return render(request,"fatturazione/Modifica/ddt-cliente.html",context)
 
 

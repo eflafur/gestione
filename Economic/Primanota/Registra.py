@@ -1,4 +1,4 @@
-from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
+from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto,sp,ce
 from decimal import Decimal
 from django.db.models import Q,F
 import openpyxl,time,os,subprocess,datetime
@@ -15,15 +15,26 @@ class Model:
         self.cassa=cassa
         self.iva=iva
         
-class CLienti:
+class Clienti:
     def __init__(self,imp,erario,cod):
         self.imp=imp
         self.erario=erario
         self.cod=cod
-        self.put(self.imp,self.erario.self.cod)
+        self.put(self.imp,self.erario,self.cod)
         
     def put(self,imp,erario,cod):
-        a=imp
-        b=erario
-        c=cod
+        s=sp.objects.all()
+        rc=ce.objects.get(cod="80.80")
+        cl=s.get(cod=cod)
+        cs=s.get(cod="1.1")
+        iva=s.get(cod="20.20")
+        cl.attivo+=imp+erario
+        iva.passivo+=erario
+        cs.attivo+=imp+erario
+        rc.ricavi+=imp
+        cl.passivo+=imp+erario
+        cl.save()
+        cs.save()
+        iva.save()
+        rc.save()
         return (1)

@@ -3,19 +3,24 @@ var x=0;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#tbf2").hide();
+    $("#pgm").hide();
 
     $("#clientes").click(function(){
         $("#btddt").hide();
         $("#tbf1").hide();
         $("#tbf2").hide();
+        $("#pgm").show();
         GetTable($("#clientes option:selected").val());
+    });
+   $("#pagam").click(function(){
+        $("#btddt").show();
     });
     
    $("#btddt").click(function(){
         $("#tbf1").hide();
         GetDdt()
         $("#btddt").hide();
-//        $("#tbf2").hide();
+        $("#pagam").hide();
     });
 });
 
@@ -26,7 +31,6 @@ function GetTable(cl){
         function(res){
         if(res.length==0)
             return;
-        $("#btddt").show();
         $("#tbf1").show();
         var label="";
         for (i=0;i<res.length;i++){
@@ -48,7 +52,7 @@ function GetDdt(){
     var ar=[];
     $("#tbf1 :checked").each(function(index){
         x=index+1;
-        ar[x]=$(this).val();
+        ar[index]=$(this).val();
     });
 
     if(x==0){
@@ -61,7 +65,7 @@ function GetDdt(){
     x=0;
     $.post(
         "ddt",
-        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val()},
+        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val(),pgm:$("#pagam option:selected").val()},
         function(res){
             var label="";
             for (i=0;i<res.length;i++){
