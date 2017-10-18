@@ -19,17 +19,12 @@ $(document).ready(function(){
         $("#cldt5").show();
         $("#cldt6").show();
         $("#cldt7").show();
-//        if(cntrl==0){
             GetCv();
-            //return;
-        //}
         Write($("#dt2").val());
     });
     
     $("#btmrg").click(function(){
- //       if(xx==0)
             Write($("#dt2").val());
-   //     else
             return;
     });
     $("#btcrc").click(function(){
@@ -69,7 +64,6 @@ function Evidance(){
 };
 
 function GetCv(){
-//    cntrl=1;
     $.post(
         "cvc",
         {cln:$("#azienda option:selected").text(),azione:"b"},
@@ -92,15 +86,16 @@ function Write(mrg){
     for (i=0;i<res1.length-1;i++){
         nt1=res1[i].costo/res1[i].q*(1-mrg/100);
         nt=nt1*res1[i].q;
+        iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
         sum=sum+nt;
         sumcst=sumcst+parseFloat(res1[i].costo);
         label=label + '<tr>';
-        if( res1[i].bolla!=before){
+        if(res1[i].bolla!=before){
             label=label + '<td><input type="checkbox" value='+res1[i].bolla+'></td>';
             label=label + '<td>' + res1[i].bolla+ '</td>';
         }
         else
-        label=label+'<td></td><td></td>'
+           label=label+'<td></td><td></td>'
         label=label + '<td style="display: none">' + res1[i].bolla+ '</td>';
         label=label + '<td>' + res1[i].data+ '</td>';
         label=label + '<td>' + res1[i].q+ '</td>';
@@ -109,6 +104,8 @@ function Write(mrg){
         label=label + '<td>' + res1[i].costo+ '</td>';
         label=label + '<td><input class="prz" type=number value='+nt1.toFixed(2)+'></input></td>';
         label=label + '<td>'+nt.toFixed(2)+'</td>';
+        label=label + '<td>' + iva.toFixed(2)+ '</td>';
+        label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
         label=label + '<td style="display: none">' + res1[i].id+ '</td>';
         label=label + '</tr>';
         before=res1[i].bolla;
@@ -137,7 +134,9 @@ function WriteChecked(ret){
     for (i=0;i<ret.length;i++){
         ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());
         r=ret[i].find("td:eq(9)").text(ft);
-        label=label+r.html();
+        iva=ft*(1+parseFloat(ret[i].find("td:eq(11)").text()));
+        r1=ret[i].find("td:eq(10)").text(iva);
+        label=label+r.html()+r1.html();
         sumfatt=sumfatt+ft;    
         sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
     }

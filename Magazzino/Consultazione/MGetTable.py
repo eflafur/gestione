@@ -2,7 +2,8 @@
 #django.setup()
 from gestione.models import Produttore,IDcod,Carico,Sospese
 from django.db.models import Q,F,Sum
-import os,time,openpyxl,subprocess,decimal
+import os,time,openpyxl,subprocess,Registra
+from decimal import Decimal
 
 class GetData:
     def GetIdCodAll(self):
@@ -63,7 +64,7 @@ class GetData:
         cm2=cm1.values("bolla").distinct()
         for  item in cm2:
             ls.append(item["bolla"])
-        cm1=c.filter(Q(cassa=F("cassaexit"))).values("id",
+        cm1=c.filter(Q(cassa=F("cassaexit"))).values("id","idcod__genere__iva",
                                    "idcod__cod","q","cassa","data","bolla","costo").order_by("bolla")
         for item in cm1:
             if(item["bolla"] in ls):
@@ -111,6 +112,8 @@ class GetData:
 
     
     def PushBollaCv(self,line,cln,mrgn):
+        imp=0
+        erario=0
         ls=[]
         cliente=Produttore.objects.get(azienda=cln)
         ccv=Carico.objects.filter().values("cv").order_by("cv").last()
@@ -155,10 +158,12 @@ class GetData:
         return data 
     
     def GetCvFatt(self,cvd):
-        rec=Carico.objects.filter(cv=cvd).values("id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
+        rec=Carico.objects.filter(cv=cvd).values("idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         data=list(rec)
         return data
     def SaveCvFatt(self,cvls,ft,frn,mrgg):
+        imp=0
+        erario=0
         cst=0
         res=Carico.objects.filter(Q(p__lte=1),Q(idcod__produttore__azienda=frn))
         #try:
@@ -171,11 +176,14 @@ class GetData:
         #else:
         for item in cvls:
             rec=res.get(id=item["id"])
-            rec.fattimp=float(item["vnd"])
+            rec.fattimp=Decimal(item["vnd"])
             rec.fatt=ft
             rec.mrg=mrgg
             rec.p=2
             rec.save()
+            imp+=Decimal(item["vnd"])
+            erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
+        Registra.Fornitori(imp,erario,"53.1")
         return 0
 
     def stampaFattura(self,nFattura, cln, righeFattura,mrg):

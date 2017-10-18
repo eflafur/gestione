@@ -48,6 +48,9 @@ class Produt:
         bl=[]
         ls=[]
         ltt1=0
+        if (int(pgm)!=0):
+            pg=1
+        gg=date.today()+timedelta(int(pgm))
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         fatt=""
         if(sps[:2]=="sc"):
@@ -117,11 +120,8 @@ class Produt:
                 rec1=Saldo.objects.get(idcod__cod=item["cod"])
                 rec1.q=rec1.q-css+rim
                 rec1.save()
-                if (int(pgm)!=0):
-                    pg=1
-                gg=date.today()+timedelta(int(pgm))
-                imp+=imp+prz*qc*(css-rim)
-                erario+=erario+Decimal(item["iva"])*imp
+                imp+=prz*qc*(css-rim)*(1-tara)
+                erario+=Decimal(item["iva"])*prz*qc*(css-rim)*(1-tara)
                 rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim)-tara,cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
             rec.save()
         Registra.CLienti(imp,erario,"3.1")
@@ -501,7 +501,7 @@ class Produt:
         trs=trasporto.objects.filter(status=0).values("tara","ddt","q","prezzo","data","lotto","cassa",
                                 "idcod__cod","cliente__azienda","idcod__genere__iva","status","cliente__azienda")
         trstrs=trs.annotate(cod=F("idcod__cod"),ps=F("q"),css=F("cassa"),prz=F("prezzo"),iva=F("idcod__genere__iva")).values("cod",
-                                   "ps","css","prz","iva","data","lotto","ddt","cliente__azienda","tara")
+                                   "q","css","prz","iva","data","lotto","ddt","cliente__azienda","tara")
         for item in ls:
             t=trstrs.filter(ddt=item).values()
             data=list(t)
@@ -526,15 +526,16 @@ class Produt:
             pg=1
         gg=datetime.now()+timedelta(int(pgm))
         for item in line:
+            row=Decimal(item["prz"])*(Decimal(item["q"])-(int(item["cassa"])*Decimal(item["tara"])))
             cod=IDcod.objects.get(cod=item["cod"])
-            rec=Scarico(idcod=cod,cliente=cln,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
+            rec=Scarico(idcod=cod,cliente=cln,prezzo=item["prz"],q=item["q"],cassa=item["css"],
                                     fattura=fatt,lotto=item["lotto"],iva=item["iva"],pagato=pg,scadenza=gg,tara=item["tara"])
             rec.save()
             cln=Cliente.objects.get(azienda=cliente)
-            imp+=imp+Decimal(item["prz"])*(Decimal(item["ps"])-Decimal(item["tara"]))
-            erario+=erario+(Decimal(item["iva"])+1)*imp
+            imp+=row
+            erario+=Decimal(item["iva"])*row
         Registra.Clienti(imp,erario,"3.1")
-        self.stampaFattura(fatt,cln,line)
+       # self.stampaFattura(fatt,cln,line)
         return ls        
     
     

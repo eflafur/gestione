@@ -128,8 +128,9 @@ function WriteCv(mrgg){
     var label="";
     var sum=0;
     for (i=0;i<res1.length;i++){
-        nt1=res1[i].fattimp/res1[i].q//*(1-mrgg/100);
+        nt1=res1[i].fattimp/res1[i].q
         nt=parseFloat(res1[i].fattimp);
+        iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
         sum=sum+nt;
         sumcosto=sumcosto+parseFloat(res1[i].costo);
         label=label + '<tr>';
@@ -140,7 +141,9 @@ function WriteCv(mrgg){
         label=label + '<td>' + res1[i].cassa+ '</td>';
         label=label + '<td>' + res1[i].idcod__cod+ '</td>';
         label=label + '<td><input class="prz" type=number value='+nt1.toFixed(2)+'></input></td>';
-        label=label + '<td>'+nt.toFixed(2)+'</td>';
+        label=label + '<td>'+nt+'</td>';
+        label=label + '<td>'+iva.toFixed(2)+'</td>';
+        label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
         label=label + '</tr>';
     }
     $("#tbf2").show();  
@@ -160,6 +163,7 @@ function ReadChange(n){
         var dc={}
         dc["id"]=$(this).find("td:first").text();
         dc["vnd"]=$(this).find("td:eq(7)").text();
+        dc["iva"]=$(this).find("td:eq(9)").text();
         ls.push(dc);
     }
     });
@@ -175,6 +179,8 @@ function WriteChecked(ret){
     for (i=0;i<ret.length;i++){
         ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(3)").text());
         r=ret[i].find("td:eq(7)").text(ft);
+        iva=ft*(1+parseFloat(ret[i].find("td:eq(9)").text()));
+        r1=ret[i].find("td:eq(8)").text(iva);
         label=label+r.html();
         sumfatt=sumfatt+ft;    
 //        sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())

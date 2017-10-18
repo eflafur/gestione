@@ -152,8 +152,6 @@ def Contov(request):
             res=obj.GetBollaCv(v)
         if(message["azione"]=="p"):
             ret=jsonpickle.decode(message["data"])
-            #if(ret[0]==None):
-                #ret.pop(0);
             mrg=message["mrg"]
             frn=message["frn"]
             obj=MGetTable.GetData()
