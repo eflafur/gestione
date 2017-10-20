@@ -1,0 +1,66 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-2">
+   <div class="row">
+        <div class="col-md-8 "><h4>Ricerca per Data</h4> </div>      
+    </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-2">     
+            <div class="input-group" id="dtft">
+                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>
+        <div class="col-md-2" id="pf">
+            <p>Cliente:<input type = "text" id = "pcln" readonly></p>
+        </div>
+        <div class="col-md-2" id="pf">
+            <p>Num Fattura:<input type = "text" id = "pfatt" readonly></p>
+        </div>
+    </div>
+    </br>
+    
+     <div class="row">
+        <div class=" col-md-12" id="tbf1" >
+            <table id="tablef"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Num</th>
+                        <th>Cliente</th>
+                        <th>Valore</th>
+                        <th>Data</th>
+                        <th>Data Scadenza</th>
+                        <th>Insoluta</th>
+                    </tr>
+                </thead>
+                <tbody id="tb6"></tbody>
+            </table>
+        </div>
+        
+         <div class=" col-md-9" id="tbf2" >
+            <table id="tablef"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Cod</th>
+                        <th>Colli</th>
+                        <th>Peso</th>
+                        <th>Prezzo</th>
+                        <th>Iva</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="tb62"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Magazzino/Consultazione/RegFattFrn.js' %}" ></script>
+{% endblock %}

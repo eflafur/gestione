@@ -120,11 +120,11 @@ class Produt:
                 rec1=Saldo.objects.get(idcod__cod=item["cod"])
                 rec1.q=rec1.q-css+rim
                 rec1.save()
-                imp+=prz*qc*(css-rim)*(1-tara)
-                erario+=Decimal(item["iva"])*prz*qc*(css-rim)*(1-tara)
-                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim)-tara,cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
+                imp+=prz*(qc*(css-rim)-(css*tara))
+                erario+=Decimal(item["iva"])*prz*(qc*(css-rim)-(css*tara))
+                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
             rec.save()
-        Registra.CLienti(imp,erario,"3.1")
+        Registra.Clienti(imp,erario,"3.1",pg)
         return lsecc    
     
     def ScriviDDT(self,line,sps):
@@ -445,7 +445,16 @@ class Produt:
         return ss        
     
     def Pagato(self,line):
-        Scarico.objects.filter(fattura=line["pg"]).update(pagato=0,note=line["nt"])
+        imp=0
+        erario=0
+        s=Scarico.objects.filter(fattura=line["pg"])
+        s.update(pagato=0,note=line["nt"])
+        s1=s.values("q","prezzo","cassa","idcod__genere__iva","tara")
+        for item in s1:
+            imp+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]
+            erario+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]*(item["idcod__genere__iva"])
+        Registra.Banca(imp,erario,"3.1",0)
+            
     def GetFatturabyNum(self,num):
         recls=Scarico.objects.filter(fattura=num).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
         data=list(recls)
@@ -534,7 +543,7 @@ class Produt:
             cln=Cliente.objects.get(azienda=cliente)
             imp+=row
             erario+=Decimal(item["iva"])*row
-        Registra.Clienti(imp,erario,"3.1")
+        Registra.Clienti(imp,erario,"3.1",pg)
        # self.stampaFattura(fatt,cln,line)
         return ls        
     

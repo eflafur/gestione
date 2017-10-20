@@ -28,6 +28,7 @@ urlpatterns = [
     
     #MAGAZZINO
     url('entrata',Mviews.CreaBolla),
+    url('regfattfrn',Mviews.RegFattFrn),
     url('elimina',Mviews.EliminaBolla),
     url('lkfornitore',Mviews.LKCaricoFornitore),
     url('lkprodotto',Mviews.LKCaricoProdotto),

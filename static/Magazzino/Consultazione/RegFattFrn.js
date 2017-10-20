@@ -3,8 +3,6 @@ var d = new Date();
 var strDate = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-
-   
     
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01", 
         onSelect: function (date) {
@@ -30,7 +28,6 @@ $(document).ready(function(){
         $(this).css('background-color','green');
         Pagato(p);
     });
-    
 });
 
 function Pagato(pgm){
@@ -52,7 +49,7 @@ function Pagato(pgm){
 function GetTable(date){
     res.length=0;
     $.post(
-        "lkftr",
+        "regfattfrn",
         {data:date,azione:"t",cliente:""},
         function(ret){
             res=ret;

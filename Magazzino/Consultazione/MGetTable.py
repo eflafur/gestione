@@ -61,6 +61,7 @@ class GetData:
         ls1=[]
         c=Carico.objects.filter(Q(idcod__produttore__azienda=nome),Q(p=0)).order_by("bolla")
         cm1=c.filter(Q(cassa__gt=F("cassaexit")))
+        data=list(cm1)
         cm2=cm1.values("bolla").distinct()
         for  item in cm2:
             ls.append(item["bolla"])

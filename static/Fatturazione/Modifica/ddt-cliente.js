@@ -20,7 +20,7 @@ $(document).ready(function(){
         $("#tbf1").hide();
         GetDdt()
         $("#btddt").hide();
-        $("#pagam").hide();
+        $("#pgm").hide();
     });
 });
 
@@ -69,11 +69,11 @@ function GetDdt(){
         function(res){
             var label="";
             for (i=0;i<res.length;i++){
-                imp=parseFloat(res[i]["ps"])*parseFloat(res[i]["prz"])*(parseFloat(res[i]["iva"])+1);
+                imp=parseFloat(res[i]["q"])*parseFloat(res[i]["prz"])*(parseFloat(res[i]["iva"])+1);
                 label=label + '<tr>';
                 label=label + '<td>'+res[i]["ddt"]+'</td>';
                 label=label + '<td>' + res[i]["cod"] + '</td>';
-                label=label + '<td>' + res[i]["ps"] + '</td>';
+                label=label + '<td>' + res[i]["q"] + '</td>';
                 label=label + '<td>' + res[i]["css"] + '</td>';
                 label=label + '<td>' + res[i]["prz"] + '</td>';
                 label=label + '<td>' + res[i]["iva"]+ '</td>';

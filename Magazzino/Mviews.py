@@ -205,6 +205,25 @@ def FattFrn(request):
         context={"prod":res}
         return render(request,"Magazzino/Bilancio/fattfrn.html",context)
     
+    
+def RegFattFrn(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)     
+    if(request.method=="POST"):
+        message=request.POST
+        if(message["azione"]=="t"):
+            objf=FCreateTable.Produt()
+            res=objf.GetFattura(message);
+        if(message["azione"]=="p"):
+            objf=FCreateTable.Produt()
+            res=objf.Pagato(message);
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        context={"items":""}
+        return render(request,"Magazzino/Consultazione/RegFattFrn.html",context)        
+    
+    
 #test----------------------------------------------
 
 
