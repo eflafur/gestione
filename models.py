@@ -42,13 +42,13 @@ class Produttore(models.Model):
 	contatto=models.CharField(max_length=50,blank=True,default=" ")
 	indirizzo=models.CharField(max_length=60,null=True,blank=True,default=" ")
 	acquisizione=models.DateField(default=date.today)
-	capacita=models.CharField(max_length=10,null=True,blank=True,default="Bassa ")
 	email=models.EmailField(null=True,blank=True)
 	tel=models.CharField(max_length=15,null=True,blank=True,default=" ")
 	trpag=models.IntegerField(null=True,blank=True,default=0)
 	margine=models.IntegerField(null=True,blank=True,default=0)
 	fatturato=models.IntegerField(null=True,blank=True,default=0)
-	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")
+	pi=models.CharField(max_length=11,default=" ")
+	cod=models.CharField(max_length=10,default=" ")
 	def __str__(self):
 		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)
 
@@ -87,6 +87,8 @@ class Carico(models.Model):
 	mrg=models.SmallIntegerField(default=0)
 	fattimp=models.DecimalField(max_digits=14,decimal_places=2,null=True,blank=True,default=0)
 	fatt=models.CharField(max_length=10,null=True)
+	pagato=models.BooleanField(default=0)
+	note=models.TextField(max_length=30,default="")
 	def __str__(self):
 		return "%s" % (self.bolla)	
 	
@@ -109,6 +111,7 @@ class Cliente(models.Model):
 	tel=models.CharField(max_length=15,null=True,blank=True,default=" ")
 	trpag=models.IntegerField(null=True,blank=True,default=0)
 	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")
+	cod=models.CharField(max_length=10,default=" ")
 
 
 class Scarico(models.Model):
@@ -166,4 +169,5 @@ class ce(models.Model):
 	cod=models.CharField(max_length=20,null=True)
 	costi=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
 	ricavi=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+
 	

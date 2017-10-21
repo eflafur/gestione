@@ -1,6 +1,6 @@
 var res=[];
 var d = new Date();
-var strDate = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
+var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     
@@ -40,7 +40,7 @@ function Pagato(pgm){
         }
     });
     $.post(
-    "lkftr",
+    "regfattfrn",
     {pg:ft,nt:txt,azione:"p"},
     function(){
     });
@@ -55,18 +55,25 @@ function GetTable(date){
             res=ret;
             var label="";
             for (i=0;i<res.length;i++){
+                var d = new Date(res[i].data)//.split("-").reverse().join("/"));
+                var dd=d.getDate();
+                var mm=d.getMonth()+1;
+                var yy=d.getFullYear();
+                var g=yy+"-"+mm+"-"+dd;
+                var f=g+15
+                tot=parseFloat(res[i].erario)+parseFloat(res[i].imp);
                 label=label + '<tr>';
-                label=label + '<td><a href="#">' + res[i].fattura + '</a></td>';
-                label=label + '<td>' + res[i].cliente__azienda + '</td>';
-                label=label + '<td>' + res[i].valore+ '</td>';
-                label=label + '<td>' +res[i].data + '</td>';
-                label=label + '<td>' +res[i].scadenza+ '</td>';
-                label=label + '<td>' +res[i].pagato+ '</td>';
+                label=label + '<td><a href="#">' + res[i].fatt + '</a></td>';
+                label=label + '<td>' + res[i].frn + '</td>';
+                label=label + '<td>' +res[i].data+ '</td>';
+                label=label + '<td>' + res[i].imp+ '</td>';
+                label=label + '<td>' +res[i].erario+ '</td>';
+                label=label + '<td>' +tot+ '</td>';
                 label=label + '<td><input type="text" value="'+res[i].note+'"></input></td>';
-                if(res[i].pagato==1 & strDate>res[i].scadenza)
-                    label=label + '<td><button class="btn-danger btn-sm" value="'+res[i].fattura +'"></button></td>';
+                if(strDate>f+15)
+                    label=label + '<td><button class="btn-danger btn-sm" value="'+res[i].fatt +'"></button></td>';
                 else
-                    label=label + '<td><button class="btn-success btn-sm" value="'+res[i].fattura +'"></button></td>';
+                    label=label + '<td><button class="btn-success btn-sm" value="'+res[i].fatt +'"></button></td>';
                 label=label + '</tr>';
             }
             $("#tbf1").show();
@@ -78,27 +85,27 @@ function GetTable(date){
 
 function GetFatt(num){
     $.post(
-        "lkftrcln",
+        "regfattfrn",
         {fatt:num,azione:"ftr"},
         function(res){
             var label="";
-            var sum=0
             var prd=0;
             for (i=0;i<res.length;i++){
+                totfatt=parseFloat(res[i].fattimp)*(1+parseFloat(res[i].idcod__genere__iva));
+                totcosto=parseFloat(res[i].costo)*(1+parseFloat(res[i].idcod__genere__iva));
                 label=label+'<tr>'
-                sum=sum+parseFloat(res[i].prezzo)*parseFloat(res[i].q)*(parseFloat(res[i].idcod__genere__iva)+1);
-                label=label + '<td>'+ res[i].idcod__cod + '</td>';
-                label=label + '<td>' + res[i].cassa+ '</td>';
-                label=label + '<td>' + res[i].q + '</td>';
-                label=label + '<td>' + res[i].prezzo + '</td>';
-                label=label + '<td>' + res[i].idcod__genere__iva + '</td>';
+                label=label + '<td>' + res[i].bolla + '</td>';
                 label=label + '<td>' + res[i].data + '</td>';
+                label=label + '<td>'+ res[i].idcod__cod + '</td>';
+                label=label + '<td>' + res[i].q + '</td>';
+                label=label + '<td>' + res[i].cassa+ '</td>';
+                label=label + '<td>' + totcosto+ '</td>';
+                label=label + '<td>' + totfatt+ '</td>';
                 label=label+'</tr>'
             }
-            label=label + '<td>ToT</td><td></td><td></td><td>' + sum + '</td>';
             label=label+'</tr>'
             $("#tb62").html(label);  
-            $("#tb62 tr:last").find("td:last").css("color","blue");
+            $("#pcln").val(res[0].idcod__produttore__azienda);  
         });
         return
 };

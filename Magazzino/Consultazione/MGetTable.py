@@ -23,6 +23,10 @@ class GetData:
         rec=Carico.objects.filter(Q(bolla=line["bolla"]), Q(idcod__produttore__azienda=line["cliente"])).values("idcod__id","idcod__cod","q","cassa","data","bolla")
         data=list(rec)
         return data 
+    def GetFatt(self,line):
+        rec=Carico.objects.filter(fatt=line).values("idcod__produttore__azienda","idcod__genere__iva","costo","fattimp","bolla","idcod__cod","q","cassa","data")
+        data=list(rec)
+        return data 
     def GetIdCodbyProdotto(self,message):
         rec=Carico.objects.filter(Q(idcod__genere__nome=message["prd"]),Q(data__gte=message["data"])).values("idcod__cod",
                                 "q","cassa","bolla","data").order_by("-idcod__cod")
@@ -95,22 +99,6 @@ class GetData:
                 continue
             ls1.append(item)
         return ls1     
-    #def GetBollaCvP(self):
-        #ls=[]
-        #ls1=[]
-        #c=Carico.objects.filter(p=0).order_by("bolla")
-        #cm1=c.filter(Q(cassa=F("cassaexit")))
-        #cm2=cm1.values("bolla").distinct()
-        #for  item in cm2:
-            #ls.append(item["bolla"])
-        #cM1=c.filter(Q(cassa__gt=F("cassaexit"))).values("idcod__id",
-                                   #"idcod__cod","q","cassa","cassaexit","data","bolla","costo","idcod__produttore__margine").order_by("bolla")
-        #for item in cM1:
-            #if(item["bolla"] in ls):
-                #continue
-            #ls1.append(item)
-        #return ls1     
-
     
     def PushBollaCv(self,line,cln,mrgn):
         imp=0
@@ -186,6 +174,64 @@ class GetData:
             erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
         Registra.Fornitori(imp,erario,"53.1")
         return 0
+    
+    def GetFattFrn(self,message):
+        erario=0
+        imp=0
+        dt=""
+        frn=""
+        somma=0
+        before=" "
+        i=0
+        ll=[]
+        recls=Carico.objects.filter(Q(data__gte=message["data"]),Q(p=2)).values("pagato","idcod__produttore__azienda","fattimp"
+                                ,"fatt","data","idcod__genere__iva","note").order_by("fatt")
+        for el in recls:
+            if(el["fatt"]!=before):
+                if(before!=" "):
+                    dic={}
+                    dic["fatt"]=before
+                    dic["imp"]=imp
+                    dic["erario"]=erario
+                    dic["frn"]=frn
+                    dic["data"]=dt
+                    dic["note"]=note
+                    dic["pg"]=pg
+                    ll.append(dic)
+                imp=0
+                imp+=el["fattimp"]
+                erario+=el["fattimp"]*el["idcod__genere__iva"]
+                frn=el["idcod__produttore__azienda"]
+                dt=el["data"]
+                note=el["note"]
+                pg=el["pagato"]
+            else:
+                imp+=el["fattimp"]
+                erario+=el["fattimp"]*el["idcod__genere__iva"]
+            before=el["fatt"]
+        dic={}
+        dic["fatt"]=before
+        dic["imp"]=imp
+        dic["erario"]=erario
+        dic["frn"]=frn
+        dic["data"]=dt
+        dic["note"]=note
+        dic["pg"]=pg
+        ll.append(dic)
+        return ll            
+    
+    def Pagato(self,line):
+        imp=0
+        erario=0
+        s=Carico.objects.filter(fatt=line["pg"])
+        s.update(pagato=1,note=line["nt"])
+        s1=s.values("fattimp","idcod__genere__iva")
+        for item in s1:
+            imp+=item["fattimp"]
+            erario+=item["fattimp"]*(item["idcod__genere__iva"])
+        Registra.Banca(imp,erario,"53.1",0)
+    
+    
 
     def stampaFattura(self,nFattura, cln, righeFattura,mrg):
         """ produce fattura in excel """

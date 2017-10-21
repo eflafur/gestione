@@ -213,10 +213,14 @@ def RegFattFrn(request):
     if(request.method=="POST"):
         message=request.POST
         if(message["azione"]=="t"):
-            objf=FCreateTable.Produt()
-            res=objf.GetFattura(message);
+            objf=MGetTable.GetData()
+            res=objf.GetFattFrn(message);
+        if(message["azione"]=="ftr"):
+            p=message["fatt"]
+            objf=MGetTable.GetData()
+            res=objf.GetFatt(p);
         if(message["azione"]=="p"):
-            objf=FCreateTable.Produt()
+            objf=MGetTable.GetData()
             res=objf.Pagato(message);
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
