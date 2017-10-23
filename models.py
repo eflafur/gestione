@@ -170,4 +170,14 @@ class ce(models.Model):
 	costi=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
 	ricavi=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
 
+class ivacliente(models.Model):
+	dtreg=models.DateField(default=date.today)
+	prot=models.IntegerField(null=True,blank=True,default=0)
+	dtfatt=models.DateField(default=date.today)
+	fatt=models.CharField(max_length=20,null=True)
+	nome=models.CharField(max_length=20,null=True)
+	tot=models.DecimalField(max_digits=8,decimal_places=2,null=True)
+	imp=models.DecimalField(max_digits=8,decimal_places=2,null=True)
+	erario=models.DecimalField(max_digits=8,decimal_places=2,null=True)
+	esenzione=models.CharField(max_length=20,null=True)
 	

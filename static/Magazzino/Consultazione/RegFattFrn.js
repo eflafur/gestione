@@ -55,22 +55,23 @@ function GetTable(date){
             res=ret;
             var label="";
             for (i=0;i<res.length;i++){
-                var d = new Date(res[i].data)//.split("-").reverse().join("/"));
-                var dd=d.getDate();
-                var mm=d.getMonth()+1;
-                var yy=d.getFullYear();
-                var g=yy+"-"+mm+"-"+dd;
-                var f=g+15
+                //var d = new Date(res[i].data)//.split("-").reverse().join("/"));
+                //var dd=d.getDate();
+                //var mm=d.getMonth()+1;
+                //var yy=d.getFullYear();
+                //var g=yy+"-"+mm+"-"+dd;
+                //var f=g+15
                 tot=parseFloat(res[i].erario)+parseFloat(res[i].imp);
                 label=label + '<tr>';
                 label=label + '<td><a href="#">' + res[i].fatt + '</a></td>';
                 label=label + '<td>' + res[i].frn + '</td>';
-                label=label + '<td>' +res[i].data+ '</td>';
+                label=label + '<td>' +res[i].dt+ '</td>';
+                label=label + '<td>' +res[i].dtadd+ '</td>';
                 label=label + '<td>' + res[i].imp+ '</td>';
                 label=label + '<td>' +res[i].erario+ '</td>';
                 label=label + '<td>' +tot+ '</td>';
                 label=label + '<td><input type="text" value="'+res[i].note+'"></input></td>';
-                if(strDate>f+15)
+                if(strDate>res[i].dtadd)
                     label=label + '<td><button class="btn-danger btn-sm" value="'+res[i].fatt +'"></button></td>';
                 else
                     label=label + '<td><button class="btn-success btn-sm" value="'+res[i].fatt +'"></button></td>';

@@ -1,5 +1,5 @@
-import django
-django.setup()
+#import django
+#django.setup()
 from gestione.models import Produttore,Settore,Genere,Area,Sito
 from django.db.models import Q
 
@@ -17,7 +17,6 @@ class Produt:
             citta=self.row["a4"],
             regione=self.row["a5"],
             acquisizione=self.row["a6"],
-            capacita=self.row["a7"],
             email=self.row["a8"],
             trpag=self.row["a10"],
             margine=self.row["a11"],

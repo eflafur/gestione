@@ -2,7 +2,7 @@
 #django.setup()
 from gestione.models import Produttore,IDcod,Carico,Sospese
 from django.db.models import Q,F,Sum
-import os,time,openpyxl,subprocess,Registra
+import os,time,openpyxl,subprocess,Registra,datetime
 from decimal import Decimal
 
 class GetData:
@@ -194,7 +194,8 @@ class GetData:
                     dic["imp"]=imp
                     dic["erario"]=erario
                     dic["frn"]=frn
-                    dic["data"]=dt
+                    dic["dt"]=dt
+                    dic["dtadd"]=dt+datetime.timedelta(days=15)
                     dic["note"]=note
                     dic["pg"]=pg
                     ll.append(dic)
@@ -214,7 +215,8 @@ class GetData:
         dic["imp"]=imp
         dic["erario"]=erario
         dic["frn"]=frn
-        dic["data"]=dt
+        dic["dt"]=dt
+        dic["dtadd"]=dt+datetime.timedelta(days=15)
         dic["note"]=note
         dic["pg"]=pg
         ll.append(dic)

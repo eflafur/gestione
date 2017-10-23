@@ -63,6 +63,7 @@ class Produt:
         f=(s.fattura).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
+        c=Cliente.objects.get(azienda=line[0]["cln"])
         for item in line:
             iva=Decimal(item["iva"])+1
             lsecc.clear()
@@ -73,7 +74,6 @@ class Produt:
             css=int(item["css"])
             qc=ps/css
             tara=Decimal(item["tara"])
-            c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
             ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
             ltt=ltcod[0].id
@@ -124,7 +124,7 @@ class Produt:
                 erario+=Decimal(item["iva"])*prz*(qc*(css-rim)-(css*tara))
                 rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
             rec.save()
-        Registra.Clienti(imp,erario,"3.1",pg)
+        Registra.Clienti(imp,erario,"3.1",pg,line[0]["cln"],fatt)
         return lsecc    
     
     def ScriviDDT(self,line,sps):
@@ -543,7 +543,7 @@ class Produt:
             cln=Cliente.objects.get(azienda=cliente)
             imp+=row
             erario+=Decimal(item["iva"])*row
-        Registra.Clienti(imp,erario,"3.1",pg)
+        Registra.Clienti(imp,erario,"3.1",pg,cliente,fatt)
        # self.stampaFattura(fatt,cln,line)
         return ls        
     

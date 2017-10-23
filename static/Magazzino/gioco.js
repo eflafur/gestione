@@ -4,6 +4,11 @@ $(document).ready(function(){
     $.ajaxSetup({cache:false});
         regione=$("#reg option:selected").text();
 
+            $("#btl").click(function(){
+                TestDb();
+            });
+                
+
 
         //$("#reg").click(function(){
             //opt=$("#reg option:selected").text();
@@ -46,11 +51,11 @@ $(document).ready(function(){
              //});
  
                 
-                $('#idLKP11 tr').each(function() {
-                    var customerId = $(this).find("td:first").html(); 
-                    $("pp").val(customerId);
-                    alert (customerId);
-                });
+                //$('#idLKP11 tr').each(function() {
+                    //var customerId = $(this).find("td:first").html(); 
+                    //$("pp").val(customerId);
+                    //alert (customerId);
+                //});
                 
                 //LightTd();
                 //LightLi();
@@ -122,6 +127,15 @@ $(document).ready(function(){
          //GetBolla();
 
     });
+            
+function TestDb(){
+    $.post(
+    "gioco",
+    {azione:"db"},
+    function(res){
+    
+    });
+};            
             
 
 function GetBolla(){

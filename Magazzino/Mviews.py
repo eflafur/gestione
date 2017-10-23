@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 import CreateTable,Modifica,GetProduct,validazione,Fviews,MCreateTable,MGetTable,MModifica
+import testdb
 import re,json,jsonpickle
 #import wingdbstub
 #nuova relaease salvata
@@ -236,22 +237,6 @@ def RegFattFrn(request):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def Gioco(request):
     res=""
     res1=""
@@ -260,6 +245,12 @@ def Gioco(request):
     context={}
     if(request.method=="POST"):
         message=request.POST
+        if(message["azione"]=="db"):
+            res=testdb.test1("3.1",100,50)
+            f=res.ScriviAttivo()
+            v1=f.cod
+            v2=f.c
+            v3=res.v
         if(message["a2"]=="insert"):
             H1=1
             el=CreateTable.GetProd()
@@ -288,3 +279,4 @@ def Gioco(request):
         prod=el.GetProduttori()
         context={"items1":res1,"items3":prod}
     return render(request,"Magazzino/gioco.html",context)
+
