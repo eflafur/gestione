@@ -71,7 +71,7 @@ function GetTable(date){
                 label=label + '<td>' +res[i].erario+ '</td>';
                 label=label + '<td>' +tot+ '</td>';
                 label=label + '<td><input type="text" value="'+res[i].note+'"></input></td>';
-                if(strDate>res[i].dtadd)
+                if(res[i].pg==0 && strDate>res[i].dtadd)
                     label=label + '<td><button class="btn-danger btn-sm" value="'+res[i].fatt +'"></button></td>';
                 else
                     label=label + '<td><button class="btn-success btn-sm" value="'+res[i].fatt +'"></button></td>';

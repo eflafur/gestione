@@ -124,7 +124,10 @@ class Produt:
                 erario+=Decimal(item["iva"])*prz*(qc*(css-rim)-(css*tara))
                 rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
             rec.save()
-        Registra.Clienti(imp,erario,"3.1",pg,line[0]["cln"],fatt)
+        
+        res=Registra.Clienti(imp,erario,"3.1",pg,line[0]["cln"],fatt)
+        res.Vendita()
+        res.SetErarioCliente()
         return lsecc    
     
     def ScriviDDT(self,line,sps):
@@ -543,7 +546,9 @@ class Produt:
             cln=Cliente.objects.get(azienda=cliente)
             imp+=row
             erario+=Decimal(item["iva"])*row
-        Registra.Clienti(imp,erario,"3.1",pg,cliente,fatt)
+        res=Registra.Clienti(imp,erario,"3.1",pg,cliente,fatt)
+        res.Vendita()
+        res.SetErarioCliente()
        # self.stampaFattura(fatt,cln,line)
         return ls        
     

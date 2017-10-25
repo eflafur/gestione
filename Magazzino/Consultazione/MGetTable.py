@@ -132,11 +132,16 @@ class GetData:
     
     def GetCvbyPrd(self,line):
         dic={}
-        rec=Carico.objects.filter(p__gte=1)
-        r1=rec.filter(fatt=line["fatt"])
+        if(line["chc"]=="bl"):
+            chc=0
+            rec=Carico.objects.filter(p__gte=0)
+        else:
+            chc=1
+            rec=Carico.objects.filter(p__gte=1)
+        r1=rec.filter(Q(idcod__produttore__azienda=line["cln"]),Q(fatt=line["fatt"]))
         if(r1):
             return 1
-        r2=rec.filter(Q(idcod__produttore__azienda=line["cln"]),Q(p=1)).values("bolla","cv","mrg","data").order_by("cv").distinct()
+        r2=rec.filter(Q(idcod__produttore__azienda=line["cln"]),Q(p=chc)).values("bolla","cv","mrg","data").order_by("cv").distinct()
         frn=Produttore.objects.get(azienda=line["cln"])
         dic["ct"]=frn.citta
         dic["pi"]=frn.pi
@@ -146,8 +151,11 @@ class GetData:
         data.append(dic)
         return data 
     
-    def GetCvFatt(self,cvd):
-        rec=Carico.objects.filter(cv=cvd).values("idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
+    def GetCvFatt(self,line):
+        if(line["ch"]=="cv"):
+            rec=Carico.objects.filter(cv=line["cvd"]).values("idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
+        else:
+            rec=Carico.objects.filter(bolla=line["cvd"]).values("idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         data=list(rec)
         return data
     def SaveCvFatt(self,cvls,ft,frn,mrgg):
@@ -172,7 +180,8 @@ class GetData:
             rec.save()
             imp+=Decimal(item["vnd"])
             erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
-        Registra.Fornitori(imp,erario,"53.1")
+        res=Registra.Fornitore(imp,erario,"53.1",0,frn,ft)
+        res.Acquisto()
         return 0
     
     def GetFattFrn(self,message):

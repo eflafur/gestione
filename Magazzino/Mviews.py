@@ -189,9 +189,8 @@ def FattFrn(request):
             obj=MGetTable.GetData()
             res=obj.GetCvbyPrd(message)
         elif(message["azione"]=="v"):
-            v=message["cvd"]
             obj=MGetTable.GetData()
-            res=obj.GetCvFatt(v)
+            res=obj.GetCvFatt(message)
         elif(message["azione"]=="p"):
             ret=jsonpickle.decode(message["data"])
             fatt=message["fatt"]
@@ -205,7 +204,6 @@ def FattFrn(request):
         res=obj.GetProduttori()
         context={"prod":res}
         return render(request,"Magazzino/Bilancio/fattfrn.html",context)
-    
     
 def RegFattFrn(request):
     if(login==0):
@@ -246,28 +244,26 @@ def Gioco(request):
     if(request.method=="POST"):
         message=request.POST
         if(message["azione"]=="db"):
-            res=testdb.test1("3.1",100,50)
-            f=res.ScriviAttivo()
-            v1=f.cod
-            v2=f.c
-            v3=res.v
-        if(message["a2"]=="insert"):
-            H1=1
-            el=CreateTable.GetProd()
-            a=message["vary"]
-            res=el.GetCitta(a)            
-            return JsonResponse(res,safe=False)
-        elif(message['a2']!=""):
-            if(H1!=1):
-                context={}
-                return render(request,"gestione/safe1.html",context)                 
-            el=CreateTable.Produt()
-            res=el.put(message)
-            H1=0
-            if(res==2):
-                H1=0
-                context={}
-                return render(request,"gestione/safe.html",context)            
+            res=testdb.Clienti(333,222,"3.1",0,"brero","001")
+            res.Vendita()
+            res.SetErarioCliente()
+        #if(message["a2"]=="insert"):
+            #H1=1
+            #el=CreateTable.GetProd()
+            #a=message["vary"]
+            #res=el.GetCitta(a)            
+            #return JsonResponse(res,safe=False)
+        #elif(message['a2']!=""):
+            #if(H1!=1):
+                #context={}
+                #return render(request,"gestione/safe1.html",context)                 
+            #el=CreateTable.Produt()
+            #res=el.put(message)
+            #H1=0
+            #if(res==2):
+                #H1=0
+                #context={}
+                #return render(request,"gestione/safe.html",context)            
         el=CreateTable.GetProd()
         res1=el.GetArea()
         prod=el.GetProduttori()

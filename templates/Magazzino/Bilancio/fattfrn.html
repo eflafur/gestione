@@ -4,9 +4,6 @@
 {%block insert%}
 
 <div class="container col-md-offset-2">
-   <!--<div class="row">-->
-        <!--<div class="col-md-8"><h4>Registrazione Fattura Fornitore</h4> </div>      -->
-    <!--</div>-->
 
     <div class="row">
      <div class="col-md-2" id="nmft">  
@@ -14,6 +11,13 @@
           <p>Num Fattura<input type="text" id="numfatt" class="form-control" name="a9" placeholder="Num Fattura"></p>
        </div>
      </div>
+    <div class="col-md-2" >  
+      <div class="input-group" id="chc">
+        CV<input type="radio" name="linguaggio" value="cv"/>
+        Bolla<input type="radio" name="linguaggio" value="bl"/>
+      </div>
+    </div>
+     
       <div class="col-md-3" id="cl">  
             <p>Fornitore<select class="form-control" id="azienda"></p> 
                 {% for entry in prod %}

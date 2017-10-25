@@ -4,9 +4,8 @@ from django.db.models import Q,F
 import openpyxl,time,os,subprocess,datetime
 from datetime import datetime,timedelta,date
         
-        
-      
-class Clienti:
+
+class Commercio:
     def __init__(self,imp,erario,cod,pg,cl,fatt):
         self.imp=imp
         self.erario=erario
@@ -14,57 +13,51 @@ class Clienti:
         self.pg=pg
         self.cl=cl
         self.fatt=fatt
-        self.put(self.imp,self.erario,self.cod,self.pg)
-        self.SetErarioCliente(self.imp,self.erario,self.cl,self.fatt)
-    def put(self,imp,erario,cod,pg):
-        s=sp.objects.all()
-        cl=s.get(cod=cod)
-        iva=s.get(cod="20.20")
-        cl.attivo+=imp+erario
-        iva.passivo+=erario
-        cl.save()
-        iva.save()
-        if(pg==0):
-            cs=s.get(cod="1.1")
-            cs.attivo+=imp+erario
-            cs.save()
-            cl.passivo+=imp+erario
-            cl.save()
-            rc=ce.objects.get(cod="80.80")
-            rc.ricavi+=imp
-            rc.save()
-        return (1)
-    def SetErarioCliente(self,imp,erario,cl,fattura):
-        rec=ivacliente.objects.latest("id")
-        res=ivacliente(prot=rec.prot+1,fatt=fattura,nome=cl,tot=imp+erario,imp=imp,erario=erario)
-        res.save()
-    
-    
-
-class Fornitori:
-    def __init__(self,imp,erario,cod):
-        self.imp=imp
-        self.erario=erario
-        self.cod=cod
-        self.put(self.imp,self.erario,self.cod)
-        
-    def put(self,imp,erario,cod):
-        s=sp.objects.all()
-        rc=ce.objects.get(cod="72.72")
-        fr=s.get(cod=cod)
-        cs=s.get(cod="1.1")
-        iva=s.get(cod="20.20")
-        fr.passivo+=imp+erario
-        iva.attivo+=erario
-        cs.passivo+=imp+erario
-        rc.costi+=imp
-        fr.attivo+=imp+erario
-        fr.save()
-        cs.save()
-        iva.save()
+        self.s=sp.objects.all()
+        self.cl=self.s.get(cod=cod)
+        self.iva=self.s.get(cod="20.20")
+    def Vendita(self):
+        self.cl.attivo+=self.imp+self.erario
+        self.iva.passivo+=self.erario
+        rc=ce.objects.get(cod="80.80")
+        rc.ricavi+=self.imp
+        self.cl.save()
+        self.iva.save()
         rc.save()
-        return (1)
+        if(self.pg==0):
+            cs=self.s.get(cod="1.1")
+            cs.attivo+=self.imp+erario
+            cs.save()
+    def Acquisto(self):
+        self.cl.passivo+=self.imp+self.erario
+        self.iva.attivo+=self.erario
+        rc=ce.objects.get(cod="72.72")
+        rc.costi+=self.imp
+        self.cl.save()
+        self.iva.save()
+        rc.save()
+        if(self.pg==1):
+            cs=self.s.get(cod="1.1")
+            cs.passivo+=self.imp+self.erario
+            cs.save()
+        
+    def SetErarioCliente(self):
+        rec=ivacliente.objects.latest("id")
+        res=ivacliente(prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
+        res.save()   
 
+class Clienti(Commercio):
+    pass
+class Fornitore(Commercio):
+    pass
+
+
+
+
+
+    
+    
+    
 class Banca:
     def __init__(self,imp,erario,cod,sgn):
         self.imp=imp

@@ -2,12 +2,19 @@
 //var TempUserTable=null;
 var res1="";
 var sumcosto=0;
+var choice;
 $(document).ready(function(){
 //    $.ajaxSetup({cache:false});
-    $("#azienda").hide();
+    $("#cl").hide();
+    $("#chc").hide();
     Evidance();
     $("#numfatt").keypress(function(){
-        $("#azienda").show();
+        $("#chc").show();
+    });
+
+    $("#chc").click(function(){
+        choice=$("#chc :checked").val();
+        $("#cl").show();
     });
     $("#azienda").click(function(){
         $("#btddt").hide();
@@ -35,9 +42,9 @@ $(document).ready(function(){
         PushCv(a)
     });
     
-    //$("#btmrg").click(function(){
-        //WriteCv($("#dt2").val());
-    //});
+    $("#btmrg").click(function(){
+        WriteCv($("#dt2").val());
+    });
 
     $("#btcrc").click(function(){
         ret=ReadChange(0);
@@ -59,7 +66,7 @@ $(document).ready(function(){
 });
 
 function Evidance(){
-   $("#cldt2").toggle();
+    $("#cldt2").toggle();
     $("#cldt3").toggle();
     $("#cldt4").toggle();
     $("#cldt5").toggle();
@@ -67,10 +74,11 @@ function Evidance(){
     $("#cldt7").toggle();
 };
 
+
 function GetCv(){
     $.post(
         "fattfrn",
-        {cln:$("#azienda option:selected").text(),fatt:$("#numfatt").val(),azione:"g"},
+        {chc:choice,cln:$("#azienda option:selected").text(),fatt:$("#numfatt").val(),azione:"g"},
         function(res){
             if(res==1){
                 alert("Fattura: "+$("#numfatt").val()+" già esistente")
@@ -81,25 +89,40 @@ function GetCv(){
         });
 };
 
+
 function Write(res) {
     var before="";
     var label="";
     var sum=0;
-    for (i=0;i<res.length-1;i++){
-        label=label + '<tr>';
-        if(res[i].cv!=before)
-            label=label+'<td color="#FF0000"><a href="#">' + res[i].cv+ '</a></td>';
-        else
-            label=label + '<td></td>';
-        label=label + '<td>' + res[i].bolla+ '</td>';
-        label=label + '<td>' + res[i].data+ '</td>';
-        label=label + '</tr>';
-        before=res[i].cv
+    if(choice=="cv"){
+        for (i=0;i<res.length-1;i++){
+            label=label + '<tr>';
+            if(res[i].cv!=before)
+                label=label+'<td color="#FF0000"><a href="#">' + res[i].cv+ '</a></td>';
+            else
+                label=label + '<td></td>';
+            label=label + '<td>' + res[i].bolla+ '</td>';
+            label=label + '<td>' + res[i].data+ '</td>';
+            label=label + '</tr>';
+            before=res[i].cv
+        }
+    }
+    else{
+        for (i=0;i<res.length-1;i++){
+            label=label + '<tr>';
+            if(res[i].bolla!=before)
+                label=label+'<td color="#FF0000"><a href="#">' + res[i].bolla+ '</a></td>';
+            else
+                label=label + '<td></td>';
+            label=label + '<td>' + res[i].bolla+ '</td>';
+            label=label + '<td>' + res[i].data+ '</td>';
+            label=label + '</tr>';
+            before=res[i].bolla
+        }
     }
     $("#tbf1").show();  
     $("#tb6").html(label);  
 //    $("#tb6 tr:first").css("color","blue");//.find("td:last").css("color","blue");
-
     $("#dt2").val(res[i].mrg);
     $("#cldt2").show();
     $("#dt3").val(res[i].ct);
@@ -116,7 +139,7 @@ function Write(res) {
 function PushCv(cv){
     $.post(
         "fattfrn",
-        {cvd:cv,azione:"v"},
+        {cvd:cv,azione:"v",ch:choice},
         function(ret){
             res1=ret;
             WriteCv(0);
