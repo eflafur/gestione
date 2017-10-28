@@ -182,6 +182,7 @@ class GetData:
             erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
         res=Registra.Fornitore(imp,erario,"53.1",0,frn,ft)
         res.Acquisto()
+        res.SetErarioForn()   
         return 0
     
     def GetFattFrn(self,message):
@@ -240,7 +241,8 @@ class GetData:
         for item in s1:
             imp+=item["fattimp"]
             erario+=item["fattimp"]*(item["idcod__genere__iva"])
-        Registra.Banca(imp,erario,"53.1",0)
+        res=Registra.Banca(imp,erario,"53.1",0)
+        res.putfrn()
     
     
 

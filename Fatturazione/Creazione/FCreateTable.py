@@ -286,25 +286,14 @@ class Produt:
             f=(s.fatturas).split("-")
             r=int(f[1])+1
             fatt=f[0]+"-"+str(r)
-#        lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         for item in line:
             c=Cliente.objects.get(azienda=item["cln"])
             cod=IDcod.objects.get(cod=item["cod"])
-#            ltcod=lotto.filter(idcod__cod=item["cod"])
- #           ltt=ltcod[0].id
             rec=Sospese(idcod=cod,cliente=c,prezzo=item["prz"],q=item["ps"],cassa=item["css"],
                         fatturas=fatt,tara=Decimal(item["tara"]))
             rec.save()
         return
     
-    
-    
-#evidenzia tutte le righe della sopsesa *1    
-    #def GetSospesa(self,message):
-        #recls=Sospese.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","fatturas","data","prezzo","cliente__azienda")
-        #data=list(recls)
-        #return data
-
     def RecFatt(self,message):
         somma=0
         before=" "
@@ -456,8 +445,8 @@ class Produt:
         for item in s1:
             imp+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]
             erario+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]*(item["idcod__genere__iva"])
-        Registra.Banca(imp,erario,"3.1",0)
-            
+        res=Registra.Banca(imp,erario,"3.1",0)
+        res.put() 
     def GetFatturabyNum(self,num):
         recls=Scarico.objects.filter(fattura=num).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
         data=list(recls)

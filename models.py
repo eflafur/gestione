@@ -48,7 +48,6 @@ class Produttore(models.Model):
 	margine=models.IntegerField(null=True,blank=True,default=0)
 	fatturato=models.IntegerField(null=True,blank=True,default=0)
 	pi=models.CharField(max_length=11,default=" ")
-	cod=models.CharField(max_length=10,default=" ")
 	def __str__(self):
 		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)
 
@@ -111,7 +110,6 @@ class Cliente(models.Model):
 	tel=models.CharField(max_length=15,null=True,blank=True,default=" ")
 	trpag=models.IntegerField(null=True,blank=True,default=0)
 	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")
-	cod=models.CharField(max_length=10,default=" ")
 
 
 class Scarico(models.Model):
@@ -141,8 +139,7 @@ class Sospese(models.Model):
 	lotto=models.CharField(max_length=5,null=True)
 	tara=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	def __str__(self):
-		return "%s" % (self.fatturas)	
-	
+		return "%s" % (self.fatturas)
 	
 class trasporto(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
@@ -176,6 +173,19 @@ class ivacliente(models.Model):
 	dtfatt=models.DateField(default=date.today)
 	fatt=models.CharField(max_length=20,null=True)
 	nome=models.CharField(max_length=20,null=True)
+	iva=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
+	tot=models.DecimalField(max_digits=8,decimal_places=2,null=True)
+	imp=models.DecimalField(max_digits=8,decimal_places=2,null=True)
+	erario=models.DecimalField(max_digits=8,decimal_places=2,null=True)
+	esenzione=models.CharField(max_length=20,null=True)
+	
+class ivaforn(models.Model):
+	dtreg=models.DateField(default=date.today)
+	prot=models.IntegerField(null=True,blank=True,default=0)
+	dtfatt=models.DateField(default=date.today)
+	fatt=models.CharField(max_length=20,null=True)
+	nome=models.CharField(max_length=20,null=True)
+	iva=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	tot=models.DecimalField(max_digits=8,decimal_places=2,null=True)
 	imp=models.DecimalField(max_digits=8,decimal_places=2,null=True)
 	erario=models.DecimalField(max_digits=8,decimal_places=2,null=True)
