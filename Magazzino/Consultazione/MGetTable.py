@@ -120,7 +120,7 @@ class GetData:
             ddt["iva"]=c1[0]["idcod__genere__iva"]
             c1.update(fattimp=item["fatt"],mrg=mrgn,p=1,cv=fatt)
             ls.append(ddt)
-        self.stampaFattura("vostra fattura",cliente,ls,mrgn)
+  #      self.stampaFattura("vostra fattura",cliente,ls,mrgn)
         return
     
     def PushFattFrn(self,line,ft,frn,mrgn,cst):
@@ -158,7 +158,7 @@ class GetData:
             rec=Carico.objects.filter(bolla=line["cvd"]).values("idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         data=list(rec)
         return data
-    def SaveCvFatt(self,cvls,ft,frn,mrgg):
+    def SaveCvFatt(self,cvls,ft,frn,mrgg,data):
         imp=0
         erario=0
         cst=0
@@ -180,7 +180,7 @@ class GetData:
             rec.save()
             imp+=Decimal(item["vnd"])
             erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
-        res=Registra.Fornitore(imp,erario,"53.1",0,frn,ft)
+        res=Registra.ComVen(imp,erario,"53.1",0,frn,ft)
         res.Acquisto()
         res.SetErarioForn()   
         return 0
@@ -237,14 +237,12 @@ class GetData:
         erario=0
         s=Carico.objects.filter(fatt=line["pg"])
         s.update(pagato=1,note=line["nt"])
-        s1=s.values("fattimp","idcod__genere__iva")
+        s1=s.values("fattimp","idcod__genere__iva","idcod__produttore__azienda")
         for item in s1:
             imp+=item["fattimp"]
             erario+=item["fattimp"]*(item["idcod__genere__iva"])
-        res=Registra.Banca(imp,erario,"53.1",0)
+        res=Registra.ComVenBnc(imp,erario,"53.1",0,line["pg"],"2017-01-01",s1[0]["idcod__produttore__azienda"])
         res.putfrn()
-    
-    
 
     def stampaFattura(self,nFattura, cln, righeFattura,mrg):
         """ produce fattura in excel """

@@ -3,6 +3,7 @@
 var res1="";
 var sumcosto=0;
 var choice;
+var dt="";
 $(document).ready(function(){
 //    $.ajaxSetup({cache:false});
     $("#cl").hide();
@@ -10,6 +11,12 @@ $(document).ready(function(){
     Evidance();
     $("#numfatt").keypress(function(){
         $("#chc").show();
+    });
+    
+    $("#dt").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",autoClose: true, 
+        onSelect: function (date) {
+            dt=date;
+        }
     });
 
     $("#chc").click(function(){
@@ -74,7 +81,6 @@ function Evidance(){
     $("#cldt7").toggle();
 };
 
-
 function GetCv(){
     $.post(
         "fattfrn",
@@ -88,7 +94,6 @@ function GetCv(){
             return;
         });
 };
-
 
 function Write(res) {
     var before="";
@@ -180,15 +185,15 @@ function WriteCv(mrgg){
 function ReadChange(n){
     var ls=[];
     $("#tb62 tr").each(function(){
-    if(n==0)
-        ls.push($(this));
-    else if(n==1){
-        var dc={}
-        dc["id"]=$(this).find("td:first").text();
-        dc["vnd"]=$(this).find("td:eq(7)").text();
-        dc["iva"]=$(this).find("td:eq(9)").text();
-        ls.push(dc);
-    }
+        if(n==0)
+            ls.push($(this));
+        else if(n==1){
+            var dc={}
+            dc["id"]=$(this).find("td:first").text();
+            dc["vnd"]=$(this).find("td:eq(7)").text();
+            dc["iva"]=$(this).find("td:eq(9)").text();
+            ls.push(dc);
+    };
     });
 //    ls.splice(0,1)
     return ls;
@@ -219,7 +224,7 @@ function PushDdt(ret){
     ar=JSON.stringify(ret);
     $.post(
         "fattfrn",
-        {data:ar,fatt:$("#numfatt").val(),azione:"p",frn:$("#azienda option:selected").val(),mrg:$("#dt2").val()},
+        {data:ar,fatt:$("#numfatt").val(),azione:"p",frn:$("#azienda option:selected").val(),mrg:$("#dt2").val(),data:dt},
         function(ret){
             if(ret==1)
                 alert("Fattura: "+$("#numfatt").val()+" già esistente")

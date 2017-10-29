@@ -1,4 +1,4 @@
-from gestione.models import sp, ce,ivacliente
+from gestione.models import sp, ce,ivacliente,libro
 
 class Commercio:
     def __init__(self,imp,erario,cod,pg,cl,fatt):
@@ -9,14 +9,14 @@ class Commercio:
         self.cl=cl
         self.fatt=fatt
         self.s=sp.objects.all()
-        self.cl=self.s.get(cod=cod)
+        self.cln=self.s.get(cod=cod)
         self.iva=self.s.get(cod="20.20")
     def Vendita(self):
-        self.cl.attivo+=self.imp+self.erario
+        self.cln.attivo+=self.imp+self.erario
         self.iva.passivo+=self.erario
         rc=ce.objects.get(cod="80.80")
         rc.ricavi+=self.imp
-        self.cl.save()
+        self.cln.save()
         self.iva.save()
         rc.save()
         if(self.pg==0):
@@ -24,10 +24,18 @@ class Commercio:
             cs.attivo+=self.imp+self.erario
             cs.save()
     def SetErarioCliente(self):
-        rec=ivacliente.objects.latest("id")
-        res=ivacliente(prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
-        res.save()            
-
+        prt=libro.objects.latest("id")
+        p=prt.id
+        ds="fattura vendita a " +self.cl
+        l=libro(id=p+1,prot=p+1,doc=self.fatt,desc="fattura vendita a " +self.cl,conto=self.cod,
+                dare=self.erario+self.imp)
+        l1=libro(id=p+2,prot=p+2,doc=self.fatt,desc="fattura IVA " +self.cl,conto="20.20",
+                avere=self.erario)
+        l2=libro(id=p+3,prot=p+3,doc=self.fatt,desc="fattura ricavi" +self.cl,conto="80.80",
+                    avere=self.imp)
+        l.save()
+        l1.save()
+        l2.save()
 class Clienti(Commercio):
     #def __init__(self,imp,erario,cod,pg,cl,fatt):
         #super().__init__(imp,erario,cod,pg,cl,fatt)

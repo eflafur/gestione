@@ -11,14 +11,23 @@
           <p>Num Fattura<input type="text" id="numfatt" class="form-control" name="a9" placeholder="Num Fattura"></p>
        </div>
      </div>
+
+
+    <div class="col-sm-1" >  
+      <div class="input-group" id="dtt">
+        <p>Data<input type="text" id="dt"></p>
+      </div>
+    </div>
+
+
     <div class="col-md-2" >  
       <div class="input-group" id="chc">
-        CV<input type="radio" name="linguaggio" value="cv"/>
-        Bolla<input type="radio" name="linguaggio" value="bl"/>
+        CV<input type="radio" name="linguaggio" value="cv">
+        Bolla<input type="radio" name="linguaggio" value="bl">
       </div>
     </div>
      
-      <div class="col-md-3" id="cl">  
+      <div class="col-md-2" id="cl">  
             <p>Fornitore<select class="form-control" id="azienda"></p> 
                 {% for entry in prod %}
                     <option value="{{entry.azienda}}">{{entry.azienda}}</option>
@@ -37,13 +46,8 @@
             <button type="button" class="btn  btn-success btn-sm" id="btcrc" >Ricalcola</button>
           </div>   
         </div>
-        <div class="col-md-2" >  
-          <div class="input-group" id="cldt7">
-            <p>Saldo:<input type = "number" id = "dt7"  class="form-control" readonly></p>
-          </div>   
-       </div>
-    </br>
     </div>
+    </br>
   <div class="row">
        <div class="col-md-2" >  
           <div class="input-group" id="cldt3">
@@ -60,8 +64,13 @@
             <p>P.I.<input type = "text" id = "dt5"  class="form-control" readonly></p>
           </div>   
       </div>   
+      <div class="col-md-2" >  
+          <div class="input-group" id="cldt7">
+            <p>Saldo:<input type = "number" id = "dt7"  class="form-control" readonly></p>
+          </div>   
+       </div>
       </br>
-       <div class="col-md-3 col-md-offset-1" >  
+       <div class="col-md-3" >  
           <div class="btn-group" id="btcv">
             <button type="button" class="btn  btn-warning" id="btddt">Emetti</button>
           </div>

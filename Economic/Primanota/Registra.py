@@ -1,4 +1,4 @@
-from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto,sp,ce,ivacliente,ivaforn
+from gestione.models import Cliente,sp,ce,ivacliente,ivaforn,libro
 from decimal import Decimal
 from django.db.models import Q,F
 import openpyxl,time,os,subprocess,datetime
@@ -15,6 +15,8 @@ class Commercio:
         self.s=sp.objects.all()
         self.cln=self.s.get(cod=cod)
         self.iva=self.s.get(cod="20.20")
+        prt=libro.objects.latest("id")
+        self.p=prt.id
     def Vendita(self):
         self.cln.attivo+=self.imp+self.erario
         self.iva.passivo+=self.erario
@@ -27,6 +29,12 @@ class Commercio:
             cs=self.s.get(cod="1.1")
             cs.attivo+=self.imp+self.erario
             cs.save()
+            l=libro(id=self.p+4,prot=self.p+4,doc=self.fatt,desc="Cassa per vendita a " +self.cl,conto="1.1",
+                        dare=self.erario+self.imp)
+            l1=libro(id=self.p+5,prot=self.p+4,doc=self.fatt,desc="fattura acquisto da " +self.cl,conto=self.cod,
+                            avere=self.erario+self.imp)
+            l.save()
+            l1.save()
         self.cln.save()
     def Acquisto(self):
         self.cln.passivo+=self.imp+self.erario
@@ -44,39 +52,79 @@ class Commercio:
         rec=ivacliente.objects.latest("id")
         res=ivacliente(prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
         res.save()
+        l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="fattura vendita a " +self.cl,conto=self.cod,
+                    dare=self.erario+self.imp)
+        l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,desc="fattura IVA " +self.cl,conto="20.20",
+                     avere=self.erario)
+        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,desc="fattura ricavi " +self.cl,conto="80.80",
+                     avere=self.imp)
+        l.save()
+        l1.save()
+        l2.save()
     def SetErarioForn(self):
         rec=ivaforn.objects.latest("id")
         res=ivaforn(prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
         res.save()
-class Clienti(Commercio):
+        prt=libro.objects.latest("id")
+        p=prt.id
+        l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="fattura acquisto da " +self.cl,conto=self.cod,
+                    avere=self.erario+self.imp)
+        l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,desc="fattura IVA " +self.cl,conto="20.20",
+                     dare=self.erario)
+        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,desc="fattura costi " +self.cl,conto="72.72",
+                     dare=self.imp)
+        l.save()
+        l1.save()
+        l2.save()
+        
+class ComVen(Commercio):
     pass
-class Fornitore(Commercio):
-    pass
+
     
 class Banca:
-    def __init__(self,imp,erario,cod,sgn):
+    def __init__(self,imp,erario,cod,sgn,doc,data,cl):
         self.imp=imp
         self.erario=erario
         self.cod=cod
         self.sgn=sgn
+        self.doc=doc
+        self.data=data
+        self.cl=cl
+        prt=libro.objects.latest("id")
+        self.p=prt.id
     def put(self):
         bc=sp.objects.get(cod="1.2")
         if(self.sgn==0):
             bc.attivo+=self.imp+self.erario
-            cl=sp.objects.get(cod="3.1")
-            cl.passivo+=self.imp+self.erario
+            cln=sp.objects.get(cod="3.1")
+            cln.passivo+=self.imp+self.erario
+            l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.cl,conto="1.2",
+                            dare=self.erario+self.imp)
+            l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc="fattura acquisto da " +self.cl,conto="3.1",
+                             avere=self.erario+self.imp)
+            l.save()
+            l1.save()
         else:
             bc.passivo+=self.imp
         bc.save()
-        cl.save()
+        cln.save()
  
     def putfrn(self):
         bc=sp.objects.get(cod="1.2")
         if(self.sgn==0):
             bc.passivo+=self.imp+self.erario
-            cl=sp.objects.get(cod="53.1")
-            cl.attivo+=self.imp+self.erario
+            cln=sp.objects.get(cod="53.1")
+            cln.attivo+=self.imp+self.erario
+            l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.cl,conto="1.2",
+                            avere=self.erario+self.imp)
+            l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc="fattura acquisto da " +self.cl,conto="53.1",
+                             dare=self.erario+self.imp)
+            l.save()
+            l1.save()
         else:
             bc.passivo+=self.imp
         bc.save()
-        cl.save()        
+        cln.save()        
+        
+class ComVenBnc(Banca):
+    pass

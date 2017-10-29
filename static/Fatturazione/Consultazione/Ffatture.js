@@ -1,6 +1,6 @@
 var res=[];
 var d = new Date();
-var strDate = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
+var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
 
@@ -66,7 +66,7 @@ function GetTable(date){
                 label=label + '<td>' +res[i].scadenza+ '</td>';
                 label=label + '<td>' +res[i].pagato+ '</td>';
                 label=label + '<td><input type="text" value="'+res[i].note+'"></input></td>';
-                if(res[i].pagato==1 & strDate>res[i].scadenza)
+                if(res[i].pagato==1 && strDate>res[i].scadenza)
                     label=label + '<td><button class="btn-danger btn-sm" value="'+res[i].fattura +'"></button></td>';
                 else
                     label=label + '<td><button class="btn-success btn-sm" value="'+res[i].fattura +'"></button></td>';

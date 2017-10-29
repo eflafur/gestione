@@ -124,10 +124,11 @@ class Produt:
                 erario+=Decimal(item["iva"])*prz*(qc*(css-rim)-(css*tara))
                 rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
             rec.save()
-        
-        res=Registra.Clienti(imp,erario,"3.1",pg,line[0]["cln"],fatt)
-        res.Vendita()
+#registrazione contabile        
+        res=Registra.ComVen(imp,erario,"3.1",pg,line[0]["cln"],fatt)
         res.SetErarioCliente()
+        res.Vendita()
+#registrazione contabile        
         return lsecc    
     
     def ScriviDDT(self,line,sps):
@@ -373,7 +374,7 @@ class Produt:
         if(message["cliente"]!=" "):
             recls=Sospese.objects.filter(Q(data__gte=message["data"]),Q(cliente__azienda=message["cliente"])).exclude(id=199).values("tara","idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         else:
-            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=209).values("tara","idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
+            recls=Sospese.objects.filter(Q(data__gte=message["data"])).exclude(id=1).values("tara","idcod__cod","idcod__genere__iva","q","cassa","fatturas","data","prezzo","cliente__azienda").order_by("fatturas")
         
         for el in recls:
             iva=el["idcod__genere__iva"]+1
@@ -407,11 +408,9 @@ class Produt:
         if(message["cliente"]!= ""):
             recls=Scarico.objects.filter(Q(data__gte=message["data"]) , Q(cliente__azienda=message["cliente"])).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         else:
-            recls=Scarico.objects.filter(Q(data__gte=message["data"])).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"])).exclude(id=1).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         
         for el in recls:
-            if(el["fattura"]=="fc2018-0"):
-                continue
             iva=el["idcod__genere__iva"]+1
             if(el["fattura"]!=before):
                 if(before!=" "):
@@ -427,8 +426,6 @@ class Produt:
         i=0
         
         for item in recls:
-            if(item["fattura"]=="fc2018-0"):
-                continue     
             if (item["fattura"]!=before):
                 item["valore"]=ll[i]
                 ss.append(item)
@@ -441,12 +438,13 @@ class Produt:
         erario=0
         s=Scarico.objects.filter(fattura=line["pg"])
         s.update(pagato=0,note=line["nt"])
-        s1=s.values("q","prezzo","cassa","idcod__genere__iva","tara")
+        s1=s.values("q","prezzo","cassa","idcod__genere__iva","tara","data","cliente__azienda")
         for item in s1:
             imp+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]
             erario+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]*(item["idcod__genere__iva"])
-        res=Registra.Banca(imp,erario,"3.1",0)
+        res=Registra.ComVenBnc(imp,erario,"3.1",0,line["pg"],s1[0]["data"],s1[0]["cliente__azienda"])
         res.put() 
+        
     def GetFatturabyNum(self,num):
         recls=Scarico.objects.filter(fattura=num).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
         data=list(recls)
@@ -460,13 +458,11 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!=""):
-            recls=trasporto.objects.filter(Q(cliente__azienda=message["cliente"]),Q(status=0)).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
+            recls=trasporto.objects.filter(Q(cliente__azienda=message["cliente"]),Q(status=0)).exclude(id=1).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
         else:
-            recls=trasporto.objects.filter(Q(status=0)).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
+            recls=trasporto.objects.filter(Q(status=0)).exclude(id=1).values("idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
         
         for el in recls:
-            if(el["ddt"]=="ddt2018-01"):
-                continue
             iva=el["idcod__genere__iva"]+1
             if(el["ddt"]!=before):
                 if(before!=" "):
@@ -481,8 +477,6 @@ class Produt:
         i=0
         
         for item in recls:
-            if(item["ddt"]=="ddt2018-01"):
-                continue
             if (item["ddt"]!=before):
                 item["valore"]=ll[i]
                 ss.append(item)
@@ -535,7 +529,7 @@ class Produt:
             cln=Cliente.objects.get(azienda=cliente)
             imp+=row
             erario+=Decimal(item["iva"])*row
-        res=Registra.Clienti(imp,erario,"3.1",pg,cliente,fatt)
+        res=Registra.ComVen(imp,erario,"3.1",pg,cliente,fatt)
         res.Vendita()
         res.SetErarioCliente()
        # self.stampaFattura(fatt,cln,line)

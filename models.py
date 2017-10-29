@@ -191,3 +191,13 @@ class ivaforn(models.Model):
 	erario=models.DecimalField(max_digits=8,decimal_places=2,null=True)
 	esenzione=models.CharField(max_length=20,null=True)
 	
+class libro(models.Model):
+	dtreg=models.DateField(default=date.today)
+	prot=models.IntegerField(null=True,blank=True,default=0)
+	doc=models.CharField(max_length=20,null=True)
+	dtdoc=models.DateField(default=date.today)
+	desc=models.CharField(max_length=30,null=True)
+	conto=models.CharField(max_length=10,null=True)
+	dare=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	avere=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	

@@ -196,8 +196,9 @@ def FattFrn(request):
             fatt=message["fatt"]
             frn=message["frn"]
             mrg=message["mrg"]
+            dt=message["data"]
             obj=MGetTable.GetData()
-            res=obj.SaveCvFatt(ret,fatt,frn,mrg)
+            res=obj.SaveCvFatt(ret,fatt,frn,mrg,dt)
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         obj=Modifica.ModProd()
