@@ -196,7 +196,7 @@ def FattFrn(request):
             fatt=message["fatt"]
             frn=message["frn"]
             mrg=message["mrg"]
-            dt=message["data"]
+            dt=message["date"]
             obj=MGetTable.GetData()
             res=obj.SaveCvFatt(ret,fatt,frn,mrg,dt)
         return JsonResponse(res,safe=False)        

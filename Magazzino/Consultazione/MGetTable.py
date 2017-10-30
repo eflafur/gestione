@@ -4,6 +4,7 @@ from gestione.models import Produttore,IDcod,Carico,Sospese
 from django.db.models import Q,F,Sum
 import os,time,openpyxl,subprocess,Registra,datetime
 from decimal import Decimal
+from datetime import date
 
 class GetData:
     def GetIdCodAll(self):
@@ -158,7 +159,7 @@ class GetData:
             rec=Carico.objects.filter(bolla=line["cvd"]).values("idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         data=list(rec)
         return data
-    def SaveCvFatt(self,cvls,ft,frn,mrgg,data):
+    def SaveCvFatt(self,cvls,ft,frn,mrgg,data=date.today()):
         imp=0
         erario=0
         cst=0
@@ -176,11 +177,12 @@ class GetData:
             rec.fattimp=Decimal(item["vnd"])
             rec.fatt=ft
             rec.mrg=mrgg
+            rec.datafatt=data
             rec.p=2
             rec.save()
             imp+=Decimal(item["vnd"])
             erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
-        res=Registra.ComVen(imp,erario,"53.1",0,frn,ft)
+        res=Registra.ComVen(imp,erario,"53.1",0,frn,ft,data)
         res.Acquisto()
         res.SetErarioForn()   
         return 0
@@ -237,11 +239,11 @@ class GetData:
         erario=0
         s=Carico.objects.filter(fatt=line["pg"])
         s.update(pagato=1,note=line["nt"])
-        s1=s.values("fattimp","idcod__genere__iva","idcod__produttore__azienda")
+        s1=s.values("fattimp","idcod__genere__iva","idcod__produttore__azienda","datafatt")
         for item in s1:
             imp+=item["fattimp"]
             erario+=item["fattimp"]*(item["idcod__genere__iva"])
-        res=Registra.ComVenBnc(imp,erario,"53.1",0,line["pg"],"2017-01-01",s1[0]["idcod__produttore__azienda"])
+        res=Registra.ComVenBnc(imp,erario,"53.1",0,line["pg"],s1[0]["datafatt"],s1[0]["idcod__produttore__azienda"])
         res.putfrn()
 
     def stampaFattura(self,nFattura, cln, righeFattura,mrg):

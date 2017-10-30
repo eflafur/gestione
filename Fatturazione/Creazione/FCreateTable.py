@@ -124,12 +124,12 @@ class Produt:
                 erario+=Decimal(item["iva"])*prz*(qc*(css-rim)-(css*tara))
                 rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
             rec.save()
-#registrazione contabile        
+#registrazione contabile
         res=Registra.ComVen(imp,erario,"3.1",pg,line[0]["cln"],fatt)
         res.SetErarioCliente()
         res.Vendita()
-#registrazione contabile        
-        return lsecc    
+#registrazione contabile
+        return lsecc
     
     def ScriviDDT(self,line,sps):
         c=""

@@ -5,13 +5,14 @@ import openpyxl,time,os,subprocess,datetime
 from datetime import datetime,timedelta,date
 
 class Commercio:
-    def __init__(self,imp,erario,cod,pg,cl,fatt):
+    def __init__(self,imp,erario,cod,pg,cl,fatt,data=date.today()):
         self.imp=imp
         self.erario=erario
         self.cod=cod
         self.pg=pg
         self.cl=cl
         self.fatt=fatt
+        self.data=data
         self.s=sp.objects.all()
         self.cln=self.s.get(cod=cod)
         self.iva=self.s.get(cod="20.20")
@@ -67,11 +68,11 @@ class Commercio:
         res.save()
         prt=libro.objects.latest("id")
         p=prt.id
-        l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="fattura acquisto da " +self.cl,conto=self.cod,
+        l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,dtdoc=self.data,desc="fattura acquisto da " +self.cl,conto=self.cod,
                     avere=self.erario+self.imp)
-        l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,desc="fattura IVA " +self.cl,conto="20.20",
+        l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,dtdoc=self.data,desc="fattura IVA " +self.cl,conto="20.20",
                      dare=self.erario)
-        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,desc="fattura costi " +self.cl,conto="72.72",
+        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.cl,conto="72.72",
                      dare=self.imp)
         l.save()
         l1.save()

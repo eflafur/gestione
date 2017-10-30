@@ -79,6 +79,7 @@ class Carico(models.Model):
 	cassaexit=models.IntegerField(null=True,blank=True,default=0)
 	cassa=models.IntegerField(null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
+	datafatt=models.DateField(default=date.today)
 	bolla=models.CharField(max_length=20,null=True)
 	costo=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True,default=0)
 	p=models.SmallIntegerField(default=0)
