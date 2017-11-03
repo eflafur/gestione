@@ -4,20 +4,23 @@
 {%block insert%}
 
 <div class="container col-md-offset-2">
-   <div class="row">
-        <div class="col-md-8 "><h4>Ricerca per Data</h4> </div>      
-    </div>
-    <br/>
 
     <div class="row">
-
-        <div class="col-md-3">     
-            <div class="input-group" id="jj">
-                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
-            </div>   
+        <div class="col-md-2">     
+            <p>Cliente<select id="cln"></p>
+                {% for entry in items %}
+                    <option> {{entry.azienda}}</option>
+                {%endfor%}
+            </select>
         </div>
-  
-        <div class=" col-md-9" id="tbf1" >
+      <div class="btn-group-sm">
+              <button type="button" class="btn  btn-success" id="btrs">Reso</button>
+              <button type="button" class="btn  btn-success" id="btanl">Annulla</button>        
+      </div>
+    </div>
+
+    <div class="row">
+        <div class=" col-md-8" id="tbf1" >
             <table id="tablef"  class="table table-hover">
                 <thead id="thd">
                     <tr>
@@ -31,6 +34,26 @@
             </table>
         </div>
     </div>
+        
+  <div class="row">
+    <div class=" col-md-10" id="tbf" >
+      <table id="mytable"  class="table table-hover">
+          <thead id="thd">
+              <tr>
+                  <th>Codice</th>
+                  <th>Peso</th>
+                  <th>Colli</th>
+                  <th>Iva</th>
+                  <th>Prezzo</th>
+                  <th>Imponibile</th>
+                  <th>Lotto</th>
+                  <th>Reso KG</th>
+              </tr>
+          </thead>
+          <tbody id="tbfb"></tbody>
+      </table>
+  </div>
+ </div>
 </div>
   
 {%endblock%}

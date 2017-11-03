@@ -2,29 +2,32 @@
 //var UserTable=$("#mytable");
 //var TempUserTable=null;
 
-var option=""
-var optionValues=[];
+var fatt=""
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
 
-    $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",//autoSize:true,appendText: "(yyyy-mm-dd)",// 
-        onSelect: function (date) {
-            GetTable(date);
-                $("#tbf1").show();
-        }
+    $("#cln").click(function(){
+        $("#tbf").hide();
+        GetTable();
     });
     
     $("#tablef").on('click','a',function(){
-        a=$(this).text();
-        window.location.replace("fattura?nome="+a+"&azione=ftr");
+        fatt=$(this).text();
+        cl=$('#cln').val();
+// funzione di reso tabellare
+        GetFatt(fatt,cl);
+//        window.location.replace("reso?nome="+a+"&cln="+cl);
     });
     
+    $("#btrs").on('click',function(){
+        LoopTable();
+    });
 });
 
-function GetTable(date){
+function GetTable(){
     $.post(
         "recfatt",
-        {data:date,cliente:" "},
+        {cl:$("#cln").val(),action:"ga"},
         function(res){
             var label="";
             for (i=0;i<res.length;i++){
@@ -35,10 +38,62 @@ function GetTable(date){
                 label=label + '<td>' +res[i].data + '</td>';
                 label=label + '</tr>';
             }
-            $("#tb6").html(label);  
+            $("#tbf1").show();
+            $("#tb6").html(label);
             $("#idLKP").show();
         });
         return
 };
 
+// funzione di reso tabellare
+function GetFatt(fatt,cl){
+    $.post(
+        "recfatt",
+        {ft:fatt,cln:cl,action:"gf"},
+        function(res){
+            var label="";
+            var sumf=0;
+            for (i=0;i<res.length;i++){
+                imp=res[i].prezzo*res[i].q*(parseFloat(res[i].idcod__genere__iva)+1)
+                sumf=sumf+imp;
+                label = label + '<tr>';
+                label = label + '<td style="display: none">' + res[i].idcod__id+ '</td>';
+                label = label + '<td>' + res[i].idcod__cod+ '</td>';
+                label = label + '<td>' + res[i].q+ '</td>';
+                label = label + '<td>'+ res[i].cassa+ '</td>';
+                label = label + '<td>' + res[i].idcod__genere__iva+ '</td>';
+                label = label + '<td>' + res[i].prezzo+ '</td>';
+                label = label + '<td>' + imp+ '</td>';
+                label = label + '<td>' + res[i].lotto+ '</td>';
+                label = label + '<td><input type="text"  size="8"></td>';
+                label = label + '</tr>';
+            }
+            label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sumf.toFixed(2)+ '</td></tr>';
+            $("#tbf1").hide();
+            $("#tbf").show();
+            $("#tbfb").html(label);
+//            $("#tbfb tr:last").find("td:last").css("color","blue");
+            return;
+    });
+};
 
+function LoopTable(){
+    var ls=[];
+    $("#tbfb tr").each(function(){
+        rs=$(this).find("input").val();
+        if(rs!=null && rs!=" " ){
+            var dc={};
+            rsid=$(this).find("td:eq(0)").text();
+            dc["id"]=rsid
+            dc["rs"]=rs
+            ls.push(dc);
+        }
+    });
+    ret=JSON.stringify(ls);
+    $.post(
+        "recfatt",
+        {rsls:ret,ft:fatt,action:"rs"},
+        function(res){
+          
+        });
+};

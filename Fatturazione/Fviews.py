@@ -140,9 +140,9 @@ def DelCliente(request):
         var=""
         res=obj.GetAnagrafica(var)
         context={"items":res}
-    return render(request,"fatturazione/Modifica/FDelFornitore.html",context)  
+    return render(request,"fatturazione/Modifica/FDelFornitore.html",context)
 
-
+    
 def Fattura(request):
     if(login==0):
         context={}
@@ -196,17 +196,58 @@ def Fattura(request):
             context={"items":res,"itemsf":res1,"itemsd":res2,"itemsp":res3,"itemtr":res4}
         return render(request,"fatturazione/Creazione/fattura.html",context)
     
+def Reso(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context) 
+    res=""
+    itm=" "
+    context={}
+    if(request.method=="POST"):
+        message=request.POST
+        objf=FCreateTable.Produt()
+        if(message["azione"]=='l'):
+            obj=MGetTable.GetData()
+            res=obj.GetCaricobyIdcod()
+        if(message["azione"]=="I"):
+            itm=message["item"]
+            pgm=message["pgm"]
+            lst = jsonpickle.decode(message['res'])
+            res=objf.ScriviFattura(lst,itm,pgm)
+        elif (message["azione"]=="p"):
+            itm=message["item"]
+        return JsonResponse(res,safe=False)
+    if(request.method=="GET"):
+        message=request.GET
+        obj=GetProduct.LKPData()
+        res=obj.GetIDcod()
+        context={"items":res,"itemsf":message["cln"],"el":message["nome"]}
+        return render(request,"fatturazione/Creazione/reso.html",context)
+    
 def RecFatt(request):
+    res=""
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)
     if(request.method=="POST"):
         message=request.POST
-        objf=FCreateTable.Produt()
-        res=objf.RecFatt(message);
+        if(message["action"]=="ga"):
+            objf=FCreateTable.Produt()
+            res=objf.RecFatt(message);
+        elif(message["action"]=="gf"):
+            fatt=message["ft"]
+            obj=FCreateTable.Produt()
+            res=obj.GetFatturabyNum(fatt)
+        elif(message["action"]=="rs"):
+            ret=jsonpickle.decode(message["rsls"])
+            fatt=message["ft"]
+            obj=FCreateTable.Produt()
+            res=obj.ScriviNotaC(ret,fatt)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
-        context={"items":""}
+        objf=FGetTable.GetData()
+        res=objf.GetCliente()
+        context={"items":res}
         return render(request,"fatturazione/Modifica/Frecfatt.html",context)
 
 def RecDdt(request):

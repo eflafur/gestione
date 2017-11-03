@@ -12,23 +12,8 @@ $(document).ready(function(){
     $.ajaxSetup({cache:false});
     
     $("#css").hide();
-    $("#dsc").hide();
-    $("#pgm").hide();
     $("#cod").hide();
-    $("#lt").hide();
-    $("#btltsos").hide();    
-    $("#tr").hide();
-    if(tipo=="dd" ){
-        $("#cliente").attr('disabled',true);
-        $("#codice").attr('disabled',true);
-        $("#cod").hide();
-        $("#dsc").hide();
-        $("#tr").hide();
-        $("#lt").hide();
-        $("#btsps").hide();
-        $("#btems").hide();
-        GetSospesa();
-    }  
+    $("#lt").val();
     else if(tipo=="fc" ){
         $("#cliente").attr('disabled',true);
         $("#codice").attr('disabled',true);
@@ -40,35 +25,6 @@ $(document).ready(function(){
         $("#ddtft").hide();
         GetSospesa();
     } 
-    else if(tipo=="sc" ){
-        $("#cliente").attr('disabled',true);
-        $("#cod").show();
-        GetSospesaSos();
-    } 
-    $("#cliente").click(function(){
-        GetLotto();
-        $("#pagam").attr('disabled',false);
-        $("#cod").show();
-    });
-
-    $("#dsc").click(function(){
-        $("#tr").show();
-    });
-    $("#tara").click(function(){
-        $("#ps").show();
-    });
-
-    $("#pagam").click(function(){
-        $("#btadd").show();
-    });
-
-     $("#btltsos").click(function(){
-        var cod=$("#codice option:selected").text();
-        if(f==0)
-            SelLotto(cod);
-        else
-            SelLottoSos(cod);
-    });
      $("#codice").click(function(){
         $("#btltsos").hide();    
         var cod=$("#codice option:selected").text();
@@ -97,13 +53,6 @@ $(document).ready(function(){
             $("#btadd").show();
     });
     
-    $("#btsps").click(function(){
-        Invia('S');
-        ar1.length=0
-        if(pvl!="")
-            window.location.replace("sospesa");
-        Eval();
-    });
     
     $("#btems").click(function(){
         Invia('I');
@@ -111,11 +60,6 @@ $(document).ready(function(){
         Eval();
     });
     
-    $("#ddtft").click(function(){
-        Invia('D');
-        ar1.length=0
-        Eval();
-    });
     
     $("#btanl").click(function(){
         ar1.length=0
@@ -181,7 +125,6 @@ $(document).ready(function(){
         lt=$(this).val();
     });
 
-
    $('#tbfb').on('click','a',function(){
         var arr= [];
         arr=$(this).text().split('-');   
@@ -214,7 +157,7 @@ function Fill(){
     for (i = 0; i < ar1.length; i++) {
         k=k+1
         imp=ar1[i].prz*ar1[i].ps*(parseFloat(ar1[i].iva)+1)
-        sumf=sumf+imp;
+        sumf=sumf+ar1[i].prz*ar1[i].ps*(parseFloat(ar1[i].iva)+1);
         label = label + '<tr>';
         label = label + '<td>' + ar1[i].cod+ '</td>';
         label = label + '<td>' + ar1[i].ps+ '</td>';
@@ -244,13 +187,9 @@ function Invia(act){
       {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:$("#pagam").val()},
     function (result){
     });
-    return;    $("#dsc").hide();
+    return;  
+    $("#dsc").hide();
 
-};
-
-function DeleteRow(row){
-    ar1.splice(row-1,1);
-    Fill();
 };
 function AddRow(row){
     t=ar1[row-1].cod;
@@ -347,51 +286,51 @@ function GetLotto(){
             return;
 };
 
-function SelLotto(cod){
-    var option=" ";
-    var cassat=0,cassat1=0;
-    sum=0;
-    for (k=0;k<sos.length;k++)
-        if(sos[k].idcod__cod==cod){
-            cassat=sos[k].css_sum;
-            cassat1=cassat;
-            $("#btltsos").show();
-            f=1;
-            break;
-        }
-    for (var i=0;i<lotto.length;i++){
-        if(lotto[i].idcod__cod==cod){
-            cassa=lotto[i].cassa-lotto[i].cassaexit;
-            if(cassat>0){
-                if(cassat>=cassa){
-                    cassat=cassat-cassa;
-                    cassa=0;
-                }
-                else{
-                    cassa=cassa-cassat;
-                    cassat=0
-                }
-            }
-            sum=sum+lotto[i].cassa-lotto[i].cassaexit
-            option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +cassa + '</option>';
-        }
-    }
-        sum=sum-cassat1
-    $('#lotto').html(option);
-    };
+//function SelLotto(cod){
+    //var option=" ";
+    //var cassat=0,cassat1=0;
+    //sum=0;
+    //for (k=0;k<sos.length;k++)
+        //if(sos[k].idcod__cod==cod){
+            //cassat=sos[k].css_sum;
+            //cassat1=cassat;
+            //$("#btltsos").show();
+            //f=1;
+            //break;
+        //}
+    //for (var i=0;i<lotto.length;i++){
+        //if(lotto[i].idcod__cod==cod){
+            //cassa=lotto[i].cassa-lotto[i].cassaexit;
+            //if(cassat>0){
+                //if(cassat>=cassa){
+                    //cassat=cassat-cassa;
+                    //cassa=0;
+                //}
+                //else{
+                    //cassa=cassa-cassat;
+                    //cassat=0
+                //}
+            //}
+            //sum=sum+lotto[i].cassa-lotto[i].cassaexit
+            //option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +cassa + '</option>';
+        //}
+    //}
+        //sum=sum-cassat1
+    //$('#lotto').html(option);
+    //};
 
-function SelLottoSos(cod){
-    var option=" ";
-    sum=0;
-    f=0;
-    for (var i=0;i<lotto.length;i++)
-        if(lotto[i].idcod__cod==cod){
-            cassa=lotto[i].cassa-lotto[i].cassaexit;
-            sum=sum+lotto[i].cassa-lotto[i].cassaexit
-            option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +cassa+ '</option>';
-        }
-    $('#lotto').html(option);
-    };
+//function SelLottoSos(cod){
+    //var option=" ";
+    //sum=0;
+    //f=0;
+    //for (var i=0;i<lotto.length;i++)
+        //if(lotto[i].idcod__cod==cod){
+            //cassa=lotto[i].cassa-lotto[i].cassaexit;
+            //sum=sum+lotto[i].cassa-lotto[i].cassaexit
+            //option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +cassa+ '</option>';
+        //}
+    //$('#lotto').html(option);
+    //};
     
     
     

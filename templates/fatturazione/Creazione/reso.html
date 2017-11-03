@@ -11,21 +11,13 @@
     <div class="row">
      <div class="col-md-4">  
       <div class="input-group" id="cln">
-       <p>Cliente<select class="form-control" name="cln" id="cliente"></p>
-         {% for entry in itemsf %}
-             <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
-         {% endfor %}
-       </select>
+        <input type="text" id="cliente" class="form-control" value={{itemsf}}>
       </div>
      </div>
-     </br>
 
       <div class="btn-group">
-              <button type="button" class="btn  btn-success" id="btsps">Sospesa</button>
-              <button type="button" class="btn  btn-success" id="btems">Fattura</button>
-              <button type="button" class="btn  btn-success" id="ddtft">DDT</button>
+              <button type="button" class="btn  btn-success" id="btems">Reso</button>
               <button type="button" class="btn  btn-success" id="btanl">Annulla</button>        
-              <!--<button type="button" class="btn  btn-success" id="btstp">Stampa</button>        -->
       </div>
     </div>
     </br>
@@ -43,39 +35,11 @@
       </div>
       <div class="col-md-4">  
        <div class="input-group" id="lt">  
-       <p> Lotto<select class="form-control" id="lotto"></p>
+       <p> Lotto<input type="text" class="form-control" id="lotto"></p>
          </select>
        </div>
       </div>
-      </br>
-      <div class="col-md-2">  
-        <button type="button" class="btn  btn-success  btn-xs" id="btltsos">Bypass</button>
-      </div>
      </div>
-     </br>
-   
-
-   
-   
-     <div class="row">
-       <div class="col-md-6">  
-       <div class="input-group" id="dsc">
-        <p>Descrizione<select class="form-control" name="a5" id="desc"></p>
-          {% for entry in itemsd %}
-              <option value="{{ entry.tipo}}">{{ entry.tipo}} </option>
-          {% endfor %}
-        </select>
-       </div>
-      </div> 
-     <div class="col-md-5" id="tr">  
-        <p>Tara<select class="form-control" name="a7" id="tara"></p>
-          {% for entry in itemtr %}
-              <option value="{{ entry.q}}">{{ entry.cont}} </option>
-          {% endfor %}
-        </select>
-      </div>
-     </div>
-     </br> 
       
      <div class="row">
       <div class="col-md-3"> 
@@ -93,15 +57,6 @@
        <p>Prezzo<input type="text" id="prezzo" class="form-control" name="a3" min="0"></p>
       </div>
     </div>
-       <div class="col-md-4">  
-       <div class="input-group" id="pgm">
-        <p>Pagamento<select class="form-control" name="a6" id="pagam"></p>
-          {% for entry in itemsp %}
-              <option value="{{ entry.giorni}}">{{ entry.tipo}} </option>
-          {% endfor %}
-        </select>
-       </div>
-      </div>
    </div>
 
     </br>
@@ -124,8 +79,6 @@
                   <th>Prezzo</th>
                   <th>Imponibile</th>
                   <th>Lotto</th>
-                  <th>Elimina</th>
-                  <th>Mancanti</th>
               </tr>
           </thead>
           <tbody id="tbfb"></tbody>
