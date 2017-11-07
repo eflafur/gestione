@@ -241,8 +241,9 @@ def RecFatt(request):
         elif(message["action"]=="rs"):
             ret=jsonpickle.decode(message["rsls"])
             fatt=message["ft"]
+            cln=message["cln"]
             obj=FCreateTable.Produt()
-            res=obj.ScriviNotaC(ret,fatt)
+            res=obj.ScriviNotaC(ret,fatt,cln)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         objf=FGetTable.GetData()
@@ -314,7 +315,6 @@ def DDT(request):
         res=objf.GetCliente()
         context={"items":res,"itemtp":res3}
         return render(request,"fatturazione/Modifica/ddt-cliente.html",context)
-
 
 def LKFatturabyCliente(request):
     if(login==0):

@@ -92,7 +92,7 @@ function LoopTable(){
     ret=JSON.stringify(ls);
     $.post(
         "recfatt",
-        {rsls:ret,ft:fatt,action:"rs"},
+        {rsls:ret,ft:fatt,action:"rs",cln:$("#cln").val()},
         function(res){
           
         });

@@ -7,6 +7,7 @@ from django.core import serializers
 import CreateTable,Modifica,GetProduct,validazione,Fviews,MCreateTable,MGetTable,MModifica
 import testdb
 import re,json,jsonpickle
+
 #import wingdbstub
 #nuova relaease salvata
 #runserver --noreload 8000
@@ -236,44 +237,51 @@ def RegFattFrn(request):
 
 
 
-def Gioco(request):
-    res=""
-    res1=""
+#def Gioco(request):
+    #res=""
+    #res1=""
         
-    global H1
-    context={}
-    if(request.method=="POST"):
-        message=request.POST
-        if(message["azione"]=="db"):
-            res=testdb.Clienti(333,222,"3.1",0,"brero","001")
-            res.Vendita()
-            res.SetErarioCliente()
-        #if(message["a2"]=="insert"):
-            #H1=1
-            #el=CreateTable.GetProd()
-            #a=message["vary"]
-            #res=el.GetCitta(a)            
-            #return JsonResponse(res,safe=False)
-        #elif(message['a2']!=""):
-            #if(H1!=1):
-                #context={}
-                #return render(request,"gestione/safe1.html",context)                 
-            #el=CreateTable.Produt()
-            #res=el.put(message)
-            #H1=0
-            #if(res==2):
-                #H1=0
-                #context={}
-                #return render(request,"gestione/safe.html",context)            
-        el=CreateTable.GetProd()
-        res1=el.GetArea()
-        prod=el.GetProduttori()
-        context={"items":res,"items1":res1,"items3":prod}
-        return render(request,"Magazzino/gioco.html",context)            
-    if(request.method=="GET"):
-        el=CreateTable.GetProd()
-        res1=el.GetArea()
-        prod=el.GetProduttori()
-        context={"items1":res1,"items3":prod}
-    return render(request,"Magazzino/gioco.html",context)
+    #global H1
+    #context={}
+    #if(request.method=="POST"):
+        #message=request.POST
+        #if(message["azione"]=="db"):
+            #res=testdb.Clienti(333,222,"3.1",0,"brero","001")
+            #res.Vendita()
+            #res.SetErarioCliente()
+        ##if(message["a2"]=="insert"):
+            ##H1=1
+            ##el=CreateTable.GetProd()
+            ##a=message["vary"]
+            ##res=el.GetCitta(a)            
+            ##return JsonResponse(res,safe=False)
+        ##elif(message['a2']!=""):
+            ##if(H1!=1):
+                ##context={}
+                ##return render(request,"gestione/safe1.html",context)                 
+            ##el=CreateTable.Produt()
+            ##res=el.put(message)
+            ##H1=0
+            ##if(res==2):
+                ##H1=0
+                ##context={}
+                ##return render(request,"gestione/safe.html",context)            
+        #el=CreateTable.GetProd()
+        #res1=el.GetArea()
+        #prod=el.GetProduttori()
+        #context={"items":res,"items1":res1,"items3":prod}
+        #return render(request,"Magazzino/gioco.html",context)            
+    #if(request.method=="GET"):
+        #el=CreateTable.GetProd()
+        #res1=el.GetArea()
+        #prod=el.GetProduttori()
+        #context={"items1":res1,"items3":prod}
+    #return render(request,"Magazzino/gioco.html",context)
 
+
+def Gioco(request):
+    res=testdb.Pdf("floppolo.pdf")
+    res.Do()
+    context={res:""}
+    return render(request,"Magazzino/gioco.html",context)        
+    

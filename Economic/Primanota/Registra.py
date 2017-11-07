@@ -49,16 +49,24 @@ class Commercio:
             cs=self.s.get(cod="1.1")
             cs.passivo+=self.imp+self.erario
             cs.save()
-    def SetErarioCliente(self):
+    def SetErarioCliente(self,r=0):
         rec=ivacliente.objects.latest("id")
         res=ivacliente(prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
         res.save()
-        l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="fattura vendita a " +self.cl,conto=self.cod,
-                    dare=self.erario+self.imp)
-        l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,desc="fattura IVA " +self.cl,conto="20.20",
-                     avere=self.erario)
-        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,desc="fattura ricavi " +self.cl,conto="80.80",
-                     avere=self.imp)
+        if(r==0):
+            l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="fattura vendita a " +self.cl,conto=self.cod,
+                        dare=self.erario+self.imp)
+            l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,desc="fattura IVA " +self.cl,conto="20.20",
+                         avere=self.erario)
+            l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,desc="fattura ricavi " +self.cl,conto="80.80",
+                         avere=self.imp)
+        else:
+            l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="reso vendita a" +self.cl,conto=self.cod,
+                            dare=self.erario+self.imp)
+            l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,desc="storno IVA " +self.cl,conto="20.20",
+                             avere=self.erario)
+            l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,desc="reso su vendite" +self.cl,conto="80.80",
+                             avere=self.imp)
         l.save()
         l1.save()
         l2.save()
@@ -72,12 +80,13 @@ class Commercio:
                     avere=self.erario+self.imp)
         l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,dtdoc=self.data,desc="fattura IVA " +self.cl,conto="20.20",
                      dare=self.erario)
-        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.cl,conto="72.72",
-                     dare=self.imp)
+        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.cl,conto="80.80",
+                     dare=-self.imp)
         l.save()
         l1.save()
         l2.save()
         
+ 
 class ComVen(Commercio):
     pass
 

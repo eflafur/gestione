@@ -42,11 +42,6 @@ class Produt:
         erario=0
         pg=0
         c=""
-        i=0
-        ls1=[]
-        lsecc=[]
-        bl=[]
-        ls=[]
         ltt1=0
         if (int(pgm)!=0):
             pg=1
@@ -55,9 +50,6 @@ class Produt:
         fatt=""
         if(sps[:2]=="sc"):
             rec=Sospese.objects.filter(fatturas=sps)
-        #           rec.delete()
-        elif(sps[:2]=="fc"):    
-            rec=Scarico.objects.filter(fattura=sps)
             rec.delete()
         s=Scarico.objects.latest("id")
         f=(s.fattura).split("-")
@@ -66,84 +58,52 @@ class Produt:
         c=Cliente.objects.get(azienda=line[0]["cln"])
         for item in line:
             iva=Decimal(item["iva"])+1
-            lsecc.clear()
-            bl.clear()
-            ecc={}
             prz=Decimal(item["prz"])
+            tara=Decimal(item["tara"])
             ps=Decimal(item["ps"])
             css=int(item["css"])
-            qc=ps/css
-            tara=Decimal(item["tara"])
+            qcss=ps/css-tara
             cod=IDcod.objects.get(cod=item["cod"])
-            ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
+            ltcod=lotto.filter(idcod__cod=item["cod"])
             ltt=ltcod[0].id
-            if(sps[:2]=="fc"):    
-                fatt=sps                
-                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,fattura=fatt,lotto=item["lotto"],tara=tara)
-                bl.append(item["lotto"])
-            else:      
-                rim=css
-                if(item["lotto"]!=""):
-                    ltt=item["lotto"]
-                    ltt1=ltt
-                    lt1=ltcod.get(id=ltt)
-                    bl.append(ltt)
-                    rimp=rim
-                    rim=rimp-(lt1.cassa-lt1.cassaexit)
-                    if(rim<=0):
-                        lt1.cassaexit+=css
-                        lt1.costo+=ps*prz
-                        lt1.save()
-                        rim=0
-                    else:
-                        lt1.cassaexit=lt1.cassa
-                        lt1.costo+=prz*qc*(rimp-rim)
-                        lt1.save()
-                if(rim>0):
-                    for item1 in ltcod:
-                        if(item1.id==ltt1):
-                            continue
-                        rimp=rim
-                        rim=rimp-(item1.cassa-item1.cassaexit)
-                        if (rim<=0 and rimp>0):
-                            item1.cassaexit+=rimp
-                            item1.costo+=qc*rimp*prz
-                            item1.save()
-                            rim=0
-                            bl.append(item1.id)
-                            break
-                        else:
-                            item1.cassaexit=item1.cassa
-                            item1.costo+=prz*qc*(rimp-rim)
-                            item1.save()
-                        bl.append(item1.id)
-                rec1=Saldo.objects.get(idcod__cod=item["cod"])
-                rec1.q=rec1.q-css+rim
-                rec1.save()
-                imp+=prz*(qc*(css-rim)-(css*tara))
-                erario+=Decimal(item["iva"])*prz*(qc*(css-rim)-(css*tara))
-                rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara)
+            if(item["lotto"]!=""):
+                ltt=item["lotto"]
+            ltt1=ltcod.get(id=ltt)
+            rim=ltt1.cassa-(ltt1.cassaexit+css)
+            if(rim>=0):
+                ltt1.cassaexit+=css
+                ltt1.costo+=qcss*css*prz*iva
+                ltt1.save()
+            else:
+                ltt1.cassaexit=ltt1.cassa
+                ltt1.costo+=prz*iva*(css+rim)*qcss
+                ltt1.save()
+                ltt2=ltcod.exclude(id=ltt).order_by("id")
+                data=list(ltt2)
+                rim=self.DelLotto(ltt2,-rim,prz,qcss,iva,0)
+            rec1=Saldo.objects.get(idcod__cod=item["cod"])
+            rec1.q=rec1.q-css+rim
+            rec1.save()
+            imp+=prz*qcss*(css-rim)
+            erario+=Decimal(item["iva"])*prz*qcss*(css+rim)
+            rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara,iva=iva-1)
             rec.save()
 #registrazione contabile
         res=Registra.ComVen(imp,erario,"3.1",pg,line[0]["cln"],fatt)
         res.SetErarioCliente()
         res.Vendita()
 #registrazione contabile
-        return lsecc
+        return 0
     
     def ScriviDDT(self,line,sps):
-        c=""
-        i=0
-        ls1=[]
-        lsecc=[]
         bl=[]
-        ls=[]
+        c=""
         ltt1=0
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
         fatt=""
         if(sps[:2]=="sc"):
             rec=Sospese.objects.filter(fatturas=sps)
- #           rec.delete()
+            rec.delete()
         elif(sps[:2]=="dd"):    
             rec=trasporto.objects.filter(ddt=sps)
             rec.delete()
@@ -151,64 +111,41 @@ class Produt:
         f=(s.ddt).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
+        c=Cliente.objects.get(azienda=line[0]["cln"])
         for item in line:
             iva=Decimal(item["iva"])+1
-            lsecc.clear()
-            bl.clear()
-            ecc={}
             prz=Decimal(item["prz"])
+            tara=Decimal(item["tara"])
             ps=Decimal(item["ps"])
             css=int(item["css"])
-            qc=ps/css
-            tara=Decimal(item["tara"])
-            c=Cliente.objects.get(azienda=item["cln"])
+            qcss=ps/css-tara
             cod=IDcod.objects.get(cod=item["cod"])
-            ltcod=lotto.filter(idcod__cod=item["cod"]).order_by("id")
-            ltt=ltcod[0].id
+            ltcod=lotto.filter(idcod__cod=item["cod"])
             if(sps[:2]=="dd"):    
                 fatt=sps                
                 rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=item["lotto"],tara=tara)
-                bl.append(item["lotto"])
-            else:      
-                rim=css
-                if(item["lotto"]!=""):
-                    ltt=item["lotto"]
-                    ltt1=ltt
-                    lt1=ltcod.get(id=ltt)
-                    bl.append(ltt)
-                    rimp=rim
-                    rim=rimp-(lt1.cassa-lt1.cassaexit)
-                    if(rim<=0):
-                        lt1.cassaexit+=css
-                        lt1.costo+=ps*prz
-                        lt1.save()
-                        rim=0
-                    else:
-                        lt1.cassaexit=lt1.cassa
-                        lt1.costo+=prz*qc*(rimp-rim)
-                        lt1.save()
-                if(rim>0):
-                    for item1 in ltcod:
-                        if(item1.id==ltt1):
-                            continue
-                        rimp=rim
-                        rim=rimp-(item1.cassa-item1.cassaexit)
-                        if (rim<=0 and rimp>0):
-                            item1.cassaexit+=rimp
-                            item1.costo+=qc*rimp*prz
-                            item1.save()
-                            rim=0
-                            bl.append(item1.id)
-                            break
-                        else:
-                            item1.cassaexit=item1.cassa
-                            item1.costo+=prz*qc*(rimp-rim)
-                            item1.save()
-                        bl.append(item1.id)
-                rec1=Saldo.objects.get(idcod__cod=item["cod"])
-                rec1.q=rec1.q-css+rim
-                rec1.save()
-                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=qc*(css-rim),cassa=css-rim,ddt=fatt,lotto=ltt,tara=tara)
+                bl.append(item["lotto"])            
+            if(item["lotto"]!=""):
+                ltt=item["lotto"]
+            else:
+                ltt=ltcod[0].id
+            ltt1=ltcod.get(id=ltt)
+            rim=ltt1.cassa-(ltt1.cassaexit+css)
+            if(rim>=0):
+                ltt1.cassaexit+=css
+                ltt1.costo+=ps*css*prz*iva
+                ltt1.save()
+            else:
+                ltt1.cassaexit=ltt1.cassa
+                ltt1.costo+=prz*iva*(css+rim)*qcss
+                ltt1.save()
+                ltt2=ltcod.exclude(id=ltt)
+                data=list(ltt2)
+                rim=self.DelLotto(ltt2,-rim,prz,qcss,iva,0)
+            rec1=Saldo.objects.get(idcod__cod=item["cod"])
+            rec1.q=rec1.q-css+rim
+            rec1.save()
+            rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,ddt=fatt,lotto=ltt,tara=tara)
             rec.save()
             #ls1[i]["lotto"]=bl.copy()
             #ls1[i]["css"]=css
@@ -216,7 +153,27 @@ class Produt:
             #i=i+1
         #rg=list(line)
   #      self.stampaFattura(fatt,c,rg)            
-        return lsecc    
+        return 0
+    
+    def DelLotto(self,lotti,num,prz,qcss,iva,i):
+        try:
+            cod=lotti[i].id
+            rim=lotti[i].cassa-(lotti[i].cassaexit+num)
+        except:
+            return num
+        if(rim<0):
+            ltt=lotti.get(id=cod)
+            ltt.cassaexit=ltt.cassa
+            ltt.costo+=prz*iva*(num+rim)*qcss
+            ltt.save()
+            return self.DelLotto(lotti,-rim,prz,qcss,iva,i+1)
+        else:
+            ltt=lotti.get(id=cod)
+            ltt.cassaexit+=num
+            ltt.costo+=prz*iva*num*qcss
+            ltt.save()
+            rim=0
+        return rim          
     
     def stampaFattura(self,nFattura, cln, righeFattura):
         """ produce fattura in excel """
@@ -532,13 +489,15 @@ class Produt:
         return ls        
     
     
-    def ScriviNotaC(self,line,fatt):
+    def ScriviNotaC(self,line,fatt,cln):
         c=""
         lsecc=[]
         i=0
         res=0
         bl=[]
         ls=[]
+        imp=0
+        erario=0
         nodi=Scarico.objects.filter(fattura=fatt)
         crc=Carico.objects.filter(cassaexit__gt=0)
         s=Scarico.objects.latest("id")
@@ -548,92 +507,57 @@ class Produt:
 
         for item in line:
             nodo=nodi.get(idcod__id=item["id"])
-            pscss=nodo.q/nodo.cassa
             psrs=int(item["rs"])
-            rec=Scarico(idcod=nodo.idcod,cliente=nodo.cliente,prezzo=nodo.prezzo,
-                        q=psrs,cassa=psrs/pscss,fattura=prg,lotto=nodo.lotto,tara=nodo.tara)
+            css=psrs/(nodo.q/nodo.cassa)
+            pscss=nodo.q/nodo.cassa-nodo.tara
+            rec=Scarico(idcod=nodo.idcod,cliente=nodo.cliente,prezzo=-nodo.prezzo,
+                        q=psrs,cassa=css,fattura=prg,lotto=nodo.lotto,tara=nodo.tara,iva=nodo.iva)
             rec.save()
             rec1=Saldo.objects.get(idcod__id=item["id"])
-            rec1.q=psrs/pscss
+            rec1.q=css
             rec1.save()
-            lt=crc.get(id=nodo.lotto)
-            rem=lt.cassaexit-psrs/pscss
-            if(rem<0):
+            try:
+                lt=crc.get(id=nodo.lotto)
+            except:
+                lt=crc.filter(idcod__id=item["id"]).first()
+            rim=lt.cassaexit-css
+            if(rim<0):
                 lt.cassaexit=0
+                lt.costo-=nodo.prezzo*(nodo.iva+1)*pscss*(css+rim)
                 lt.save()
-                lotti=crc.filter(idcod__id=item["id"]).exclude(id=nodo.lotto)
-                res=self.AddLotto(lotti,-rem,0)
+                lotti=crc.filter(idcod__id=item["id"]).exclude(id=lt.id)
+                data=list(lotti)
+                rim=self.AddLotto(lotti,-rim,nodo.prezzo,nodo.iva+1,pscss,0)
             else:
-                ltcassaexit-=psrs/pscss
+                lt.cassaexit-=css
+                lt.costo-=nodo.prezzo*(nodo.iva+1)*pscss*css
                 lt.save()
+            imp+=nodo.prezzo*pscss*(css)
+            erario+=nodo.iva*nodo.prezzo*(css)*pscss
+#registrazione contabile
+        res=Registra.ComVen(-imp,-erario,"3.1",0,cln,prg)
+        res.SetErarioCliente(1)
+        res.Vendita()
+#registrazione contabile                
 #        self.stampaFattura(fatt,c,rg)            
         return lsecc    
-
-    def DelLotto(self,lotti,num,i):
-        try:
-            rem=lotti[i].cassa-(lotti[i].cassaexit+num)
-        except:
-            return 0
-        if(rem<0):
-            lotti[i].cassaexit=lotti[i].cassa
-            lotti[i].save()
-            res=self.DelLotto(lotti,-rem,i+1)
-        else:
-            lotti[i].cassaexit+=num
-            lotti[i].save()
-        return rem  
     
-    def AddLotto(self,lotti,num,i):
-        data=list(lotti)
+    def AddLotto(self,lotti,num,prz,iva,pscss,i):
         try:
-            rem=lotti[i].cassaexit-num
+            cod=lotti[i].id
+            rim=lotti[i].cassaexit-num
         except:
             return 0
-        if(rem<0):
-            lotti[i].cassaexit=0
-            lotti[i].save()
-            res=self.AddLotto(lotti,-rem,i+1)
+        if(rim<0):
+            ltt=lotti.get(id=cod)
+            ltt.cassaexit=0
+            ltt.costo-=prz*iva*pscss*(num+rim)
+            ltt.save()
+            res=self.AddLotto(lotti,-rim,prz,iva,pscss,i+1)
         else:
-            lotti[i].cassaexit-=num
-            lotti[i].save()
-        return rem
+            ltt=lotti.get(id=cod)
+            ltt.cassaexit-=num
+            ltt.costo-=prz*iva*pscss*num
+            ltt.save()
+        return rim
 
-
-
-
-        
-    def Rec(self,lotti,casse,i,lotto,bl,qc,prz):
-        num=0
- #       data=list(lotti)
-        try:
-            dd=lotti[i].id
-        except IndexError:
-            return casse
-        num=lotti[i].cassa-(lotti[i].cassaexit+casse)
-        if(num>=0 and lotti[i].id!=lotto):
-            bl.append(lotti[i].id)
-#            lt1=lotti.get(id=dd)
-            lotti[i].cassaexit=lotti[i].cassaexit+casse
-            lotti[i].costo=lotti[i].costo+prz*qc*casse
-            lotti[i].save()
-            #lt1.costo=lotti[i].costo+prz*qc*casse
-            #lt1.cassaexit=lotti[i].cassaexit+casse
-            #lt1.save()
-#            return bl
-            return 0
-        else:
-            if(lotti[i].id!=lotto):
-                bl.append(lotti[i].id)
-                #lt1=lotti.get(id=dd)
-                #lt1.costo=lotti[i].costo+prz*qc*(num+casse)
-                #lt1.cassaexit=lotti[i].cassa
-                #lt1.save()
-                lotti[i].costo=lotti[i].costo+prz*qc*(num+casse)
-                lotti[i].cassaexit=lotti[i].cassa
-                lotti[i].save()
-            else:
-                num=casse*(-1)
-            i=i+1
-            res=self.Rec(lotti,num*(-1),i,lotto,bl,qc,prz)
-        return res
-        
