@@ -17,7 +17,6 @@ class Produt:
             citta=self.row["a4"],
             regione=self.row["a5"],
             acquisizione=self.row["a6"],
-            capacita=int(self.row["a7"]),
             email=self.row["a8"],
             tel=self.row["a9"],
         )
@@ -58,7 +57,7 @@ class ModProd:
     def GetAll(self,line):
         self.row=line
         res=Produttore.objects.filter(Q(azienda=line)).values("azienda","settore__articolo",
-            "contatto","regione","citta","acquisizione","capacita","email","tel","trpag","margine","fatturato","pi")
+            "contatto","regione","citta","acquisizione","email","tel","trpag","margine","fatturato","pi")
         ret=list(res)    
         return ret
     def GetRegione(self):
@@ -79,15 +78,13 @@ class ModProd:
         val1=0
         p=Produttore.objects.get(azienda=self.row["a2"])
         pt=Produttore.objects.filter(Q(azienda=self.row["a2"])).values("settore__articolo","contatto","regione",
-                                    "citta","acquisizione","capacita","email","tel","trpag","margine","fatturato","pi")
+                                    "citta","acquisizione","email","tel","trpag","margine","fatturato","pi")
         if(pt[0]["contatto"]!=self.row["a3"]):
             val=1
         elif(pt[0]["regione"]!=self.row["a4"]):
             val=1            
         elif(pt[0]["citta"]!=self.row["a5"]):
             val=1
-        elif(pt[0]["capacita"]!=self.row["a7"]):
-            val=1            
         elif(pt[0]["tel"]!=self.row["a9"]):
             val=1
         elif(pt[0]["email"]!=self.row["a8"]):
@@ -106,7 +103,6 @@ class ModProd:
             p.contatto=self.row["a3"]
             p.regione=self.row["a4"]
             p.citta=self.row["a5"]
-            p.capacita=self.row["a7"]
             p.acquisizione=self.row["a6"]
             p.tel=self.row["a9"]
             p.email=self.row["a8"]

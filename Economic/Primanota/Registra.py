@@ -81,7 +81,7 @@ class Commercio:
         l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,dtdoc=self.data,desc="fattura IVA " +self.cl,conto="20.20",
                      dare=self.erario)
         l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.cl,conto="80.80",
-                     dare=-self.imp)
+                     dare=self.imp)
         l.save()
         l1.save()
         l2.save()

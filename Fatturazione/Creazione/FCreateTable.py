@@ -74,6 +74,7 @@ class Produt:
                 ltt1.cassaexit+=css
                 ltt1.costo+=qcss*css*prz*iva
                 ltt1.save()
+                rim=0
             else:
                 ltt1.cassaexit=ltt1.cassa
                 ltt1.costo+=prz*iva*(css+rim)*qcss
@@ -135,6 +136,7 @@ class Produt:
                 ltt1.cassaexit+=css
                 ltt1.costo+=ps*css*prz*iva
                 ltt1.save()
+                rim=0
             else:
                 ltt1.cassaexit=ltt1.cassa
                 ltt1.costo+=prz*iva*(css+rim)*qcss
