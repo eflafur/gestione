@@ -4,7 +4,7 @@ from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
 from decimal import Decimal
 from django.db.models import Q,F
 import openpyxl,time,os,subprocess,datetime
-import Registra
+import Registra,Pdf
 from datetime import datetime,timedelta,date
 
 class Modelddt:
@@ -38,6 +38,9 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps,pgm):
+        i=0
+        bl=[]
+        lsdc=[]
         imp=0
         erario=0
         pg=0
@@ -69,6 +72,7 @@ class Produt:
             if(item["lotto"]!=""):
                 ltt=item["lotto"]
             ltt1=ltcod.get(id=ltt)
+            bl.append(ltt)
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
                 ltt1.cassaexit+=css
@@ -81,7 +85,7 @@ class Produt:
                 ltt1.save()
                 ltt2=ltcod.exclude(id=ltt).order_by("id")
                 data=list(ltt2)
-                rim=self.DelLotto(ltt2,-rim,prz,qcss,iva,0)
+                rim=self.DelLotto(ltt2,-rim,prz,qcss,iva,0,bl)
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
             rec1.q=rec1.q-css+rim
             rec1.save()
@@ -89,15 +93,31 @@ class Produt:
             erario+=Decimal(item["iva"])*prz*qcss*(css+rim)
             rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara,iva=iva-1)
             rec.save()
+            row=str(str(imp)+" "+str(iva)+" "+str(erario)+" "+str(tara)+" "+str(css)+" "+str(ps))
+            ls={}
+            ls["tot"]=row
+            #ls["imp"]=imp
+            #ls["iva"]=iva-1
+            #ls["erario"]=erario
+            #ls["tara"]=tara
+            #ls["lotto"]=bl.copy()    
+            #ls["css"]=css
+            #ls["ps"]=ps
+            lsdc.append(ls)
+    
 #registrazione contabile
         res=Registra.ComVen(imp,erario,"3.1",pg,line[0]["cln"],fatt)
         res.SetErarioCliente()
         res.Vendita()
 #registrazione contabile
+        obj=Pdf.PrintTable("Fattura",lsdc)
+        obj.Do()
         return 0
     
     def ScriviDDT(self,line,sps):
+        i=0
         bl=[]
+        lsdc=[]
         c=""
         ltt1=0
         lotto=Carico.objects.filter(cassa__gt=F("cassaexit")).order_by("id")
@@ -130,6 +150,7 @@ class Produt:
                 ltt=item["lotto"]
             else:
                 ltt=ltcod[0].id
+            bl.append(ltt)
             ltt1=ltcod.get(id=ltt)
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
@@ -143,21 +164,28 @@ class Produt:
                 ltt1.save()
                 ltt2=ltcod.exclude(id=ltt)
                 data=list(ltt2)
-                rim=self.DelLotto(ltt2,-rim,prz,qcss,iva,0)
+                rim=self.DelLotto(ltt2,-rim,prz,qcss,iva,0,bl)
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
             rec1.q=rec1.q-css+rim
             rec1.save()
             rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,ddt=fatt,lotto=ltt,tara=tara)
             rec.save()
-            #ls1[i]["lotto"]=bl.copy()
-            #ls1[i]["css"]=css
-            #ls1[i]["ps"]=ps
-            #i=i+1
-        #rg=list(line)
-  #      self.stampaFattura(fatt,c,rg)            
-        return 0
+            row=str(str(imp)+" "+str(iva)+" "+str(erario)+" "+str(tara)+" "+str(css)+" "+str(ps))
+            ls={}
+            ls["tot"]=row 
+            #ls["imp"]=imp
+            #ls["iva"]=iva-1
+            #ls["erario"]=erario
+            #ls["tara"]=tara
+            #ls["lotto"]=bl.copy()    
+            #ls["css"]=css
+            #ls["ps"]=ps
+            lsdc.append(ls)
+            obj=Pdf.PrintTable("Fattura",lsdc)
+            obj.Do()
+            return 0
     
-    def DelLotto(self,lotti,num,prz,qcss,iva,i):
+    def DelLotto(self,lotti,num,prz,qcss,iva,i,lt):
         try:
             cod=lotti[i].id
             rim=lotti[i].cassa-(lotti[i].cassaexit+num)
@@ -168,12 +196,14 @@ class Produt:
             ltt.cassaexit=ltt.cassa
             ltt.costo+=prz*iva*(num+rim)*qcss
             ltt.save()
-            return self.DelLotto(lotti,-rim,prz,qcss,iva,i+1)
+            lt.append(cod)
+            return self.DelLotto(lotti,-rim,prz,qcss,iva,i+1,lt)
         else:
             ltt=lotti.get(id=cod)
             ltt.cassaexit+=num
             ltt.costo+=prz*iva*num*qcss
             ltt.save()
+            lt.append(cod)
             rim=0
         return rim          
     
