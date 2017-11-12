@@ -60,6 +60,7 @@ class Produt:
         fatt=f[0]+"-"+str(r)
         c=Cliente.objects.get(azienda=line[0]["cln"])
         for item in line:
+            bl.clear()
             iva=Decimal(item["iva"])+1
             prz=Decimal(item["prz"])
             tara=Decimal(item["tara"])
@@ -89,20 +90,19 @@ class Produt:
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
             rec1.q=rec1.q-css+rim
             rec1.save()
-            imp+=prz*qcss*(css-rim)
-            erario+=Decimal(item["iva"])*prz*qcss*(css+rim)
+            imp+=round(prz*qcss*(css-rim),2)
+            erario+=round(Decimal(item["iva"])*prz*qcss*(css+rim),2)
             rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara,iva=iva-1)
             rec.save()
-            row=str(str(imp)+" "+str(iva)+" "+str(erario)+" "+str(tara)+" "+str(css)+" "+str(ps))
             ls={}
-            ls["tot"]=row
-            #ls["imp"]=imp
-            #ls["iva"]=iva-1
-            #ls["erario"]=erario
-            #ls["tara"]=tara
-            #ls["lotto"]=bl.copy()    
-            #ls["css"]=css
-            #ls["ps"]=ps
+            ls["cod"]=item["cod"]
+            ls["imp"]=round(prz*qcss*(css-rim),2)
+            ls["iva"]=iva-1
+            ls["tara"]=tara
+            ls["lotto"]=bl.copy()    
+            ls["prz"]=prz
+            ls["css"]=css
+            ls["ps"]=ps
             lsdc.append(ls)
     
 #registrazione contabile
@@ -111,7 +111,8 @@ class Produt:
         res.Vendita()
 #registrazione contabile
         obj=Pdf.PrintTable("Fattura",lsdc)
-        obj.Do()
+        obj.PrintArt()
+        obj.PrintAna(fatt,c)
         return 0
     
     def ScriviDDT(self,line,sps):

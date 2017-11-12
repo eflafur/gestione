@@ -148,9 +148,9 @@ $(document).ready(function(){
             obj['cod'] =$("#codice option:selected").text();
             obj['ps'] =$("#peso").val();
             obj['css'] =$("#cassa").val();
-            obj['prz'] =$("#prezzo").val();
-            obj["iva"]=$("#codice option:selected").val();
-            obj['tara']=$("#tara option:selected").val();
+            obj['prz'] =parseFloat($("#prezzo").val()).toFixed(2);
+            obj["iva"]=parseFloat($("#codice option:selected").val()).toFixed(2);
+            obj['tara']=parseFloat($("#tara option:selected").val()).toFixed(2);
             obj['lotto']=lt;
             ar1.push(obj);
             lt="";

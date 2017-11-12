@@ -280,6 +280,8 @@ def RegFattFrn(request):
 
 
 def Gioco(request):
+    if(request.method=="POST"):
+        message=request.POST
     res=testdb.Pdf("floppolo.pdf")
     res.Do()
     context={res:""}

@@ -129,9 +129,12 @@ $(document).ready(function(){
     });
             
 function TestDb(){
+    var ft=parseFloat($("#fatt").val()).toFixed(2);
+//    a=parseFloat(ft).toFixed(2);
+//    var t=a.toFixed(2);
     $.post(
     "gioco",
-    {azione:"db"},
+    {azione:"db",fatt:ft},
     function(res){
     
     });
