@@ -1,5 +1,5 @@
 from gestione.models import sp, ce,ivacliente,libro
-import reportlab
+import reportlab,webbrowser
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4,inch
 from reportlab.lib.colors import pink, black, red, blue, green
@@ -62,6 +62,8 @@ class Pdf:
 #        c.drawText(invoice)
         c.showPage()
         c.save()
+        webbrowser.open_new("floppolo.pdf")
+
         
 
 

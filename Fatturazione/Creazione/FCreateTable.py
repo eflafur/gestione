@@ -38,6 +38,7 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps,pgm):
+        ltstr=""
         i=0
         bl=[]
         lsdc=[]
@@ -92,7 +93,8 @@ class Produt:
             rec1.save()
             imp+=round(prz*qcss*(css-rim),2)
             erario+=round(Decimal(item["iva"])*prz*qcss*(css+rim),2)
-            rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,fattura=fatt,lotto=ltt,scadenza=gg,pagato=pg,tara=tara,iva=iva-1)
+            ltstr=' '.join(str(x) for x in bl)
+            rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,fattura=fatt,lotto=ltstr,scadenza=gg,pagato=pg,tara=tara,iva=iva-1)
             rec.save()
             ls={}
             ls["cod"]=item["cod"]
@@ -110,12 +112,13 @@ class Produt:
         res.SetErarioCliente()
         res.Vendita()
 #registrazione contabile
-        obj=Pdf.PrintTable("Fattura",lsdc)
+        obj=Pdf.PrintTable("FATTURA",lsdc)
         obj.PrintArt()
         obj.PrintAna(fatt,c)
         return 0
     
     def ScriviDDT(self,line,sps):
+        ltstr=""
         i=0
         bl=[]
         lsdc=[]
@@ -135,6 +138,7 @@ class Produt:
         fatt=f[0]+"-"+str(r)
         c=Cliente.objects.get(azienda=line[0]["cln"])
         for item in line:
+            bl.clear()
             iva=Decimal(item["iva"])+1
             prz=Decimal(item["prz"])
             tara=Decimal(item["tara"])
@@ -156,7 +160,7 @@ class Produt:
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
                 ltt1.cassaexit+=css
-                ltt1.costo+=ps*css*prz*iva
+                ltt1.costo+=qcss*css*prz*iva
                 ltt1.save()
                 rim=0
             else:
@@ -169,22 +173,23 @@ class Produt:
             rec1=Saldo.objects.get(idcod__cod=item["cod"])
             rec1.q=rec1.q-css+rim
             rec1.save()
-            rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,ddt=fatt,lotto=ltt,tara=tara)
+            ltstr=' '.join(str(x) for x in bl)
+            rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,ddt=fatt,lotto=ltstr,tara=tara)
             rec.save()
-            row=str(str(imp)+" "+str(iva)+" "+str(erario)+" "+str(tara)+" "+str(css)+" "+str(ps))
             ls={}
-            ls["tot"]=row 
-            #ls["imp"]=imp
-            #ls["iva"]=iva-1
-            #ls["erario"]=erario
-            #ls["tara"]=tara
-            #ls["lotto"]=bl.copy()    
-            #ls["css"]=css
-            #ls["ps"]=ps
+            ls["cod"]=item["cod"]
+            ls["imp"]=round(prz*qcss*(css-rim),2)
+            ls["iva"]=iva-1
+            ls["tara"]=tara
+            ls["lotto"]=bl.copy()    
+            ls["prz"]=prz
+            ls["css"]=css
+            ls["ps"]=ps
             lsdc.append(ls)
-            obj=Pdf.PrintTable("Fattura",lsdc)
-            obj.Do()
-            return 0
+        obj=Pdf.PrintTable("DDT",lsdc)
+        obj.PrintArt()
+        obj.PrintAna(fatt,c)
+        return 0
     
     def DelLotto(self,lotti,num,prz,qcss,iva,i,lt):
         try:
@@ -208,64 +213,6 @@ class Produt:
             rim=0
         return rim          
     
-    def stampaFattura(self,nFattura, cln, righeFattura):
-        """ produce fattura in excel """
-        venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
-    
-        data=time.strftime("%d/%m/%Y")
-        try:
-            fa=openpyxl.load_workbook('formFattura.xlsx')
-        except:
-            print("file 'formFattura.xlsx' errato o mancante in "+os.getcwd())
-            return
-    
-        sheet=fa.get_sheet_by_name('Sheet1')
-    
-        sheet['I3'].value = nFattura
-        sheet['I4'].value = data
-    
-        sheet['B2'].value = venditore['venditore']
-        sheet['B3'].value = venditore['P-IVA']
-        sheet['B4'].value = venditore['indirizzo']
-        sheet['B5'].value = venditore['città']
-        sheet['B6'].value = venditore['telefono']
-    
-        sheet['B8'].value = cln.azienda
-        sheet['B9'].value = cln.pi
-        sheet['B10'].value = cln.indirizzo
-    
-        line=16												
-        cntr=0
-        total=0
-        for riga in righeFattura:
-            sheet["B"+str(line+cntr)].value = riga['cod']
-            try:
-                sheet["C"+str(line+cntr)].value = riga['ddt']
-            except:
-                a=10
-            sheet["D"+str(line+cntr)].value=""
-            for item in riga['lotto']:
-                sheet["D"+str(line+cntr)].value = sheet["D"+str(line+cntr)].value+" "+str(item)
-
-            sheet["E"+str(line+cntr)].value = riga['ps']
-            sheet["F"+str(line+cntr)].value = riga['css']
-            sheet["G"+str(line+cntr)].value = riga['prz']
-            sheet["H"+str(line+cntr)].value = riga['iva']
-            subtotale=float(riga['prz'])*float(riga['ps'])
-            sheet["I"+str(line+cntr)].value = float(subtotale)
-            total+=subtotale
-            cntr+=1
-    
-        sheet["H"+str(line+cntr)].value = "TOTALE"							
-        sheet["I"+str(line+cntr)].value = total							
-    
-        try:
-            fa.save('nuovaFattura.xlsx')
-        except:
-            print("file 'nuovaFattura.xls' errato o mancante in "+os.getcwd())
-            return
-    
-        subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])
 
     def ScriviSospesa(self,line,sps):
         if(sps!=""):
@@ -402,9 +349,9 @@ class Produt:
                 if(before!=" "):
                     ll.append(somma)
                 somma=0
-                somma=somma+el["prezzo"]*el["q"]*iva
+                somma=somma+el["prezzo"]*(el["q"]-el["cassa"]*el["tara"])*iva
             else:
-                somma=somma+el["prezzo"]*el["q"]*iva
+                somma=somma+el["prezzo"]*(el["q"]-el["cassa"]*el["tara"])*iva
             before=el["fattura"]
         
         ll.append(somma)
@@ -433,7 +380,7 @@ class Produt:
         
     def GetFatturabyNum(self,num):
         recls=Scarico.objects.filter(fattura=num).values("idcod__id","idcod__cod","idcod__genere__iva","q","cassa","fattura",
-                                                    "data","prezzo","cliente__azienda","lotto")
+                                                    "data","prezzo","cliente__azienda","lotto","tara")
         data=list(recls)
         return data          
     
@@ -479,6 +426,7 @@ class Produt:
     def DdtEmit(self,ls,cln,pgm):
         ddtls=[]
         ls1=[]
+        lsddt=""
         trs=trasporto.objects.filter(status=0).values("tara","ddt","q","prezzo","data","lotto","cassa",
                                 "idcod__cod","cliente__azienda","idcod__genere__iva","status","cliente__azienda")
         trstrs=trs.annotate(cod=F("idcod__cod"),ps=F("q"),css=F("cassa"),prz=F("prezzo"),iva=F("idcod__genere__iva")).values("cod",
@@ -489,15 +437,17 @@ class Produt:
             t.update(status=1)
             for el in data:
                 ddtls.append(el)
-        self.Ddt2Fatt(ddtls,cln,pgm)
+        lsddt=" ".join(ls)
+        self.Ddt2Fatt(ddtls,cln,pgm,lsddt)
         return ddtls
             
         
-    def Ddt2Fatt(self,line,cliente,pgm):
+    def Ddt2Fatt(self,line,cliente,pgm,lsddt):
         erario=0
         imp=0
         pg=0
         ls=[]
+        lsdc=[]
         s=Scarico.objects.latest("id")
         f=(s.fattura).split("-")
         r=int(f[1])+1
@@ -515,10 +465,22 @@ class Produt:
             cln=Cliente.objects.get(azienda=cliente)
             imp+=row
             erario+=Decimal(item["iva"])*row
+            ls={}
+            ls["cod"]=item["cod"]
+            ls["imp"]=round(row,2)
+            ls["iva"]=Decimal(item["iva"])
+            ls["tara"]=item["tara"]
+            ls["lotto"]=item["lotto"] #bl.copy()    
+            ls["prz"]=item["prz"]
+            ls["css"]=item["cassa"]
+            ls["ps"]=item["q"]
+            lsdc.append(ls)
         res=Registra.ComVen(imp,erario,"3.1",pg,cliente,fatt)
         res.Vendita()
         res.SetErarioCliente()
-       # self.stampaFattura(fatt,cln,line)
+        obj=Pdf.PrintTable("FATTURA",lsdc)
+        obj.PrintArt()
+        obj.PrintAna(fatt,cln,lsddt)       
         return ls        
     
     
@@ -594,3 +556,62 @@ class Produt:
             ltt.save()
         return rim
 
+
+    #def stampaFattura(self,nFattura, cln, righeFattura):
+        #""" produce fattura in excel """
+        #venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
+    
+        #data=time.strftime("%d/%m/%Y")
+        #try:
+            #fa=openpyxl.load_workbook('formFattura.xlsx')
+        #except:
+            #print("file 'formFattura.xlsx' errato o mancante in "+os.getcwd())
+            #return
+    
+        #sheet=fa.get_sheet_by_name('Sheet1')
+    
+        #sheet['I3'].value = nFattura
+        #sheet['I4'].value = data
+    
+        #sheet['B2'].value = venditore['venditore']
+        #sheet['B3'].value = venditore['P-IVA']
+        #sheet['B4'].value = venditore['indirizzo']
+        #sheet['B5'].value = venditore['città']
+        #sheet['B6'].value = venditore['telefono']
+    
+        #sheet['B8'].value = cln.azienda
+        #sheet['B9'].value = cln.pi
+        #sheet['B10'].value = cln.indirizzo
+    
+        #line=16												
+        #cntr=0
+        #total=0
+        #for riga in righeFattura:
+            #sheet["B"+str(line+cntr)].value = riga['cod']
+            #try:
+                #sheet["C"+str(line+cntr)].value = riga['ddt']
+            #except:
+                #a=10
+            #sheet["D"+str(line+cntr)].value=""
+            #for item in riga['lotto']:
+                #sheet["D"+str(line+cntr)].value = sheet["D"+str(line+cntr)].value+" "+str(item)
+
+            #sheet["E"+str(line+cntr)].value = riga['ps']
+            #sheet["F"+str(line+cntr)].value = riga['css']
+            #sheet["G"+str(line+cntr)].value = riga['prz']
+            #sheet["H"+str(line+cntr)].value = riga['iva']
+            #subtotale=float(riga['prz'])*float(riga['ps'])
+            #sheet["I"+str(line+cntr)].value = float(subtotale)
+            #total+=subtotale
+            #cntr+=1
+    
+        #sheet["H"+str(line+cntr)].value = "TOTALE"							
+        #sheet["I"+str(line+cntr)].value = total							
+    
+        #try:
+            #fa.save('nuovaFattura.xlsx')
+        #except:
+            #print("file 'nuovaFattura.xls' errato o mancante in "+os.getcwd())
+            #return
+    
+        #subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])

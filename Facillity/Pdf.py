@@ -1,4 +1,4 @@
-import reportlab
+import reportlab,webbrowser
 from reportlab.pdfgen import canvas
 
 class PrintTable:
@@ -13,6 +13,15 @@ class PrintTable:
         self.c.setFont("Helvetica",10)
         x=0
         y=0
+        self.c.drawString(10,20,"Codice")
+        self.c.drawString(170,20,"Lotto")
+        self.c.drawString(260,20,"Casse")
+        self.c.drawString(310,20,"Peso")
+        self.c.drawString(340,20,"Tara")
+        self.c.drawString(380,20,"Prezzo")
+        self.c.drawString(430,20,"Imponibile")
+        self.c.drawString(490,20,"Iva")
+        self.c.drawString(550,20,"Tot")
         for item in self.line:
             #for key in  item:
                 #a=item[key]
@@ -28,11 +37,9 @@ class PrintTable:
             self.c.drawAlignedString(570,y,str(totp),pivotChar=".")
             tot+=item["imp"]*(item["iva"]+1)
             y-=20
-        self.c.drawAlignedString(570,-450,str(round(tot,2)),pivotChar=".")
-        #self.c.showPage()
-        #self.c.save()
+        self.c.drawAlignedString(570,-400,"Tot   "+str(round(tot,2)),pivotChar=".")
         
-    def PrintAna(self, nFattura=0, cln=None):
+    def PrintAna(self, nFattura=0, cln=None,lsddt=None):
         """ produce fattura in pdf """
         
         from reportlab.pdfgen import canvas
@@ -45,10 +52,10 @@ class PrintTable:
     # scrive intestazione fattura
         self.c.setFont("Times-Roman",22)
         self.c.setFillColor(blue)
-        self.c.drawString(400,800,"FATTURA")
+        self.c.drawString(400,800,self.filename)
         self.c.setFont("Times-Roman",10)
         self.c.setFillColor(black)
-        self.c.drawString(400,770,"FATTURA N.")
+        self.c.drawString(400,770,self.filename+" N.")
         self.c.drawString(500,770,nFattura)
         self.c.drawString(400,755,"DATA")
         self.c.drawString(500,755,data)
@@ -77,6 +84,9 @@ class PrintTable:
         self.c.drawString(30,610,cln.indirizzo)
         self.c.drawString(30,595,"P.I.")
         self.c.drawString(60,595,cln.pi)
+        if(lsddt is not None):
+            self.c.drawString(10,560,"Rif.  "+lsddt)
 
         self.c.showPage()
         self.c.save()
+        webbrowser.open_new(self.filename)

@@ -89,7 +89,7 @@ function GetFatt(num){
             var prd=0;
             for (i=0;i<res.length;i++){
                 label=label+'<tr>'
-                sum=sum+parseFloat(res[i].prezzo)*parseFloat(res[i].q)*(parseFloat(res[i].idcod__genere__iva)+1);
+                sum=sum+parseFloat(res[i].prezzo)*(parseFloat(res[i].q)-parseFloat(res[i].cassa)*parseFloat(res[i].tara))*(parseFloat(res[i].idcod__genere__iva)+1);
                 label=label + '<td>'+ res[i].idcod__cod + '</td>';
                 label=label + '<td>' + res[i].cassa+ '</td>';
                 label=label + '<td>' + res[i].q + '</td>';
