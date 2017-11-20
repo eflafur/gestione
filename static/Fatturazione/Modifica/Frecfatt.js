@@ -54,10 +54,12 @@ function GetFatt(fatt,cl){
             var label="";
             var sumf=0;
             for (i=0;i<res.length;i++){
-                imp=res[i].prezzo*res[i].q*(parseFloat(res[i].idcod__genere__iva)+1)
+                net=res[i].q-res[i].rs;
+                netcss=res[i].cassa-res[i].rscassa;
+                imp=res[i].prezzo*(res[i].q-res[i].cassa*res[i].tara)*(parseFloat(res[i].idcod__genere__iva)+1)
                 sumf=sumf+imp;
                 label = label + '<tr>';
-                label = label + '<td style="display: none">' + res[i].idcod__id+ '</td>';
+                label = label + '<td style="display: none">' + res[i].id+ '</td>';
                 label = label + '<td>' + res[i].idcod__cod+ '</td>';
                 label = label + '<td>' + res[i].q+ '</td>';
                 label = label + '<td>'+ res[i].cassa+ '</td>';
@@ -66,6 +68,9 @@ function GetFatt(fatt,cl){
                 label = label + '<td>' + imp+ '</td>';
                 label = label + '<td>' + res[i].lotto+ '</td>';
                 label = label + '<td><input type="text"  size="8"></td>';
+                label = label + '<td><input type="text"  size="8"></td>';
+                label = label + '<td>' + net+ '</td>';
+                label = label + '<td>' + netcss+ '</td>';
                 label = label + '</tr>';
             }
             label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sumf.toFixed(2)+ '</td></tr>';
@@ -80,12 +85,16 @@ function GetFatt(fatt,cl){
 function LoopTable(){
     var ls=[];
     $("#tbfb tr").each(function(){
-        rs=$(this).find("input").val();
-        if(rs!=null && rs!=" " ){
+        rs=$(this).find("td:eq(8)").find("input").val();
+        rscss=$(this).find("td:eq(9)").find("input").val();
+        rim=$(this).find("td:eq(10)").text();
+        rimcss=$(this).find("td:eq(11)").text();
+        if(rs!=null && rs!="" && rs<=parseFloat(rim) && rscss<=parseFloat(rimcss)){
             var dc={};
             rsid=$(this).find("td:eq(0)").text();
             dc["id"]=rsid
             dc["rs"]=rs
+            dc["rscss"]=rscss
             ls.push(dc);
         }
     });

@@ -112,7 +112,6 @@ class Cliente(models.Model):
 	trpag=models.IntegerField(null=True,blank=True,default=0)
 	pi=models.CharField(max_length=11,null=True,blank=True,default=" ")
 
-
 class Scarico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
@@ -127,7 +126,8 @@ class Scarico(models.Model):
 	pagato=models.BooleanField(default=0)
 	note=models.TextField(max_length=30,default="")
 	tara=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
-
+	rs=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	rscassa=models.IntegerField(null=True,blank=True,default=0)
 
 class Sospese(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)

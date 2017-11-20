@@ -63,7 +63,7 @@ class PrintTable:
     # scrive dati venditore'
         self.c.setFont("Times-Roman",14)
         self.c.setFillColor(blue)
-        self.c.drawString(30,770,"La Dolce Frutta SrL")
+        self.c.drawString(30,770,"Ortofrutta  F.V.")
         self.c.setFont("Times-Roman",10)
         self.c.setFillColor(black)
         self.c.drawString(30,750,'Posteggio 166 Padiglione C')
