@@ -496,7 +496,7 @@ class Produt:
         imp=0
         erario=0
         nodi=Scarico.objects.filter(fattura=fatt)
-        crc=Carico.objects.filter(Q(cassaexit__gt=0), Q(pagato=0))
+        crc=Carico.objects.filter(pagato=0) #Q(cassaexit__gt=0), Q(pagato=0))
         s=Scarico.objects.latest("id")
         f=(s.fattura).split("-")
         r=int(f[1])+1
