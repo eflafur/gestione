@@ -65,7 +65,7 @@ function GetFatt(fatt,cl){
                 label = label + '<td>'+ res[i].cassa+ '</td>';
                 label = label + '<td>' + res[i].idcod__genere__iva+ '</td>';
                 label = label + '<td>' + res[i].prezzo+ '</td>';
-                label = label + '<td>' + imp+ '</td>';
+                label = label + '<td>' + imp.toFixed(2)+ '</td>';
                 label = label + '<td>' + res[i].lotto+ '</td>';
                 label = label + '<td><input type="text"  size="8"></td>';
                 label = label + '<td><input type="text"  size="8"></td>';
@@ -85,6 +85,7 @@ function GetFatt(fatt,cl){
 function LoopTable(){
     var ls=[];
     $("#tbfb tr").each(function(){
+        cod=$(this).find("td:eq(1)").text();
         rs=$(this).find("td:eq(8)").find("input").val();
         rscss=$(this).find("td:eq(9)").find("input").val();
         rim=$(this).find("td:eq(10)").text();
@@ -92,6 +93,7 @@ function LoopTable(){
         if(rs!=null && rs!="" && rs<=parseFloat(rim) && rscss<=parseFloat(rimcss)){
             var dc={};
             rsid=$(this).find("td:eq(0)").text();
+            dc["cod"]=cod
             dc["id"]=rsid
             dc["rs"]=rs
             dc["rscss"]=rscss

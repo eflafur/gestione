@@ -10,7 +10,7 @@ var lt="";
 var f;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    
+    lotto.length=0;
     $("#css").hide();
     $("#dsc").hide();
     $("#pgm").hide();

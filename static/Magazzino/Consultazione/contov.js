@@ -19,8 +19,7 @@ $(document).ready(function(){
         $("#cldt5").show();
         $("#cldt6").show();
         $("#cldt7").show();
-            GetCv();
-        Write($("#dt2").val());
+        GetCv();
     });
     
     $("#btmrg").click(function(){
@@ -36,7 +35,7 @@ $(document).ready(function(){
         $("#btmrg").hide();
         $("#btslz").hide();
         ret=GetCheched();
-        WriteChecked(ret);
+//        WriteChecked(ret);
     });
 });
 
@@ -74,8 +73,8 @@ function GetCv(){
             $("#dt2").val(res1[k-1].mrg);
             $("#tbf2").show();
             Write($("#dt2").val());
-            return;
         });
+    return;
 };
 
 function Write(mrg){
@@ -126,25 +125,7 @@ function Write(mrg){
     $("#dt7").val(sumcst-sum);
 };
 
-function WriteChecked(ret){
-    var sumfatt=0;
-    var sumvnd=0;
-    var label="";
-    label='<tr>'
-    for (i=0;i<ret.length;i++){
-        ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());
-        r=ret[i].find("td:eq(9)").text(ft);
-        iva=ft*(1+parseFloat(ret[i].find("td:eq(11)").text()));
-        r1=ret[i].find("td:eq(10)").text(iva);
-        label=label+r.html()+r1.html();
-        sumfatt=sumfatt+ft;    
-        sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
-    }
-    label=label+'</tr>'
-    $("tb62").html(label);
-    $("#dt6").val(sumfatt);
-    $("#dt7").val(sumvnd-sumfatt);
-};
+
 
 function ReadChange(n){
     var ls=[];
@@ -210,3 +191,25 @@ function GetCheched(){
     }
     return ;
 };
+
+
+//function WriteChecked(ret){
+    //var sumfatt=0;
+    //var sumvnd=0;
+    //var label="";
+    //label='<tr>'
+    //for (i=0;i<ret.length;i++){
+        ////ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());
+       //// r=ret[i].find("td:eq(9)").text(ft);
+        //r=ret[i].find("td:eq(9)").text();
+        //iva=r*(1+parseFloat(ret[i].find("td:eq(11)").text()));
+        //r1=ret[i].find("td:eq(10)").text(iva);
+        //label=label+r.html()+r1.html();
+        //sumfatt=sumfatt+ft;    
+        //sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
+    //}
+    //label=label+'</tr>'
+    //$("tb62").html(label);
+    //$("#dt6").val(sumfatt);
+    //$("#dt7").val(sumvnd-sumfatt);
+//};

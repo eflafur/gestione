@@ -120,7 +120,7 @@ class Scarico(models.Model):
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	fattura=models.TextField(max_length=10,null=True,blank=True)
-	lotto=models.CharField(max_length=20,null=True)
+	lotto=models.CharField(max_length=50,null=True)
 	iva=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	scadenza=models.DateField(default=date.today)	
 	pagato=models.BooleanField(default=0)
@@ -150,7 +150,7 @@ class trasporto(models.Model):
 	prezzo=models.DecimalField(max_digits=6,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
 	ddt=models.TextField(max_length=10,null=True,blank=True)
-	lotto=models.CharField(max_length=20,null=True)
+	lotto=models.CharField(max_length=50,null=True)
 	status=models.SmallIntegerField(default=0)
 	tara=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	

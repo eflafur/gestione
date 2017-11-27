@@ -2,7 +2,7 @@
 #django.setup()
 from gestione.models import Produttore,IDcod,Carico,Sospese
 from django.db.models import Q,F,Sum
-import os,time,openpyxl,subprocess,Registra,datetime
+import os,time,openpyxl,subprocess,Registra,datetime,Pdf
 from decimal import Decimal
 from datetime import date
 
@@ -49,10 +49,6 @@ class GetData:
         return data    
     def GetCaricobyIdcod(self):
         dic={}
-        #if(dt!=""):
-            #ss=Sospese.objects.filter(data__lte=dt)
-            #s=ss.values("idcod__cod").annotate(css_sum=Sum("cassa")).exclude(id=188)
-        #else:
         s=Sospese.objects.values("idcod__cod").annotate(css_sum=Sum("cassa")).exclude(id=188)
         c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
         d1=list(s)
@@ -102,9 +98,11 @@ class GetData:
         return ls1     
     
     def PushBollaCv(self,line,cln,mrgn):
+        bolla=""
         imp=0
         erario=0
         ls=[]
+        lsbl=[]
         cliente=Produttore.objects.get(azienda=cln)
         ccv=Carico.objects.filter().values("cv").order_by("cv").last()
         c=Carico.objects.filter(Q(idcod__produttore__azienda=cln),Q(p=0)).values("id",
@@ -119,9 +117,20 @@ class GetData:
             ddt["ps"]=c1[0]["q"]
             ddt["css"]=c1[0]["cassa"]
             ddt["iva"]=c1[0]["idcod__genere__iva"]
+            ddt["prz"]=round(Decimal(item["fatt"])/c1[0]["q"],2)
+            ddt["tara"]="0.2"
+#            x=60
+            #f = lambda x: ['small', 'big'][x>100]
+            #lambda x: 'big' if x > 100 else 'small'
+            if(c1[0]["bolla"]!=bolla):
+                lsbl.append(c1[0]["bolla"])
+            bolla=c1[0]["bolla"]
             c1.update(fattimp=item["fatt"],mrg=mrgn,p=1,cv=fatt)
             ls.append(ddt)
-  #      self.stampaFattura("vostra fattura",cliente,ls,mrgn)
+            lsblt=" ".join(lsbl)
+        obj=Pdf.PrintTable("CV",ls)
+        obj.PrintCV()
+        obj.PrintAna(str(fatt),cliente,lsblt)         
         return
     
     def PushFattFrn(self,line,ft,frn,mrgn,cst):
@@ -246,54 +255,54 @@ class GetData:
         res=Registra.ComVenBnc(imp,erario,"53.1",0,line["pg"],s1[0]["datafatt"],s1[0]["idcod__produttore__azienda"])
         res.putfrn()
 
-    def stampaFattura(self,nFattura, cln, righeFattura,mrg):
-        """ produce fattura in excel """
-        venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
+    #def stampaFattura(self,nFattura, cln, righeFattura,mrg):
+        #""" produce fattura in excel """
+        #venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
     
-        data=time.strftime("%d/%m/%Y")
-        try:
-            fa=openpyxl.load_workbook('formFattura.xlsx')
-        except:
-            print("file 'formFattura.xlsx' errato o mancante in "+os.getcwd())
-            return
+        #data=time.strftime("%d/%m/%Y")
+        #try:
+            #fa=openpyxl.load_workbook('formFattura.xlsx')
+        #except:
+            #print("file 'formFattura.xlsx' errato o mancante in "+os.getcwd())
+            #return
     
-        sheet=fa.get_sheet_by_name('Sheet1')
+        #sheet=fa.get_sheet_by_name('Sheet1')
     
-        sheet['I3'].value = nFattura
-        sheet['I4'].value = data
+        #sheet['I3'].value = nFattura
+        #sheet['I4'].value = data
     
-        sheet['B2'].value = venditore['venditore']
-        sheet['B3'].value = venditore['P-IVA']
-        sheet['B4'].value = venditore['indirizzo']
-        sheet['B5'].value = venditore['città']
-        sheet['B6'].value = venditore['telefono']
+        #sheet['B2'].value = venditore['venditore']
+        #sheet['B3'].value = venditore['P-IVA']
+        #sheet['B4'].value = venditore['indirizzo']
+        #sheet['B5'].value = venditore['città']
+        #sheet['B6'].value = venditore['telefono']
     
-        sheet['B8'].value = cln.azienda
-        sheet['B9'].value = cln.pi
-        sheet['B10'].value = cln.indirizzo
+        #sheet['B8'].value = cln.azienda
+        #sheet['B9'].value = cln.pi
+        #sheet['B10'].value = cln.indirizzo
     
-        line=16												
-        cntr=0
-        total=0
-        for riga in righeFattura:
-            sheet["B"+str(line+cntr)].value = riga['cod']
-            sheet["C"+str(line+cntr)].value = riga['lotto']
-            sheet["D"+str(line+cntr)].value = riga['ps']
-            sheet["E"+str(line+cntr)].value = riga['css']
-            sheet["G"+str(line+cntr)].value = riga['iva']
-            sheet["H"+str(line+cntr)].value = mrg
-            subtotale =riga['costo']
-            sheet["I"+str(line+cntr)].value = subtotale
-            total+=float(subtotale)
-            cntr+=1
-        cntr+=1
-        sheet["H"+str(line+cntr)].value = "TOTALE"							
-        sheet["I"+str(line+cntr)].value = total							
+        #line=16												
+        #cntr=0
+        #total=0
+        #for riga in righeFattura:
+            #sheet["B"+str(line+cntr)].value = riga['cod']
+            #sheet["C"+str(line+cntr)].value = riga['lotto']
+            #sheet["D"+str(line+cntr)].value = riga['ps']
+            #sheet["E"+str(line+cntr)].value = riga['css']
+            #sheet["G"+str(line+cntr)].value = riga['iva']
+            #sheet["H"+str(line+cntr)].value = mrg
+            #subtotale =riga['costo']
+            #sheet["I"+str(line+cntr)].value = subtotale
+            #total+=float(subtotale)
+            #cntr+=1
+        #cntr+=1
+        #sheet["H"+str(line+cntr)].value = "TOTALE"							
+        #sheet["I"+str(line+cntr)].value = total							
     
-        try:
-            fa.save('nuovaFattura.xlsx')
-        except:
-            print("file 'nuovaFattura.xls' errato o mancante in "+os.getcwd())
-            return
+        #try:
+            #fa.save('nuovaFattura.xlsx')
+        #except:
+            #print("file 'nuovaFattura.xls' errato o mancante in "+os.getcwd())
+            #return
     
-        subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])
+        #subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])
