@@ -11,6 +11,7 @@ $(document).ready(function(){
     }
     else if(flag=='t'){
         $("#ggrapht").hide();
+        $("#ggraph").show();
         GetGraph(flag);
     }
         

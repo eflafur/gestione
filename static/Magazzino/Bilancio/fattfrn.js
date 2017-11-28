@@ -8,14 +8,16 @@ $(document).ready(function(){
 //    $.ajaxSetup({cache:false});
     $("#cl").hide();
     $("#chc").hide();
+    $("#dtt").hide();
     Evidance();
     $("#numfatt").keypress(function(){
-        $("#chc").show();
+        $("#dtt").show();
     });
     
     $("#dt").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",autoClose: true, 
         onSelect: function (date) {
             dt=date;
+        $("#chc").show();
         }
     });
 
@@ -155,9 +157,17 @@ function PushCv(cv){
 function WriteCv(mrgg){
     var label="";
     var sum=0;
+    var mrg
+    mrg=$("#dt2").val();
     for (i=0;i<res1.length;i++){
-        nt1=res1[i].fattimp/res1[i].q
-        nt=parseFloat(res1[i].fattimp);
+        if($("input:checked").val()=="cv"){
+            nt1=res1[i].fattimp/res1[i].q
+            nt=parseFloat(res1[i].fattimp);
+        }
+        else{
+            nt1=res1[i].costo/res1[i].q*(1-mrg/100)
+            nt=nt1*res1[i].q;
+        }
         iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
         sum=sum+nt;
         sumcosto=sumcosto+parseFloat(res1[i].costo);

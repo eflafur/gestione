@@ -220,6 +220,7 @@ class GetData:
                     dic["note"]=note
                     dic["pg"]=pg
                     ll.append(dic)
+                erario=0
                 imp=0
                 imp+=el["fattimp"]
                 erario+=el["fattimp"]*el["idcod__genere__iva"]
