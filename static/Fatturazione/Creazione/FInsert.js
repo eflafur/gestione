@@ -35,7 +35,7 @@ function Put(item) {
             function (result) {
             var option=" ";
             for (var i=0;i<result.length;i++){
-                    option += '<option value="'+ result[i].citta + '">' + result[i].citta  + '</option>';
+                    option += '<option value="'+ result[i].citta+" " +result[i].sigla+  '">' + result[i].citta+" ("+result[i].sigla+") </option>";
                 }
                 $('#ct').html(option);
             });

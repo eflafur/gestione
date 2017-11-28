@@ -171,7 +171,7 @@ function WriteCv(mrgg){
         label=label + '<td><input class="prz" type=number value='+nt1.toFixed(2)+'></input></td>';
         label=label + '<td>'+nt+'</td>';
         label=label + '<td>'+iva.toFixed(2)+'</td>';
-        label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
+        label=label + '<td >' + res1[i].idcod__genere__iva+ '</td>';
         label=label + '</tr>';
     }
     $("#tbf2").show();  

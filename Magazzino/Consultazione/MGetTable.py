@@ -124,7 +124,7 @@ class GetData:
             #lambda x: 'big' if x > 100 else 'small'
             if(c1[0]["bolla"]!=bolla):
                 lsbl.append(c1[0]["bolla"])
-            bolla=c1[0]["bolla"]
+            bolla="Bolla: "+c1[0]["bolla"]
             c1.update(fattimp=item["fatt"],mrg=mrgn,p=1,cv=fatt)
             ls.append(ddt)
             lsblt=" ".join(lsbl)

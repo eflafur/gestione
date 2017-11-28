@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 import CreateTable,Modifica,GetProduct,validazione,Fviews,MCreateTable,MGetTable,MModifica
-import testdb
+import testdb,Import
 import re,json,jsonpickle
 
 #import wingdbstub
@@ -280,10 +280,13 @@ def RegFattFrn(request):
 
 
 def Gioco(request):
-    if(request.method=="POST"):
-        message=request.POST
-    res=testdb.Pdf("floppolo.pdf")
-    res.Do()
+
+    #obj=Import.getTable()
+    #obj.readTable()
+    #if(request.method=="POST"):
+        #message=request.POST
+    #res=testdb.Pdf("floppolo.pdf")
+    #res.Do()
     context={res:""}
     return render(request,"Magazzino/gioco.html",context)        
     

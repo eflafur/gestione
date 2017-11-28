@@ -193,23 +193,26 @@ function GetCheched(){
 };
 
 
-//function WriteChecked(ret){
-    //var sumfatt=0;
-    //var sumvnd=0;
-    //var label="";
-    //label='<tr>'
-    //for (i=0;i<ret.length;i++){
-        ////ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());
-       //// r=ret[i].find("td:eq(9)").text(ft);
-        //r=ret[i].find("td:eq(9)").text();
-        //iva=r*(1+parseFloat(ret[i].find("td:eq(11)").text()));
-        //r1=ret[i].find("td:eq(10)").text(iva);
-        //label=label+r.html()+r1.html();
-        //sumfatt=sumfatt+ft;    
-        //sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
-    //}
-    //label=label+'</tr>'
-    //$("tb62").html(label);
-    //$("#dt6").val(sumfatt);
-    //$("#dt7").val(sumvnd-sumfatt);
-//};
+function WriteChecked(ret){
+    var sumfatt=0;
+    var sumvnd=0;
+    var label="";
+    label='<tr>'
+    for (i=0;i<ret.length;i++){
+        //ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());
+       // r=ret[i].find("td:eq(9)").text(ft);
+        prz=parseFloat(ret[i].find("input.prz").val());
+        p=parseFloat(ret[i].find("td:eq(4)").text());
+        iva=1+parseFloat(ret[i].find("td:eq(11)").text());
+        ret[i].find("td:eq(9)").text(prz*p);
+        ret[i].find("td:eq(10)").text(prz*p*iva);
+        label=label+ret;
+        sumfatt+=(prz*p*iva);    
+        sumvnd+=parseFloat(ret[i].find("td:eq(7)").text());
+    }
+    label=label+'</tr>'
+    $("tb62").html(label);
+    $("#dt6").val(sumfatt);
+    $("#dt7").val(sumvnd-sumfatt);
+};
+

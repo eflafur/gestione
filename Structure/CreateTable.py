@@ -29,13 +29,14 @@ class Produt:
 class Siti:
     def put(self,line):
         self.row=line
-        p=Area.objects.get(regione=self.row[0])
+        p=Area.objects.get(regione=self.row[3])
         if (p==""):
             return 
         s=Sito.objects.create(
             area=p,
             citta=self.row[1],
             sigla=self.row[2],
+            cap=self.row[5]
         )
         return   
     
@@ -47,7 +48,7 @@ class GetProd:
         res=Area.objects.all()
         return res
     def GetCitta(self,var):
-        res=Sito.objects.filter(Q(area__regione=var)).values("citta")
+        res=Sito.objects.filter(Q(area__regione=var)).values("citta","sigla","cap").order_by("sigla")
         data=list(res)
         return data
     def GetProduttori(self):

@@ -204,7 +204,7 @@ class PrintTable:
         self.c.drawString(30,630,cln.azienda)
         self.c.setFont("Times-Roman",10)
         self.c.setFillColor(black)
-        self.c.drawString(30,610,cln.indirizzo)
+        self.c.drawString(30,610,cln.indirizzo+" "+cln.citta)
         self.c.drawString(30,595,"P.I.")
         self.c.drawString(60,595,cln.pi)
         if(lsddt is not None):

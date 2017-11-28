@@ -37,7 +37,7 @@ class Specifica(models.Model):
 class Produttore(models.Model):
 	settore=models.ManyToManyField(Settore)
 	regione=models.CharField(max_length=20,null=True)
-	citta=models.CharField(max_length=20,null=True)
+	citta=models.CharField(max_length=50,null=True)
 	azienda=models.CharField(max_length=50,unique=True,blank=True,default=" ")
 	contatto=models.CharField(max_length=50,blank=True,default=" ")
 	indirizzo=models.CharField(max_length=60,null=True,blank=True,default=" ")
@@ -67,9 +67,10 @@ class Area(models.Model):
 
 class Sito(models.Model):
 	area=models.ForeignKey(Area,on_delete=models.CASCADE,null=True)
-	citta=models.CharField(max_length=20,null=True)
+	citta=models.CharField(max_length=50,null=True)
 	sigla=models.CharField(max_length=5,null=True)
-	comune=models.CharField(max_length=30,null=True)
+	comune=models.CharField(max_length=2,null=True)
+	cap=models.CharField(max_length=6,null=True)
 	def __str__(self):
 		return "%s" % (self.citta)
 
@@ -103,7 +104,7 @@ class Saldo(models.Model):
 
 class Cliente(models.Model):
 	regione=models.CharField(max_length=20,null=True)
-	citta=models.CharField(max_length=20,null=True)
+	citta=models.CharField(max_length=50,null=True)
 	azienda=models.CharField(max_length=50,unique=True,blank=True,default=" ")
 	indirizzo=models.CharField(max_length=60,null=True,blank=True,default=" ")
 	acquisizione=models.DateField(default=date.today,)
