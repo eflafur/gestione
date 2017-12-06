@@ -1,5 +1,3 @@
-//var UserTable=$("#mytable");
-//var TempUserTable=null;
 var res1="";
 var sumcosto=0;
 var choice;
@@ -224,7 +222,6 @@ function WriteChecked(ret){
         r1=ret[i].find("td:eq(8)").text(iva);
         label=label+r.html();
         sumfatt=sumfatt+ft;
-//        sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
     }
     label=label+'</tr>'
     $("tb62").html(label);

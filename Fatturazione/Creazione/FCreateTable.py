@@ -360,9 +360,11 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!= ""):
-            recls=Scarico.objects.filter(Q(data__gte=message["data"]),Q(rscassa__gte=0) , Q(cliente__azienda=message["cliente"])).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"]),Q(rscassa__gte=0) ,
+            Q(cliente__azienda=message["cliente"]),Q(pagato=1)).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         else:
-            recls=Scarico.objects.filter(Q(data__gte=message["data"]),Q(rscassa__gte=0)).exclude(id=1).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"]),
+            Q(rscassa__gte=0),Q(pagato=1)).exclude(id=1).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         
         for el in recls:
             iva=el["idcod__genere__iva"]+1

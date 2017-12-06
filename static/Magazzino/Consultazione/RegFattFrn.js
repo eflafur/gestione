@@ -54,6 +54,8 @@ function GetTable(date){
         function(ret){
             res=ret;
             var label="";
+            if(res==1)
+                window.location.replace("regfattfrn");
             for (i=0;i<res.length;i++){
                 //var d = new Date(res[i].data)//.split("-").reverse().join("/"));
                 //var dd=d.getDate();

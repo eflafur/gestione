@@ -80,24 +80,13 @@ def LKCaricoFornitore(request):
     if(login==0):
         context={}
         return render(request,"Validazione/login.html",context)     
-
     if(request.method=="POST"):
         message=request.POST
         objm=MGetTable.GetData()
-        #if(message["prs"]!=""):
-            #ls1.append(message["prs"])
-            #ls1.append(message["res"])
-            #res=objm.GetBolla(ls1)
-        #else:
         res=objm.GetIdCod(message);
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         message=request.GET
-        #if(request.GET.get("azione")):
-            #dc["azienda"]=message["cliente"]
-            #ls.append(dc)
-            #context={"prod":ls,"el":message["bolla"]}
-        #else:        
         mod=Modifica.ModProd()
         prod=mod.GetProduttori()
         context={"prod":prod,"el":""}
@@ -228,14 +217,31 @@ def RegFattFrn(request):
         context={"items":""}
         return render(request,"Magazzino/Consultazione/RegFattFrn.html",context)        
     
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 #test----------------------------------------------
-
-
-
-
-
-
 
 #def Gioco(request):
     #res=""

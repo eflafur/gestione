@@ -205,10 +205,10 @@ class GetData:
         before=" "
         i=0
         ll=[]
-        recls=Carico.objects.filter(Q(data__gte=message["data"]),Q(p=2)).values("pagato","idcod__produttore__azienda","fattimp"
+        recls=Carico.objects.filter(Q(data__gte=message["data"]),Q(p=2),Q(pagato=0)).values("pagato","idcod__produttore__azienda","fattimp"
                                 ,"fatt","data","idcod__genere__iva","note").order_by("fatt")
         if(len(recls)==0):
-            return
+            return 1
         for el in recls:
             if(el["fatt"]!=before):
                 if(before!=" "):
