@@ -1,5 +1,6 @@
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+        $("#brand").text("Nuovo Fornitore");
         $("#sl").hide();
         $('input').first().focus();
         $("#acq").val("2000-01-01");
@@ -35,32 +36,6 @@ function Put(item) {
             });
     return;
 };
-
-//function BonusLevel(data1) {
-    //$.post(
-    //"GetOfferta",
-    //{ date: data1 },
-    //function (result) {
-        //if (AdvisorUserTable != null)
-            //AdvisorUserTable.destroy();
-            //AdvisorUserTable = UserTable.DataTable({
-            //"ordering": false,
-            //data: eval(result),
-            //columns: [
-                ////{data: "azienda__offerta__ruolo"},
-                ////{data: "azienda__offerta__level__qualifica"},
-                //{data: "ruolo"},
-                //{data: "tipo" },
-                //{data  : "qualifica" }
-                ////{data  : "azienda__azienda" },
-                ////{data : "azienda__general__settore"},
-                ////{data : "level__qualifica"}
-            //]
-        //});
-    //});
-    //return;
-//};
-
 
 function BonusData(item) {
     $.post(

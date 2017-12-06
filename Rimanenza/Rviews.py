@@ -49,13 +49,14 @@ def RTot(request):
         return render(request,"Validazione/login.html",context)         
     if(request.method=="POST"):
         message=request.POST
-        if(message["azione"]=="r"):
-            obj=ReportBilancio.GetReport()
-            res=obj.BTot(message)
+        if(message["azione"]=="cod"):
+            obj=ReportBilancio.Estrazionecn()
+            res=obj.Saldi(message)
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         context={"items":" "}
-        return render(request,"Rimanenza/Report/Rtot.html",context)    
+        return render(request,"Rimanenza/Report/Saldofn.html",context)    
+    
 def RArt(request):
     res=""
     if(login==0):
@@ -95,13 +96,13 @@ def RFrn(request):
         return render(request,"Validazione/login.html",context)         
     if(request.method=="POST"):
         message=request.POST
-        if(message["azione"]=="tart"):
-            obj=ReportBilancio.GetReport()
-            res=obj.BFrn(message)
+        if(message["azione"]=="cod"):
+            obj=ReportBilancio.Estrazionecn()
+            res=obj.Giornale(message)
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         context={"items":" "}
-        return render(request,"Rimanenza/Report/Rfrn.html",context)  
+        return render(request,"Rimanenza/Report/Giornale.html",context)  
 
 
 

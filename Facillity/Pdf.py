@@ -225,7 +225,8 @@ class PrintTable:
         self.c.drawString(170,20,"Codice")
         self.c.drawString(260,20,"Casse")
         self.c.drawString(310,20,"Peso")
-        self.c.drawString(340,20,"Tara")
+        if(self.filename!="CV"):
+            self.c.drawString(340,20,"Tara")
         self.c.drawString(380,20,"Prezzo")
         self.c.drawString(430,20,"Imponibile")
         self.c.drawString(490,20,"Iva")
@@ -236,7 +237,7 @@ class PrintTable:
             self.c.drawString(100,y,str(item["cod"]))
             self.c.drawAlignedString(290,y,str(item["css"]),pivotChar=" ")
             self.c.drawAlignedString(330,y,str(item["ps"]),pivotChar=".")
-            self.c.drawAlignedString(350,y,str(item["tara"]),pivotChar=".")
+#            self.c.drawAlignedString(350,y,str(item["tara"]),pivotChar=".")
             self.c.drawAlignedString(400,y,str(item["prz"]),pivotChar=".")
             self.c.drawAlignedString(460,y,str(item["costo"]),pivotChar=".")
             self.c.drawAlignedString(500,y,str(item["iva"]),pivotChar=".")

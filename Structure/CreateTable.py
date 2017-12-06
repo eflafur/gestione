@@ -20,7 +20,7 @@ class Produt:
             email=self.row["a8"],
             trpag=self.row["a10"],
             margine=self.row["a11"],
-            fatturato=self.row["a12"],
+            tel=self.row["a9"],
             pi=self.row["a13"],
         )
         return (1)

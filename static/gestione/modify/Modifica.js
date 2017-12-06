@@ -2,6 +2,8 @@
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+            $("#brand").text("Elimina Fornitore");
+
     $("#azienda").click(function(){
       var a=$("#azienda option:selected").text();
       Put(a);
@@ -34,12 +36,12 @@ function Put(item) {
             for (var i=0;i<result[0].ct.length;i++){
                 option2 += '<option value="'+ result[0].ct[i].sito__citta+ '">' + result [0].ct[i].sito__citta+ '</option>';
             }
-             for (var i=0;i<result.length;i++){
-                option3 += '<option value="'+ result[i].settore__articolo+ '">' + result [i].settore__articolo+ '</option>';
-            }
-                $('#lsart').html(option3);
+             //for (var i=0;i<result.length;i++){
+                //option3 += '<option value="'+ result[i].settore__articolo+ '">' + result [i].settore__articolo+ '</option>';
+            //}
+//                $('#lsart').html(option3);
                 $('#lsart').val(result[0].citta);
-                $('#slc').val(result[0].settore__articolo);
+  //              $('#slc').val(result[0].settore__articolo);
                 $('#cct').html(option2);
                 $('#cct').val(result[0].citta);
                 $('#ct').html(option);

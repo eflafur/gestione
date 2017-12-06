@@ -2,6 +2,7 @@ var option=""
 var optionValues=[];
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#brand").text("Crea Articolo");
     $("#tx1").hide();
     $("#slc1").click(function(){
     //$('input[name="ss2"]').val("");

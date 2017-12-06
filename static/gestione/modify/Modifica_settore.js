@@ -2,8 +2,8 @@ var option=""
 var optionValues=[];
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#brand").text("Cerca Articolo");
     $("#slc1").click(function(){
-
    // $('input[name="s2"]').val("");
 //    $('#s3 option').text("");
 

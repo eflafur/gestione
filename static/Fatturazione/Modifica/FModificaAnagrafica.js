@@ -1,5 +1,6 @@
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#brand").text("Cerca Cliente");
     $('select').first().focus();
     $("#azienda").click(function(){
       var a=$("#azienda option:selected").text();

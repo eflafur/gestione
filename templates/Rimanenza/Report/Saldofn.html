@@ -1,0 +1,109 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-2">
+    <div class="row">
+        <div class="col-md-2" id="bcod">     
+            <p>Codice<select class="form-control" name="a1" id="bcodice"></p>
+                <option value="1">Saldo Contabile</option>
+                <option value="2">Saldo Patromoniale</option>
+                <option value="3">Erario c/Iva</option>
+                <option value="4">Vendite Clienti</option>
+                <option value="5">Acquisto Fornitori</option>
+                <option value="6">Banca</option>
+                <option value="7">Cassa</option>
+                <option value="8">Generale</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 col-md-offset-1">     
+            <div class="input-group" id="dtft">
+                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>
+    </div>
+    </br>
+    </br>
+    </br>
+
+    
+   <div class="col-md-10" id="s1">    
+        <div class="row">
+                <div class="col-md-2 " >
+                    <p>Vendite:<input type = "text" id = "rc" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Acquisti:<input type = "text" id = "cst" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Saldo:<input type = "text" id = "slce" readonly></p>
+                </div>
+        </div>
+        <div class="row">
+                <div class="col-md-2" >
+                    <p>Clienti Attivo:<input type = "text" id = "clna" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Clienti Passivo:<input type = "text" id = "clnd" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Saldo:<input type = "text" id = "slsp" readonly></p>
+                </div>
+        </div>
+        <div class="row">
+                <div class="col-md-2" >
+                    <p>Fornitori Attivo:<input type = "text" id = "frna" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Fornitori Passivo:<input type = "text" id = "frnd" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Saldo:<input type = "text" id = "slsp1" readonly></p>
+                </div>
+        </div>
+    </div>
+    
+     <div class="col-md-10" id="s2">    
+        <div class="row">
+                <div class="col-md-2 " >
+                    <p>Cassa Attivo:<input type = "text" id = "csd" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Cassa Passivo:<input type = "text" id = "csa" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Saldo:<input type = "text" id = "slcs" readonly></p>
+                </div>
+        </div>
+        <div class="row">
+                <div class="col-md-2" >
+                    <p>Banca Attivo:<input type = "text" id = "bcd" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Banca passivo:<input type = "text" id = "bca" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Saldo:<input type = "text" id = "slbn" readonly></p>
+                </div>
+        </div>
+      <div class="row">
+                <div class="col-md-2" >
+                    <p>Erario Credito:<input type = "text" id = "erd" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Erario Debito:<input type = "text" id = "era" readonly></p>
+                </div>
+                <div class="col-md-2 col-md-offset-1" >
+                    <p>Saldo:<input type = "text" id = "sler" readonly></p>
+                </div>
+        </div>
+    </div>
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Rimanenza/Report/Saldofn.js' %}" ></script>
+{% endblock %}

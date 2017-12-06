@@ -29,7 +29,7 @@ class Produt:
             citta=self.row["a4"],
             regione=self.row["a3"],
             pi=self.row["a2"],
-            indirizzo=self.row["a7"],
+#            indirizzo=self.row["a7"],
             acquisizione=self.row["a5"],
             email=self.row["a6"],
             trpag=self.row["a9"],
@@ -83,12 +83,14 @@ class Produt:
                 bls.append(str(ltt)+"-"+str(css))
                 ltt1.cassaexit+=css
                 ltt1.costo+=qcss*css*prz
+                ltt1.q+=qcss*css
                 ltt1.save()
                 rim=0
             else:
                 bls.append(str(ltt)+"-"+str(css+rim))
                 ltt1.cassaexit=ltt1.cassa
                 ltt1.costo+=prz*(css+rim)*qcss
+                ltt1.q+=(css+rim)*qcss
                 ltt1.save()
                 ltt2=ltcod.exclude(id=ltt).order_by("id")
                 data=list(ltt2)
@@ -105,7 +107,7 @@ class Produt:
             ls["cod"]=item["cod"]
             ls["imp"]=round(prz*qcss*(css-rim),2)
             ls["iva"]=iva-1
-            ls["tara"]=tara
+            ls["tara"]=tara*css
             ls["lotto"]=bl.copy()    
             ls["prz"]=prz
             ls["css"]=css
@@ -157,8 +159,7 @@ class Produt:
             if(sps[:2]=="dd"):    
                 fatt=sps                
                 rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=item["lotto"],tara=tara)
-                bl.append(item["lotto"])            
-            
+                bl.append(item["lotto"])
             if(item["lotto"]!=""):
                 ltt=item["lotto"]
             else:
@@ -173,12 +174,14 @@ class Produt:
                 bls.append(str(ltt)+"-"+str(css))
                 ltt1.cassaexit+=css
                 ltt1.costo+=qcss*css*prz
+                ltt1.q+=qcss*css
                 ltt1.save()
                 rim=0
             else:
                 bls.append(str(ltt)+"-"+str(css+rim))
                 ltt1.cassaexit=ltt1.cassa
                 ltt1.costo+=prz*(css+rim)*qcss
+                ltt1.q+=(css+rim)*qcss
                 ltt1.save()
                 ltt2=ltcod.exclude(id=ltt)
                 data=list(ltt2)
@@ -193,7 +196,7 @@ class Produt:
             ls["cod"]=item["cod"]
             ls["imp"]=round(prz*qcss*(css-rim),2)
             ls["iva"]=iva-1
-            ls["tara"]=tara
+            ls["tara"]=tara*css
             ls["lotto"]=bl.copy()    
             ls["prz"]=prz
             ls["css"]=css
@@ -214,6 +217,7 @@ class Produt:
             ltt=lotti.get(id=cod)
             ltt.cassaexit=ltt.cassa
             ltt.costo+=prz*(num+rim)*qcss
+            ltt.q=(num+rim)*qcss
             bls.append(str(cod)+"-"+str(num+rim))
             ltt.save()
             lt.append(cod)
@@ -223,6 +227,7 @@ class Produt:
             bls.append(str(cod)+"-"+str(num))
             ltt.cassaexit+=num
             ltt.costo+=prz*num*qcss
+            ltt.q=num*qcss
             ltt.save()
             lt.append(cod)
             rim=0
@@ -525,7 +530,7 @@ class Produt:
                         q=psrs,cassa=css,fattura=prg,lotto=nodo.lotto,tara=nodo.tara,iva=nodo.iva,note=fatt,rscassa=-1)
             rec.save()
             rec1=Saldo.objects.get(idcod__id=nodo.idcod_id)
-            rec1.q=css
+            rec1.q+=css
             rec1.save()
             lslotti=(nodo.lotto).split(" ")
             rscss=nodo.rscassa
@@ -540,11 +545,13 @@ class Produt:
                 if(css<=d):
                     lt.costo-=nodo.prezzo*css*pscss
                     lt.cassaexit-=css
+                    lt.q-=css*pscss
                     lt.save()
                     break
                 elif(css>d & d>0):
                     lt.costo-=nodo.prezzo*d*pscss
                     lt.cassaexit-=d
+                    lt.q-=d*pscss
                     lt.save()
                     rscss=0
                     css-=d
@@ -578,175 +585,7 @@ class Produt:
         obj.PrintArt()
         obj.PrintAna(prg,c,fatt)       
         
-        #vnd={}
-        #vnd["venditore"]="Ortofrutta"
-        #vnd["indirizzo"]="Via C. Lombroso. Pad C ,166"
-        #vnd["P-IVA"]="0198875673"
-        #vnd["città"]="Milano"
-        #vnd["telefono"]="0297465"
-        #obj=Pdf.fattura(vnd,fatt,c,lsdc)
-        #obj.buildPdf()
+
         return 0        
     
-    
-    #def ScriviNotaC(self,line,fatt,cln):
-        #lslotti=[]
-        #lsdc=[]
-        #imp=0
-        #erario=0
-        #nodi=Scarico.objects.filter(fattura=fatt)
-        #crc=Carico.objects.filter(Q(cassaexit__gt=0), Q(pagato=0))
-        #s=Scarico.objects.latest("id")
-        #f=(s.fattura).split("-")
-        #r=int(f[1])+1
-        #prg=f[0]+"-"+str(r)
-        #c=Cliente.objects.get(azienda=cln)
-
-        #for item in line:
-            #c1=0
-            #cntrl=0
-            #nodo=nodi.get(id=item["id"])
-            #psrs=Decimal(item["rs"])
-            #css=int(item["rscss"])
-##            pscss=nodo.q/nodo.cassa-nodo.tara
-            #pscss=psrs/css-nodo.tara
-            #rec=Scarico(idcod=nodo.idcod,cliente=nodo.cliente,prezzo=-nodo.prezzo,
-                        #q=psrs,cassa=css,fattura=prg,lotto=nodo.lotto,tara=nodo.tara,iva=nodo.iva,note=fatt,rscassa=-1)
-            #rec.save()
-            #rec1=Saldo.objects.get(idcod__id=nodo.idcod_id)
-            #rec1.q=css
-            #rec1.save()
-            #lslotti=(nodo.lotto).split(" ")
-            #ltls=lslotti.copy()
-            #for i in ltls:
-                #try:
-                    #lt1=crc.get(id=i)
-                    #if(cntrl==1):
-                        #continue
-                    #lt=crc.get(id=i)
-                    #cntrl=1
-                #except:
-                    #lslotti.remove(i)
-            #if (cntrl==0):
-                #return 1
-            #rim=lt.cassaexit-css
-            #if(rim<0):
-                #c1=nodo.prezzo*pscss*(css+rim)
-                #lt.costo-=nodo.prezzo*pscss*(css+rim)
-                #lt.cassaexit=0
-                #lt.save()
-                #lotti=crc.filter(idcod__id=nodo.idcod_id)#.exclude(id=lt.id)
-                #data=list(lotti)
-                #lslotti.remove(i)
-                #rim=self.AddLotto(lotti,-rim,nodo.prezzo,pscss,lslotti,c1)
-            #else:
-                #c1=nodo.prezzo*pscss*css
-                #lt.costo-=nodo.prezzo*pscss*css
-                #lt.cassaexit-=css
-                #lt.save()
-            #impfatt=nodo.prezzo*pscss*(css)
-            #imp+=nodo.prezzo*pscss*(css)
-            #erario+=nodo.iva*nodo.prezzo*(css)*pscss
-            #nodo.rs+=psrs
-            #nodo.rscassa+=Decimal(item["rscss"])
-            #nodo.save()
-            #ls={}
-            #ls["cod"]=nodo.idcod_id
-            #ls["imp"]=round(-impfatt,2)
-            #ls["iva"]=nodo.iva
-            #ls["tara"]=nodo.tara
-            #ls["lotto"]=nodo.lotto 
-            #ls["prz"]=-nodo.prezzo
-            #ls["css"]=int(css)
-            #ls["ps"]=psrs
-            #lsdc.append(ls)
-##registrazione contabile
-        #res=Registra.ComVen(-imp,-erario,"3.1",0,cln,prg)
-        #res.SetErarioCliente(1)
-        #res.Vendita()
-##registrazione contabile  
-##        self.stampaFattura(fatt,c,rg)
-        #obj=Pdf.PrintTable("Nota di Credito",lsdc)
-        #obj.PrintArt()
-        #obj.PrintAna(prg,c,fatt)       
-        #return 0    
-    
-    #def AddLotto(self,lotti,num,prz,pscss,lslotti,c1):
-        #try:
-            #ltt=lotti.get(id=lslotti[0])
-            #rim=ltt.cassaexit-num
-        #except:
-            #return 0
-        #if(rim<0):
-            #c1+=prz*pscss*(num+rim)
-            #ltt.costo-=prz*pscss*(num+rim)
-            #ltt.cassaexit=0
-            #ltt.save()
-            #del lslotti[0]
-            #res=self.AddLotto(lotti,-rim,prz,pscss,lslotti,c1)
-        #else:
-            #c1+=prz*pscss*num
-            #ltt.costo-=prz*pscss*num
-            #ltt.cassaexit-=num
-            #ltt.save()
-        #return rim
-
-
-    #def stampaFattura(self,nFattura, cln, righeFattura):
-        #""" produce fattura in excel """
-        #venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
-    
-        #data=time.strftime("%d/%m/%Y")
-        #try:
-            #fa=openpyxl.load_workbook('formFattura.xlsx')
-        #except:
-            #print("file 'formFattura.xlsx' errato o mancante in "+os.getcwd())
-            #return
-    
-        #sheet=fa.get_sheet_by_name('Sheet1')
-    
-        #sheet['I3'].value = nFattura
-        #sheet['I4'].value = data
-    
-        #sheet['B2'].value = venditore['venditore']
-        #sheet['B3'].value = venditore['P-IVA']
-        #sheet['B4'].value = venditore['indirizzo']
-        #sheet['B5'].value = venditore['città']
-        #sheet['B6'].value = venditore['telefono']
-    
-        #sheet['B8'].value = cln.azienda
-        #sheet['B9'].value = cln.pi
-        #sheet['B10'].value = cln.indirizzo
-    
-        #line=16												
-        #cntr=0
-        #total=0
-        #for riga in righeFattura:
-            #sheet["B"+str(line+cntr)].value = riga['cod']
-            #try:
-                #sheet["C"+str(line+cntr)].value = riga['ddt']
-            #except:
-                #a=10
-            #sheet["D"+str(line+cntr)].value=""
-            #for item in riga['lotto']:
-                #sheet["D"+str(line+cntr)].value = sheet["D"+str(line+cntr)].value+" "+str(item)
-
-            #sheet["E"+str(line+cntr)].value = riga['ps']
-            #sheet["F"+str(line+cntr)].value = riga['css']
-            #sheet["G"+str(line+cntr)].value = riga['prz']
-            #sheet["H"+str(line+cntr)].value = riga['iva']
-            #subtotale=float(riga['prz'])*float(riga['ps'])
-            #sheet["I"+str(line+cntr)].value = float(subtotale)
-            #total+=subtotale
-            #cntr+=1
-    
-        #sheet["H"+str(line+cntr)].value = "TOTALE"							
-        #sheet["I"+str(line+cntr)].value = total							
-    
-        #try:
-            #fa.save('nuovaFattura.xlsx')
-        #except:
-            #print("file 'nuovaFattura.xls' errato o mancante in "+os.getcwd())
-            #return
-    
-        #subprocess.call(["/usr/lib/libreoffice/program/soffice.bin", "nuovaFattura.xlsx"])
+  

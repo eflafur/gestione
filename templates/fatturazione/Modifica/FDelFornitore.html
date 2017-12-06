@@ -6,67 +6,51 @@
 
             
 <div class="container  col-md-8 col-md-offset-2">
-    <div class="row">
-        <div class="col-xs-2 col-md-8 "><h4>Visualizza CLiente</h4> </div>      
-    </div>
-    <br/><br/>
    
    <div class="row">
       <div class="col-xs-2 col-md-3">      
         <form class="form-group" action="delcliente" method="post"> 
         <div class="input-group">
-          <span class="input-group-addon">Azienda </span>    
-           <select class="form-control" name="a1" id="aziendadel">
+           <p>Azienda<select class="form-control" name="a1" id="aziendadel"></p>
              {% for entry in items %}
                  <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
              {% endfor %}
           </select>
        </div>
-       <br/><br/>
+       </br>
         
        <div class="input-group">
-         <span class="input-group-addon">PI</span>
-          <input type="text" id="pi" class="form-control" name="a2" readonly>
+          <p>P.I.<input type="text" id="pi" class="form-control" name="a2" readonly></p>
        </div>
-       <br/><br/>
+       </br>
  
        <div class="input-group">
-         <span class="input-group-addon">Regione</span>
-          <input type="text" id="reg" class="form-control" name="a3"  readonly>
+          <p>Regione<input type="text" id="reg" class="form-control" name="a3"  readonly></p>
        </div>
-       <br/><br/>
+       </br>
 
        <div class="input-group">
-         <span class="input-group-addon">Citta</span>
-          <input type="text" id="ct" class="form-control" name="a4"  readonly>
+          <p>Comune<input type="text" id="ct" class="form-control" name="a4"  readonly></p>
        </div>
      </div>
      
     <div class="col-xs-2 col-md-3">   
-      <div class="input-group">
-         <span class="input-group-addon">Indirizzo</span>
-          <input type="text" id="indirizzo" class="form-control" name="a7"  readonly>
-       </div>
-       <br/><br/>
        
         <div class="input-group">
-         <span class="input-group-addon">Email</span>
-          <input type="email" id="email" class="form-control" name="a6"  readonly>
+          <p>E-Mail<input type="email" id="email" class="form-control" name="a6"  readonly></p>
        </div>
-       <br/><br/>
+       </br>
        
       <div class="input-group">
-         <span class="input-group-addon">Tel</span>
-          <input type="text" id="tel" class="form-control" name="a8"  readonly>
+          <p>Telefono<input type="text" id="tel" class="form-control" name="a8"  readonly></p>
        </div>
-      <br/><br/>
+      </br>
        
        <div class="input-group">
-         <span class="input-group-addon">Termini pagamento</span>
-          <input type="number" id="trpag" class="form-control" name="a9"  readonly>
+          <p>Termini di Pagamento<input type="number" id="trpag" class="form-control" name="a9"  readonly></p>
        </div>
-       <br/><br/>
-       <button type="submit" class="btn btn-primary">Insert</button>
+       </br></br>
+       <button type="submit" class="btn btn-primary">Elimina </button>
     </form>
   </div>
  </div>

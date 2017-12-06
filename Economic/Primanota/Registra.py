@@ -80,7 +80,7 @@ class Commercio:
                     avere=self.erario+self.imp)
         l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,dtdoc=self.data,desc="fattura IVA " +self.cl,conto="20.20",
                      dare=self.erario)
-        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.cl,conto="80.80",
+        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.cl,conto="72.72",
                      dare=self.imp)
         l.save()
         l1.save()
@@ -110,7 +110,7 @@ class Banca:
             cln.passivo+=self.imp+self.erario
             l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.cl,conto="1.2",
                             dare=self.erario+self.imp)
-            l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc="fattura acquisto da " +self.cl,conto="3.1",
+            l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc=" Storno cliente vendita a " +self.cl,conto="3.1",
                              avere=self.erario+self.imp)
             l.save()
             l1.save()
@@ -127,7 +127,7 @@ class Banca:
             cln.attivo+=self.imp+self.erario
             l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.cl,conto="1.2",
                             avere=self.erario+self.imp)
-            l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc="fattura acquisto da " +self.cl,conto="53.1",
+            l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc="Storno fornitore acquisto da " +self.cl,conto="53.1",
                              dare=self.erario+self.imp)
             l.save()
             l1.save()

@@ -165,8 +165,11 @@ function WriteCv(mrgg){
             nt=parseFloat(res1[i].fattimp);
         }
         else{
-            nt1=res1[i].costo/res1[i].q*(1-mrg/100)
-            nt=nt1*res1[i].q;
+            nt1=0
+            nt=0
+            res1[i].q=res1[i].qn
+            //nt1=res1[i].costo/res1[i].q*(1-mrg/100)
+            //nt=nt1*res1[i].q;
         }
         iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
         sum=sum+nt;
@@ -216,11 +219,11 @@ function WriteChecked(ret){
     label='<tr>'
     for (i=0;i<ret.length;i++){
         ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(3)").text());
-        r=ret[i].find("td:eq(7)").text(ft);
+        r=(ret[i].find("td:eq(7)")).text(ft);
         iva=ft*(1+parseFloat(ret[i].find("td:eq(9)").text()));
         r1=ret[i].find("td:eq(8)").text(iva);
         label=label+r.html();
-        sumfatt=sumfatt+ft;    
+        sumfatt=sumfatt+ft;
 //        sumvnd=sumvnd+parseFloat(ret[i].find("td:eq(7)").text())
     }
     label=label+'</tr>'

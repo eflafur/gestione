@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import Produttore,IDcod,Carico
+from gestione.models import Produttore,IDcod,Carico,libro,sp,ce
 from django.db.models import Q,F,Sum
 import os,time,openpyxl,subprocess,decimal
 
@@ -90,3 +90,72 @@ class GetReport:
                 sumcassex=sumcassex+item["cassaexit"]
             before=item["idcod__produttore__id"]
         return ls
+
+
+class Estrazionecn:
+    def Saldi(self,line):
+        s1=0
+        s2=0
+        s3=0
+        s4=0
+        sca=""
+        scd=""
+        sba=""
+        sbd=""
+        sea=""
+        sed=""
+        scla=""
+        scld=""
+        sfra=""
+        sfrd=""
+        ls=[]
+        rec=libro.objects.filter(dtreg__gte=line["datacn"]).values("conto","dare","avere","desc","dtreg")
+        if(line["codcn"]=="1"):
+            r1=rec.filter(conto="80.80")
+            s1= r1.aggregate(Sum("avere"))
+            r2=rec.filter(conto="72.72")
+            s2= r2.aggregate(Sum("dare"))
+
+            r3=rec.filter(conto="3.1")
+            scla= r3.aggregate(Sum("avere"))
+            scld= r3.aggregate(Sum("dare"))
+            r4=rec.filter(conto="53.1")
+            sfra= r4.aggregate(Sum("avere"))
+            sfrd= r4.aggregate(Sum("dare"))
+        
+            ls.append(s1["avere__sum"])
+            ls.append(s2["dare__sum"])
+            ls.append(scla["avere__sum"])
+            ls.append(scld["dare__sum"])
+            ls.append(sfra["avere__sum"])
+            ls.append(sfrd["dare__sum"])
+            
+        elif (line["codcn"]=="2"):
+            r1=rec.filter(conto="1.1")
+            sca= r1.aggregate(Sum("avere"))
+            scd= r1.aggregate(Sum("dare"))
+
+            r2=rec.filter(conto="1.2")
+            sba= r2.aggregate(Sum("avere"))
+            sbd= r2.aggregate(Sum("dare"))
+
+            r3=rec.filter(conto="20.20")
+            sea= r3.aggregate(Sum("avere"))
+            sed= r3.aggregate(Sum("dare"))
+        
+            ls.append(sca["avere__sum"])
+            ls.append(scd["dare__sum"])
+            ls.append(sba["avere__sum"])
+            ls.append(sbd["dare__sum"])
+            ls.append(sea["avere__sum"])
+            ls.append(sed["dare__sum"])
+        return ls
+    
+    def Giornale(self,line):
+        if(line["codcn"]=="0"):
+            rec=libro.objects.filter(dtreg__gte=line["datacn"]).values("doc","prot","conto","dare","avere","desc","dtreg")
+        else:                                 
+            rec=libro.objects.filter(Q(dtreg__gte=line["datacn"]),Q(conto=line["codcn"])).values("doc","prot","conto","dare","avere","desc","dtreg")
+        data=list(rec)
+        return data
+            

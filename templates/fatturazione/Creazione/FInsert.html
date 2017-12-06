@@ -9,83 +9,59 @@
        {% for entry in items %}
                 <option value="{{ entry.azienda }}">{{ entry.azienda}}</option>
        {% endfor %}
-    </select>                    
-            
+  </select>                    
             
 <div class="container col-md-8 col-md-offset-2">
-    <div class="row">
-        <div class="col-xs-2 "><h2>Elimina</h2> </div>      
-    </div>
-    <br/><br/>
    
    <div class="row">
       <div class="col-xs-2 col-md-3">      
         <form class="form-group" action="ca" method="post"> 
          <div class="input-group">
-         <span class="input-group-addon">Azienda</span>
-          <input type="text" id="dl" class="form-control" name="a1" list="cityname">
-           <!--<datalist  id="cityname">-->
-            <!--{% for entry in items %}-->
-                <!--<option value="{{ entry.azienda }}">{{ entry.azienda}}</option>-->
-            <!--{% endfor %}-->
-          <!--</datalist>-->
+          <p>Azienda<input type="text" id="dl" class="form-control" name="a1" list="cityname"></p>
        </div>
-       <br/><br/>
+       </br>
         
        <div class="input-group">
-         <span class="input-group-addon">PI</span>
-          <input type="text" id="Contatto" class="form-control" name="a2" placeholder="PI" maxlength="11" min="11">
+          <p>P.I.<input type="text" id="Contatto" class="form-control" name="a2" placeholder="PI" maxlength="11" min="11"></p>
        </div>
-       <br/><br/>
+       </br>
  
        <div class="input-group">
-         <span class="input-group-addon">Regione</span>
-            <select class="form-control" name="a3" id="reg">
+            <p>Regione<select class="form-control" name="a3" id="reg"></p>
                 {% for entry in items1 %}
                     <option value="{{ entry.regione }}">{{ entry.regione}}</option>
                 {% endfor %}
             </select>
        </div>
-       <br/><br/>
+       </br>
 
        <div class="input-group">
-         <span class="input-group-addon">Citta</span>
-        <select class="form-control" name="a4" id="ct" >
+        <p>Comune<select class="form-control" name="a4" id="ct" ></p>
         </select>
-       </div>
-      <br/><br/>
-    
-      <div class="input-group">
-         <span class="input-group-addon">Indirizzo</span>
-          <input type="text" id="indirizzo" class="form-control" name="a7" placeholder="Indirizzo">
        </div>
       </div>
     
     <div class="col-xs-2 col-md-3 ">
        <div class="input-group">
-         <span class="input-group-addon">Data</span>
-          <input type="date" id="acq" class="form-control"  name="a5" >
+          <p>Data<input type="date" id="acq" class="form-control"  name="a5" ></p>
        </div>
-      <br/><br/>
+      </br>
        
         <div class="input-group">
-         <span class="input-group-addon">Email</span>
-          <input type="email" id="Email" class="form-control" name="a6" placeholder="Email">
+          <p>E-Mail<input type="email" id="Email" class="form-control" name="a6" placeholder="Email"></p>
        </div>
-       <br/><br/>
+       </br>
        
       <div class="input-group">
-         <span class="input-group-addon">Tel</span>
-          <input type="text" id="Citta" class="form-control" name="a8" placeholder="Tel">
+         <p>Telefono <input type="text" id="Citta" class="form-control" name="a8" placeholder="Tel"></p>
        </div>
-      <br/><br/>
+      </br>
        
        <div class="input-group">
-         <span class="input-group-addon">Termini pagamento</span>
-          <input type="number" id="trpag" class="form-control" name="a9" placeholder="gg" min="0">
+          <p>Termini di pagamento<input type="number" id="trpag" class="form-control" name="a9" placeholder="gg" min="0"></p>
        </div>
-       <br/><br/>
-       <button type="submit" class="btn btn-primary">Insert</button>
+       </br></br>
+       <button type="submit" class="btn btn-primary">Inserisci</button>
     </form>
   </div>
  </div>
@@ -102,7 +78,6 @@
  </div>
 
 {%endblock%}
-
 {%block script%}
   <script src="{% static 'Fatturazione/Creazione/FInsert.js' %}" ></script>
 {% endblock %}

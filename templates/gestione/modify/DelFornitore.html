@@ -4,10 +4,6 @@
 {%block insert%}
 
 <div class="container  col-md-offset-2">
-   <div class="row">
-        <div class="col-md-8"><h4>Elimina Fornitore</h4> </div>      
-    </div>
-    <br/>
 
  <div class="row">
   <div class="col-md-3">        
@@ -17,8 +13,7 @@
   <form class="form-horizontal" action="fe" method="post">            
        
         <div class="input-group">
-        <span class="input-group-addon">Azienda </span>    
-         <select class="form-control" name="a2" id="aziendadel">
+         <p>Azienda<select class="form-control" name="a2" id="aziendadel"></p>
            {% for entry in items %}
                <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
            {% endfor %}
@@ -27,29 +22,19 @@
        <br/><br/>       
        
        <div class="input-group">
-         <span class="input-group-addon">Articolo</span>
-          <input type="text" id="slc" class="form-control" name="a1" placeholder="Contatto" readonly>
-        </div>
-        <br/><br/>
-
-       
-       <div class="input-group">
-         <span class="input-group-addon">Regione</span>
-          <input type="text" id="ct" class="form-control" name="a4" placeholder="Contatto" readonly>
+          <p>Regione<input type="text" id="ct" class="form-control" name="a4" placeholder="Contatto" readonly></p>
         </div>
         <br/><br/>
         
      
        <div class="input-group">
-         <span class="input-group-addon">Citta</span>
-          <input type="text" id="citta" class="form-control" name="a5" placeholder="Contatto" readonly>
+          <p>Comune<input type="text" id="citta" class="form-control" name="a5" placeholder="Contatto" readonly></p>
        </div>
        <br/><br/>
 
 
        <div class="input-group">
-         <span class="input-group-addon">Contatto</span>
-          <input type="text" id="contatto" class="form-control" name="a3" placeholder="Contatto" readonly>
+          <p>Contatto<input type="text" id="contatto" class="form-control" name="a3" placeholder="Contatto" readonly></p>
        </div>
        <br/><br/>
        
@@ -57,26 +42,14 @@
 
      
        <div class="input-group">
-         <span class="input-group-addon">Data</span>
-          <input type="date" id="acq" class="form-control" name="a6" placeholder="Data" readonly>
+          <p>Data<input type="date" id="acq" class="form-control" name="a6" placeholder="Data" readonly></p>
        </div>
             </div>
-       <!--<br/><br/>-->
     
     <div class="col-md-3 ">
-    <!--<h1></h1> -->      
-
-  
-
-       <div class="input-group">
-         <span class="input-group-addon">Contatto</span>
-          <input type="text" id="cap" class="form-control" name="a7" placeholder="Contatto" readonly>
-       </div>
-       <br/><br/>
        
         <div class="input-group">
-         <span class="input-group-addon">Email</span>
-          <input type="email" id="email" class="form-control" name="a8" placeholder="caca" readonly>
+          <p> E-Mail<input type="email" id="email" class="form-control" name="a8" placeholder="caca" readonly></p>
        </div>
        
        
@@ -84,30 +57,26 @@
       
        
        <div class="input-group">
-         <span class="input-group-addon">Tel</span>
-          <input type="text" id="tel" class="form-control" name="a9" placeholder="Tel" readonly>
+          <p>Tel<input type="text" id="tel" class="form-control" name="a9" placeholder="Tel" readonly>
        </div>
       <br/><br/>
       
        <div class="input-group">
-         <span class="input-group-addon">Termini  pagamento</span>
-          <input type="number" id="trpag" class="form-control" name="a10" placeholder="gg" readonly>
+          <p>Termini di pagamento<input type="number" id="trpag" class="form-control" name="a10" placeholder="gg" readonly></p>
        </div>
        <br/><br/>
        
        <div class="input-group">
-         <span class="input-group-addon">Margine</span>
-          <input type="number" id="margine" class="form-control" name="a11" placeholder="%" readonly>
+          <p>Margine<input type="number" id="margine" class="form-control" name="a11" placeholder="%" readonly>
        </div>
        <br/><br/>
        
        <div class="input-group">
-         <span class="input-group-addon">Fatturato</span>
-          <input type="number" id="fatturato" class="form-control" name="a12" placeholder="Euro" readonly>
+          <p>Fatturato<input type="number" id="fatturato" class="form-control" name="a12" placeholder="Euro" readonly></p>
        </div>
        <br/><br/>
        
-        <button type="submit" class="btn btn-primary">Insert</button>
+        <button type="submit" class="btn btn-primary">Elimina</button>
      </form>
          </div>
         </div>

@@ -8,6 +8,7 @@ var lotto=[];
 var sos=[];    
 var lt="";
 var f;
+var dtl;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     lotto.length=0;
@@ -54,7 +55,7 @@ $(document).ready(function(){
     $("#dsc").click(function(){
         $("#tr").show();
     });
-    $("#tara").click(function(){
+    $(".pr").click(function(){
         $("#ps").show();
     });
 
@@ -69,8 +70,10 @@ $(document).ready(function(){
         else
             SelLottoSos(cod);
     });
+    
      $("#codice").click(function(){
-        $("#btltsos").hide();    
+        $("#btltsos").hide();
+        $("#tara1").val("");
         var cod=$("#codice option:selected").text();
         SelLotto(cod);
         $("#dsc").show();
@@ -125,6 +128,10 @@ $(document).ready(function(){
 
     });
     
+    $("#tara1").on("input",function(e){
+      dtl=$(this).val();  
+    });
+    
     $("#btadd").click(function(){
         a=$("#peso").val();
         b=$("#prezzo").val();
@@ -150,7 +157,8 @@ $(document).ready(function(){
             obj['css'] =$("#cassa").val();
             obj['prz'] =parseFloat($("#prezzo").val()).toFixed(2);
             obj["iva"]=parseFloat($("#codice option:selected").val()).toFixed(2);
-            obj['tara']=parseFloat($("#tara option:selected").val()).toFixed(2);
+//            obj['tara']=parseFloat($("#tara1 option:selected").val()).toFixed(2);
+            obj['tara']=dtl;
             obj['lotto']=lt;
             ar1.push(obj);
             lt="";

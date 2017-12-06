@@ -25,7 +25,6 @@
               <button type="button" class="btn  btn-success" id="btems">Fattura</button>
               <button type="button" class="btn  btn-success" id="ddtft">DDT</button>
               <button type="button" class="btn  btn-success" id="btanl">Annulla</button>        
-              <!--<button type="button" class="btn  btn-success" id="btstp">Stampa</button>        -->
       </div>
     </div>
     </br>
@@ -54,9 +53,6 @@
      </div>
      </br>
    
-
-   
-   
      <div class="row">
        <div class="col-md-6">  
        <div class="input-group" id="dsc">
@@ -67,12 +63,15 @@
         </select>
        </div>
       </div> 
+      </br>
+
      <div class="col-md-5" id="tr">  
-        <p>Tara<select class="form-control" name="a7" id="tara"></p>
-          {% for entry in itemtr %}
-              <option value="{{ entry.q}}">{{ entry.cont}} </option>
-          {% endfor %}
-        </select>
+        <input type="text" list="tara" id="tara1" class="pr"/>
+            <datalist id="tara">
+               {% for entry in itemtr %}
+                   <option value="{{ entry.q}}">{{ entry.cont}} </option>
+               {% endfor %}
+            </datalist>
       </div>
      </div>
      </br> 
