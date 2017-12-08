@@ -33,16 +33,22 @@ $(document).ready(function(){
 function Pagato(pgm){
     var txt="";
    $("#tb6 tr").each(function(index){
-        ft=$(this).find("td:eq(0)").text();
-        if(ft==pgm){
-            txt=$(this).find("input").val();//.find("td:eq(6)").text()
+//        ft=$(this).find("td:eq(0)").text();
+        if(index==pgm){
+            p=$(this).find("input.part").val();
+            f=$(this).find("td:eq(1)").text();
+            ft=$(this).find("td:eq(0)").text();
+            if(p=="")
+            p=0;
+        //if(ft==pgm){
+            //txt=$(this).find("input").val();//.find("td:eq(6)").text()
             return false;
         }
     });
     $.post(
-    "regfattfrn",
-    {pg:ft,nt:txt,azione:"p"},
-    function(){
+        "regfattfrn",
+        {pg:ft,nt:txt,azione:"p",part:p,frn:f},
+        function(){
     });
 }
     
@@ -53,19 +59,14 @@ function GetTable(date){
         {data:date,azione:"t",cliente:""},
         function(ret){
             res=ret;
+            var x=0
             var label="";
             if(res==1)
                 window.location.replace("regfattfrn");
             for (i=0;i<res.length;i++){
-                //var d = new Date(res[i].data)//.split("-").reverse().join("/"));
-                //var dd=d.getDate();
-                //var mm=d.getMonth()+1;
-                //var yy=d.getFullYear();
-                //var g=yy+"-"+mm+"-"+dd;
-                //var f=g+15
                 tot=parseFloat(res[i].erario)+parseFloat(res[i].imp);
                 label=label + '<tr>';
-                label=label + '<td><a href="#">' + res[i].fatt + '</a></td>';
+                label=label + '<td><a href="#" >' + res[i].fatt + '</a></td>';
                 label=label + '<td>' + res[i].frn + '</td>';
                 label=label + '<td>' +res[i].dt+ '</td>';
                 label=label + '<td>' +res[i].dtadd+ '</td>';
@@ -73,10 +74,11 @@ function GetTable(date){
                 label=label + '<td>' +res[i].erario+ '</td>';
                 label=label + '<td>' +tot+ '</td>';
                 label=label + '<td><input type="text" value="'+res[i].note+'"></input></td>';
+                label=label + '<td><input type="integer" class="part"></input></td>';
                 if(res[i].pg==0 && strDate>res[i].dtadd)
-                    label=label + '<td><button class="btn-danger btn-sm" value="'+res[i].fatt +'"></button></td>';
+                    label=label + '<td><button class="btn-danger btn-sm" value="'+ x++ +'"></button></td>';
                 else
-                    label=label + '<td><button class="btn-success btn-sm" value="'+res[i].fatt +'"></button></td>';
+                    label=label + '<td><button class="btn-success btn-sm" value="'+ x++ +'"></button></td>';
                 label=label + '</tr>';
             }
             $("#tbf1").show();

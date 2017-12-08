@@ -130,6 +130,8 @@ class Scarico(models.Model):
 	tara=models.DecimalField(max_digits=2,decimal_places=2,null=True,blank=True,default=0)
 	rs=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	rscassa=models.IntegerField(null=True,blank=True,default=0)
+	saldo=models.DecimalField(max_digits=14,decimal_places=2,null=True,blank=True,default=0)
+
 
 class Sospese(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)

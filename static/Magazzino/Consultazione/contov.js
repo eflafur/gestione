@@ -1,13 +1,10 @@
-//var UserTable=$("#mytable");
-//var TempUserTable=null;
 var res1="";
 var xx=0;
-//var cntrl=0;
 $(document).ready(function(){
 //    $.ajaxSetup({cache:false});
     Evidance();
     $("#azienda").click(function(){
-        $("#btddt").show();
+        $("#btddt").hide();
         $("#btmrg").show();
         $("#btslz").show();
         $("#btcrc").show();
@@ -35,6 +32,7 @@ $(document).ready(function(){
         $("#btmrg").hide();
         $("#btslz").hide();
         ret=GetCheched();
+        $("#btddt").show();
 //        WriteChecked(ret);
     });
 });
@@ -42,6 +40,7 @@ $(document).ready(function(){
     $("#btddt").click(function(){
         ret=ReadChange(1);
         PushDdt(ret);
+//        $("#btddt").hide();
         $("#tbf1").hide();
         $("#cldt2").hide();
         $("#cldt3").hide();

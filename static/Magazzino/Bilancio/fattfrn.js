@@ -41,7 +41,8 @@ $(document).ready(function(){
     $("#tbf1").on('click','a',function(){
         a=$(this).text();
         $("#tbf1").hide();
-        $("#btddt").show();
+        if(choice=="cv")
+            $("#btddt").show();
         $("#btmrg").show();
         $("#btcrc").show();
         $("#cldt6").show();
@@ -56,6 +57,7 @@ $(document).ready(function(){
     $("#btcrc").click(function(){
         ret=ReadChange(0);
         WriteChecked(ret);    
+        $("#btddt").show();
     });
 
     $("#btddt").click(function(){

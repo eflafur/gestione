@@ -37,7 +37,7 @@ class Produt:
         )
         return (1)
     
-    def ScriviFattura(self,line,sps,pgm):
+    def ScriviFattura(self,line,sps,pgm,tot):
         ltstr=""
         i=0
         bl=[]
@@ -115,7 +115,7 @@ class Produt:
             lsdc.append(ls)
     
 #registrazione contabile
-        res=Registra.ComVen(imp,erario,"3.1",pg,line[0]["cln"],fatt)
+        res=Registra.ComVen(tot,imp,erario,"3.1",pg,line[0]["cln"],fatt)
         res.SetErarioCliente()
         res.Vendita()
 #registrazione contabile
@@ -364,7 +364,7 @@ class Produt:
             Q(cliente__azienda=message["cliente"]),Q(pagato=1)).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         else:
             recls=Scarico.objects.filter(Q(data__gte=message["data"]),
-            Q(rscassa__gte=0),Q(pagato=1)).exclude(id=1).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
+            Q(rscassa__gte=0),Q(pagato=1)).exclude(id=1).values("saldo","tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         
         for el in recls:
             iva=el["idcod__genere__iva"]+1
@@ -446,7 +446,7 @@ class Produt:
         return data          
     
     
-    def DdtEmit(self,ls,cln,pgm):
+    def DdtEmit(self,ls,cln,pgm,tot):
         ddtls=[]
         ls1=[]
         lsddt=""
@@ -461,10 +461,10 @@ class Produt:
             for el in data:
                 ddtls.append(el)
         lsddt=" ".join(ls)
-        self.Ddt2Fatt(ddtls,cln,pgm,lsddt)
+        self.Ddt2Fatt(ddtls,cln,pgm,lsddt,tot)
         return ddtls
         
-    def Ddt2Fatt(self,line,cliente,pgm,lsddt):
+    def Ddt2Fatt(self,line,cliente,pgm,lsddt,tot):
         erario=0
         imp=0
         pg=0
@@ -497,7 +497,7 @@ class Produt:
             ls["css"]=item["cassa"]
             ls["ps"]=item["q"]
             lsdc.append(ls)
-        res=Registra.ComVen(imp,erario,"3.1",pg,cliente,fatt)
+        res=Registra.ComVen(tot,imp,erario,"3.1",pg,cliente,fatt)
         res.Vendita()
         res.SetErarioCliente()
    

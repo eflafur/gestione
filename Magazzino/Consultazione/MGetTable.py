@@ -173,14 +173,6 @@ class GetData:
         erario=0
         cst=0
         res=Carico.objects.filter(Q(p__lte=1),Q(idcod__produttore__azienda=frn))
-        #try:
-            #r=res.get(fatt=ft)
-        #except:
-            #return 1
-        #r=res.filter(fatt=ft)
-        #if (r.exists()):
-            #return 1
-        #else:
         for item in cvls:
             rec=res.get(id=item["id"])
             rec.fattimp=Decimal(item["vnd"])
@@ -191,7 +183,7 @@ class GetData:
             rec.save()
             imp+=Decimal(item["vnd"])
             erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
-        res=Registra.ComVen(imp,erario,"53.1",0,frn,ft,data)
+        res=Registra.ComVen(0,imp,erario,"53.1",0,frn,ft,data)
         res.Acquisto()
         res.SetErarioForn()   
         return 0
@@ -202,7 +194,8 @@ class GetData:
         dt=""
         frn=""
         somma=0
-        before=" "
+        beforefatt=" "
+        beforefrn=" "
         i=0
         ll=[]
         recls=Carico.objects.filter(Q(data__gte=message["data"]),Q(p=2),Q(pagato=0)).values("pagato","idcod__produttore__azienda","fattimp"
@@ -210,10 +203,10 @@ class GetData:
         if(len(recls)==0):
             return 1
         for el in recls:
-            if(el["fatt"]!=before):
-                if(before!=" "):
+            if((el["fatt"]!=beforefatt)  or (el["idcod__produttore__azienda"]!=beforefrn)):
+                if(beforefatt!=" "):
                     dic={}
-                    dic["fatt"]=before
+                    dic["fatt"]=beforefatt
                     dic["imp"]=imp
                     dic["erario"]=erario
                     dic["frn"]=frn
@@ -233,9 +226,10 @@ class GetData:
             else:
                 imp+=el["fattimp"]
                 erario+=el["fattimp"]*el["idcod__genere__iva"]
-            before=el["fatt"]
+            beforefatt=el["fatt"]
+            beforefrn=el["idcod__produttore__azienda"]
         dic={}
-        dic["fatt"]=before
+        dic["fatt"]=beforefatt
         dic["imp"]=imp
         dic["erario"]=erario
         dic["frn"]=frn
@@ -249,13 +243,11 @@ class GetData:
     def Pagato(self,line):
         imp=0
         erario=0
-        s=Carico.objects.filter(fatt=line["pg"])
+        s=Carico.objects.filter(Q(fatt=line["pg"]),Q(idcod__produttore__azienda=line["frn"]))
         s.update(pagato=1,note=line["nt"])
         s1=s.values("fattimp","idcod__genere__iva","idcod__produttore__azienda","datafatt")
         for item in s1:
             imp+=item["fattimp"]
             erario+=item["fattimp"]*(item["idcod__genere__iva"])
-        res=Registra.ComVenBnc(imp,erario,"53.1",0,line["pg"],s1[0]["datafatt"],s1[0]["idcod__produttore__azienda"])
+        res=Registra.ComVenBnc(line["part"],imp,erario,"53.1",0,line["pg"],s1[0]["datafatt"],s1[0]["idcod__produttore__azienda"])
         res.putfrn()
-
-

@@ -158,9 +158,10 @@ def Fattura(request):
             res=obj.GetCaricobyIdcod()
         if(message["azione"]=="I"):
             itm=message["item"]
+            tot=message["tot"]
             pgm=message["pgm"]
             lst = jsonpickle.decode(message['res'])
-            res=objf.ScriviFattura(lst,itm,pgm)
+            res=objf.ScriviFattura(lst,itm,pgm,tot)
         elif (message["azione"]=="S"):
             itm=message["item"]
             lst = json.loads(message['res'])
@@ -279,7 +280,8 @@ def DDT(request):
             ddtls=jsonpickle.decode(message["ddt"])
             cln=message["cln"]
             pgm=message["pgm"]
-            res=objf.DdtEmit(ddtls,cln,pgm)
+            tot=message["tot"]
+            res=objf.DdtEmit(ddtls,cln,pgm,tot)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         obj=GetProduct.LKPData()

@@ -1,11 +1,17 @@
 var x=0;
-
+var sum=0;
+var ar=[];
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#tt").hide();
     $("#tbf2").hide();
     $("#pgm").hide();
+    $("#btsel").hide();
 
     $("#clientes").click(function(){
+        ar.length=0;
+        $("#tt").hide();
+        $("#btsel").hide();
         $("#btddt").hide();
         $("#tbf1").hide();
         $("#tbf2").hide();
@@ -13,14 +19,21 @@ $(document).ready(function(){
         GetTable($("#clientes option:selected").val());
     });
    $("#pagam").click(function(){
-        $("#btddt").show();
+        $("#btsel").show();
     });
     
+   $("#btsel").click(function(){
+        $("#btddt").show();
+        $("#tt").show();
+        $("#tot").attr("readonly",false);
+        GetDdt();
+    });
+
    $("#btddt").click(function(){
-        $("#tbf1").hide();
-        GetDdt()
-        $("#btddt").hide();
+        SendDdt()
         $("#pgm").hide();
+        $("#tbddt").hide();
+        $("#tbsel").hide();
     });
 });
 
@@ -35,7 +48,7 @@ function GetTable(cl){
         var label="";
         for (i=0;i<res.length;i++){
            label=label + '<tr>';
-           label=label + '<td><input type="checkbox" value='+res[i].ddt+'></td>';
+           label=label + '<td><input type="checkbox" class="chc" value='+res[i].ddt+'></td>';
            label=label + '<td>' + res[i].ddt + '</td>';
            label=label + '<td>' + res[i].cliente__azienda + '</td>';
            label=label + '<td>' + res[i].valore+ '</td>';
@@ -43,48 +56,71 @@ function GetTable(cl){
            label=label + '</tr>';
            before=res[i].ddt;
        }
-       $("#tb6").html(label);  
-   });
+       $("#tb6").html(label);
+    });
    return
 };
 
+
 function GetDdt(){
-    var ar=[];
+    var t=0;
+    var xx=0;
+    sum=0;
     $("#tbf1 :checked").each(function(index){
-        x=index+1;
+        xx=index+1;
         ar[index]=$(this).val();
     });
-
-    if(x==0){
-        $("input:checkbox:not(:checked)").each(function(index){
-            x=index
-            ar[x]=$(this).val();
-        });
+    if(xx>0){
+        $("#tb6 tr").each(function(){
+             r=$(this).find("td:eq(1)").text();
+             for (i=0;i<ar.length;i++){
+                 if(r==ar[i]){
+                     sum+=parseFloat($(this).find("td:eq(3)").text());
+                     t=1
+                     break;
+                 }
+                 continue;
+             }
+            if(t==0)
+                 $(this).remove();
+             t=0;
+         });
+    } 
+    else {
+        $("#tb6 tr").each(function(){
+            ar.push($(this).find("td:eq(1)").text());
+            sum+=parseFloat($(this).find("td:eq(3)").text());
+         });
     }
-    var t=JSON.stringify(ar);
-    x=0;
+    $("#tot").val(sum);
+    if($("#pagam").val()!=0)
+        $("#tot").attr("readonly",true);
+ };
+
+
+function SendDdt(){
+    if(sum!=parseFloat($("#tot").val()))
+        sum=parseFloat($("#tot").val());
     $.post(
         "ddt",
-        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val(),pgm:$("#pagam option:selected").val()},
+        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val(),pgm:$("#pagam option:selected").val(),tot:sum},
         function(res){
-            var label="";
-            for (i=0;i<res.length;i++){
-                imp=parseFloat(res[i]["q"])*parseFloat(res[i]["prz"])*(parseFloat(res[i]["iva"])+1);
-                label=label + '<tr>';
-                label=label + '<td>'+res[i]["ddt"]+'</td>';
-                label=label + '<td>' + res[i]["cod"] + '</td>';
-                label=label + '<td>' + res[i]["q"] + '</td>';
-                label=label + '<td>' + res[i]["css"] + '</td>';
-                label=label + '<td>' + res[i]["prz"] + '</td>';
-                label=label + '<td>' + res[i]["iva"]+ '</td>';
-                label=label + '<td>' + imp + '</td>';
-                label=label + '<td>' + res[i]["data"] + '</td>';
-                label=label + '<td>' + res[i]["lotto"] + '</td>';
-                label=label + '</tr>';
-            }
-            $("#tb7").html(label);
-            $("#tbf2").show();
+            //var label="";
+            //for (i=0;i<res.length;i++){
+                //imp=parseFloat(res[i]["q"])*parseFloat(res[i]["prz"])*(parseFloat(res[i]["iva"])+1);
+                //label=label + '<tr>';
+                //label=label + '<td>'+res[i]["ddt"]+'</td>';
+                //label=label + '<td>' + res[i]["cod"] + '</td>';
+                //label=label + '<td>' + res[i]["q"] + '</td>';
+                //label=label + '<td>' + res[i]["css"] + '</td>';
+                //label=label + '<td>' + res[i]["prz"] + '</td>';
+                //label=label + '<td>' + res[i]["iva"]+ '</td>';
+                //label=label + '<td>' + imp + '</td>';
+                //label=label + '<td>' + res[i]["data"] + '</td>';
+                //label=label + '<td>' + res[i]["lotto"] + '</td>';
+                //label=label + '</tr>';
+            //}
+            //$("#tb7").html(label);
+            //$("#tbf2").show();
         });
 };
-
-

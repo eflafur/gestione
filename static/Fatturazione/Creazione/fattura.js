@@ -1,5 +1,6 @@
 var ar1= [];
 var sum;
+var sumf;
 var i=0;
 var cliente;
 var pvl=$("#psps").text();
@@ -218,10 +219,10 @@ function Eval(){
 function Fill(){
     var label="";
     var k=0;
-    var sumf=0;
+    sumf=0;
     for (i = 0; i < ar1.length; i++) {
         k=k+1
-        imp=ar1[i].prz*ar1[i].ps*(parseFloat(ar1[i].iva)+1)
+        imp=ar1[i].prz*(ar1[i].ps-ar1[i].css*ar1[i].tara)*(parseFloat(ar1[i].iva)+1)
         sumf=sumf+imp;
         label = label + '<tr>';
         label = label + '<td>' + ar1[i].cod+ '</td>';
@@ -230,7 +231,6 @@ function Fill(){
         label = label + '<td>' + ar1[i].iva+ '</td>';
         label = label + '<td>' + ar1[i].prz+ '</td>';
         label = label + '<td>' + imp+ '</td>';
-//        label = label + '<td>' + ar1[i].lotto+ '</td>';
         if(pvl=="" || tipo=="sc"){
             label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
             label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
@@ -240,19 +240,29 @@ function Fill(){
         label = label + '<td>' + ar1[i].diff+ '</td>';
         label = label + '</tr>';
     }
-    label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sumf.toFixed(2)+ '</td></tr>';
+    pagam=$("#pagam option:selected").val();
+    if(pagam==0)
+        label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>  <input class="tot" type=number value='+sumf.toFixed(2)+'></input></td></tr>';
+    else
+        label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>  <input class="tot" type=number value='+sumf.toFixed(2)+' readonly></input></td></tr>';
     $("#tbfb").html(label);
     $("#tbfb tr:last").find("td:last").css("color","blue");
     return;
 };
 
 function Invia(act){
+//$(".tot").trigger(function(e){
+//});
+    var t=$(".tot").val();
+    if(parseFloat(t)==sumf)
+        t=0;
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:$("#pagam").val()},
+      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:$("#pagam").val(),tot:t},
     function (result){
     });
-    return;    $("#dsc").hide();
+    return;  
+    $("#dsc").hide();
 
 };
 
