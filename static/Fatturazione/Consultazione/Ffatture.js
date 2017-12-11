@@ -3,8 +3,6 @@ var d = new Date();
 var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-
-   
     
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01", 
         onSelect: function (date) {
@@ -27,24 +25,36 @@ $(document).ready(function(){
     
     $("#tb6").on('click','button',function(){
         p=$(this).val();
-        $(this).css('background-color','green');
-        Pagato(p);
+        Pagato(p,$(this));
     });
-    
 });
 
-function Pagato(pgm){
+function Pagato(fts,btc){
     var txt="";
+    var pgm=0;
    $("#tb6 tr").each(function(index){
         ft=$(this).find("td:eq(0)").text();
-        if(ft==pgm){
-            txt=$(this).find("input").val();//.find("td:eq(6)").text()
+        if(ft==fts){
+            txt=$(this).find("input.note").val();//.find("td:eq(6)").text()
+            p=parseFloat($(this).find("input.part").val());
+            rim=parseFloat($(this).find("td:eq(8)").text());
             return false;
         }
     });
+    if(p>=0 && p<rim){
+        pgm=1
+    }
+    else if (p<0 || p>rim){
+        alert("Valore inammissibile")
+        return 1;
+    }
+    else if(isNaN(p) || p==rim){
+        p=rim;
+        btc.css('background-color','green');
+    }
     $.post(
     "lkftr",
-    {pg:ft,nt:txt,azione:"p"},
+    {pg:ft,nt:txt,azione:"p",part:p,ppg:pgm},
     function(){
     });
 }
@@ -65,7 +75,9 @@ function GetTable(date){
                 label=label + '<td>' +res[i].data + '</td>';
                 label=label + '<td>' +res[i].scadenza+ '</td>';
                 label=label + '<td>' +res[i].pagato+ '</td>';
-                label=label + '<td><input type="text" value="'+res[i].note+'"></input></td>';
+                label=label + '<td><input type="text" class="note"  value="'+res[i].note+'"></input></td>';
+                label=label + '<td><input type="integer" class="part"></input></td>';
+                label=label + '<td>' +res[i].rim+ '</td>';
                 if(res[i].pagato==1)// && strDate>res[i].scadenza)
                     label=label + '<td><button class="btn-danger btn-sm" value="'+res[i].fattura +'"></button></td>';
                 else

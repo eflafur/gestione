@@ -6,14 +6,19 @@ from datetime import datetime,timedelta,date
 
 class Commercio:
     def __init__(self,tot,imp,erario,cod,pg,cl,fatt,data=date.today()):
-        if(Decimal(tot)==0):
-            self.tot=imp+erario
+#        if(pg==1 and Decimal(tot)<imp+erario  ):
+            #self.tot=imp+erario
+        #else:
+            #pg=0
+        self.tot=Decimal(tot)
+        if(self.tot>0):
+            self.pg=0
         else:
-            self.tot=Decimal(tot)
+            self.pg=pg
+        self.tot=Decimal(tot)
         self.imp=imp
         self.erario=erario
         self.cod=cod
-        self.pg=pg
         self.cl=cl
         self.fatt=fatt
         self.data=data
@@ -55,7 +60,8 @@ class Commercio:
             cs.save()
     def SetErarioCliente(self,r=0):
         rec=ivacliente.objects.latest("id")
-        res=ivacliente(prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
+        res=ivacliente(prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,
+            erario=self.erario,saldo=self.imp+self.erario-self.tot)
         res.save()
         if(r==0):
             l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="fattura vendita a " +self.cl,conto=self.cod,
@@ -76,7 +82,8 @@ class Commercio:
         l2.save()
     def SetErarioForn(self):
         rec=ivaforn.objects.latest("id")
-        res=ivaforn(prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
+  
+        res=ivaforn(saldo=self.imp+self.erario-self.tot,prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
         res.save()
         prt=libro.objects.latest("id")
         p=prt.id
@@ -97,10 +104,7 @@ class ComVen(Commercio):
     
 class Banca:
     def __init__(self,tot,imp,erario,cod,sgn,doc,data,cl):
-        if(Decimal(tot)==0):
-            self.tot=imp+erario
-        else:
-            self.tot=Decimal(tot)
+        self.tot=Decimal(tot)
         self.imp=imp
         self.erario=erario
         self.cod=cod
@@ -113,13 +117,13 @@ class Banca:
     def put(self):
         bc=sp.objects.get(cod="1.2")
         if(self.sgn==0):
-            bc.attivo+=self.imp+self.erario
+            bc.attivo+=self.tot#self.imp+self.erario
             cln=sp.objects.get(cod="3.1")
-            cln.passivo+=self.imp+self.erario
+            cln.passivo+=self.tot#self.imp+self.erario
             l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.cl,conto="1.2",
-                            dare=self.erario+self.imp)
+                            dare=self.tot)#self.erario+self.imp)
             l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc=" Storno cliente vendita a " +self.cl,conto="3.1",
-                             avere=self.erario+self.imp)
+                             avere=self.tot)#self.erario+self.imp)
             l.save()
             l1.save()
         else:
@@ -128,6 +132,9 @@ class Banca:
         cln.save()
  
     def putfrn(self):
+        ss=ivaforn.objects.get(fatt=self.doc)
+        ss.saldo-=self.tot
+        ss.save()
         bc=sp.objects.get(cod="1.2")
         if(self.sgn==0):
             bc.passivo+=self.tot#self.imp+self.erario

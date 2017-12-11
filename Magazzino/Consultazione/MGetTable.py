@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import Produttore,IDcod,Carico,Sospese
+from gestione.models import Produttore,IDcod,Carico,Sospese,ivaforn
 from django.db.models import Q,F,Sum
 import os,time,openpyxl,subprocess,Registra,datetime,Pdf
 from decimal import Decimal
@@ -214,6 +214,7 @@ class GetData:
                     dic["dtadd"]=dt+datetime.timedelta(days=15)
                     dic["note"]=note
                     dic["pg"]=pg
+                    dic["saldo"]=ss.saldo
                     ll.append(dic)
                 erario=0
                 imp=0
@@ -223,6 +224,7 @@ class GetData:
                 dt=el["data"]
                 note=el["note"]
                 pg=el["pagato"]
+                ss=ivaforn.objects.get(fatt=el["fatt"])
             else:
                 imp+=el["fattimp"]
                 erario+=el["fattimp"]*el["idcod__genere__iva"]
@@ -237,6 +239,7 @@ class GetData:
         dic["dtadd"]=dt+datetime.timedelta(days=15)
         dic["note"]=note
         dic["pg"]=pg
+        dic["saldo"]=ss.saldo
         ll.append(dic)
         return ll            
     
@@ -244,7 +247,7 @@ class GetData:
         imp=0
         erario=0
         s=Carico.objects.filter(Q(fatt=line["pg"]),Q(idcod__produttore__azienda=line["frn"]))
-        s.update(pagato=1,note=line["nt"])
+        s.update(pagato=line["pgm"],note=line["nt"])
         s1=s.values("fattimp","idcod__genere__iva","idcod__produttore__azienda","datafatt")
         for item in s1:
             imp+=item["fattimp"]

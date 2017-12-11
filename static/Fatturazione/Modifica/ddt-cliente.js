@@ -99,11 +99,19 @@ function GetDdt(){
 
 
 function SendDdt(){
-    if(sum!=parseFloat($("#tot").val()))
-        sum=parseFloat($("#tot").val());
+    var t=parseFloat($("#tot").val());
+    var pg=$("#pagam").val();
+    if(pg>0)
+        t=0;
+    else if(t.toFixed(2)>sum.toFixed(2) || t<0){
+        alert ("valore inammissibile")
+        return 1;
+    }
+    else if(t<sum.toFixed(2))
+        pg=1
     $.post(
         "ddt",
-        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val(),pgm:$("#pagam option:selected").val(),tot:sum},
+        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val(),pgm:pg,tot:t},
         function(res){
             //var label="";
             //for (i=0;i<res.length;i++){

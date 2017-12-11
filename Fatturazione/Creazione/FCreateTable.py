@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
+from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto,ivacliente
 from decimal import Decimal
 from django.db.models import Q,F
 import time,os,subprocess,datetime
@@ -352,53 +352,46 @@ class Produt:
             before=item["fatturas"]
         return ss    
     
-    
     def GetFattura(self,message):
+        i=0
         somma=0
         before=" "
         i=0
         ll=[]
+        rim=[]
         ss=[]
         if(message["cliente"]!= ""):
-            recls=Scarico.objects.filter(Q(data__gte=message["data"]),Q(rscassa__gte=0) ,
-            Q(cliente__azienda=message["cliente"]),Q(pagato=1)).values("tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
+            recls=Scarico.objects.filter(Q(data__gte=message["data"]),Q(rscassa__gte=0),
+            Q(cliente__azienda=message["cliente"]),Q(pagato=1)).values("tara","scadenza","pagato",
+            "idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
         else:
-            recls=Scarico.objects.filter(Q(data__gte=message["data"]),
-            Q(rscassa__gte=0),Q(pagato=1)).exclude(id=1).values("saldo","tara","scadenza","pagato","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
-        
-        for el in recls:
-            iva=el["idcod__genere__iva"]+1
-            if(el["fattura"]!=before):
-                if(before!=" "):
-                    ll.append(somma)
-                somma=0
-                somma=somma+el["prezzo"]*(el["q"]-el["cassa"]*el["tara"])*iva
-            else:
-                somma=somma+el["prezzo"]*(el["q"]-el["cassa"]*el["tara"])*iva
-            before=el["fattura"]
-        
-        ll.append(somma)
-        before=" "
-        i=0
-        
-        for item in recls:
-            if (item["fattura"]!=before):
-                item["valore"]=ll[i]
-                ss.append(item)
-                i=i+1
+            rec=Scarico.objects.filter(Q(data__gte=message["data"]),
+            Q(rscassa__gte=0),Q(pagato=1)).exclude(id=1).values("tara","scadenza","pagato",
+            "idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","note")
+
+        for item in rec:
+            if(item["fattura"]==before):
+                    continue
+            res=ivacliente.objects.get(fatt=item["fattura"])
+            item["valore"]=res.tot
+            item["rim"]=res.saldo
+            ss.append(item)
             before=item["fattura"]
-        return ss        
+        return ss
     
     def Pagato(self,line):
         imp=0
         erario=0
+        cl=ivacliente.objects.get(fatt=line["pg"])
+        cl.saldo-=Decimal(line["part"])
+        cl.save()
         s=Scarico.objects.filter(fattura=line["pg"])
-        s.update(pagato=0,note=line["nt"])
+        s.update(pagato=line["ppg"],note=line["nt"])
         s1=s.values("q","prezzo","cassa","idcod__genere__iva","tara","data","cliente__azienda")
         for item in s1:
             imp+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]
             erario+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]*(item["idcod__genere__iva"])
-        res=Registra.ComVenBnc(imp,erario,"3.1",0,line["pg"],s1[0]["data"],s1[0]["cliente__azienda"])
+        res=Registra.ComVenBnc(line["part"],imp,erario,"3.1",0,line["pg"],s1[0]["data"],s1[0]["cliente__azienda"])
         res.put() 
         
     def GetFatturabyNum(self,num):

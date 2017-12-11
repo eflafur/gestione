@@ -223,7 +223,7 @@ function Fill(){
     for (i = 0; i < ar1.length; i++) {
         k=k+1
         imp=ar1[i].prz*(ar1[i].ps-ar1[i].css*ar1[i].tara)*(parseFloat(ar1[i].iva)+1)
-        sumf=sumf+imp;
+        sumf+=imp;
         label = label + '<tr>';
         label = label + '<td>' + ar1[i].cod+ '</td>';
         label = label + '<td>' + ar1[i].ps+ '</td>';
@@ -253,12 +253,16 @@ function Fill(){
 function Invia(act){
 //$(".tot").trigger(function(e){
 //});
-    var t=$(".tot").val();
-    if(parseFloat(t)==sumf)
+    var t=parseFloat($(".tot").val());
+    var pg=$("#pagam").val();
+    if(pg>0)
         t=0;
+    else if(sumf.toFixed(2)>t)
+        pg=1
+        
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:$("#pagam").val(),tot:t},
+      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t},
     function (result){
     });
     return;  

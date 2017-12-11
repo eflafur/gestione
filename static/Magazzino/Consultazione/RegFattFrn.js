@@ -4,7 +4,7 @@ var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     
-    $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01", 
+    $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",
         onSelect: function (date) {
             $("#tb62").html(" ");
             $("#tbf2").hide();
@@ -25,29 +25,38 @@ $(document).ready(function(){
     
     $("#tb6").on('click','button',function(){
         p=$(this).val();
-        $(this).css('background-color','green');
         Pagato(p);
     });
 });
 
 function Pagato(pgm){
     var txt="";
+    var pg=0;
+    var line;
    $("#tb6 tr").each(function(index){
-//        ft=$(this).find("td:eq(0)").text();
+        line=$(this).find("button");
         if(index==pgm){
-            p=$(this).find("input.part").val();
+            p=parseFloat($(this).find("input.part").val());
             f=$(this).find("td:eq(1)").text();
+            tot=parseFloat($(this).find("td:eq(9)").text());
             ft=$(this).find("td:eq(0)").text();
-            if(p=="")
-            p=0;
         //if(ft==pgm){
             //txt=$(this).find("input").val();//.find("td:eq(6)").text()
             return false;
         }
     });
+    if(p>tot || p<0){
+        alert("valore nammissibile") 
+        return 1;
+    }
+    else if(isNaN(p) || p==tot){
+        p=tot;
+        pg=1
+        line.css('background-color','green');
+    }
     $.post(
         "regfattfrn",
-        {pg:ft,nt:txt,azione:"p",part:p,frn:f},
+        {pg:ft,nt:txt,azione:"p",part:p,frn:f,pgm:pg},
         function(){
     });
 }
@@ -75,6 +84,7 @@ function GetTable(date){
                 label=label + '<td>' +tot+ '</td>';
                 label=label + '<td><input type="text" value="'+res[i].note+'"></input></td>';
                 label=label + '<td><input type="integer" class="part"></input></td>';
+                label=label + '<td>'+res[i].saldo+'</td>';
                 if(res[i].pg==0 && strDate>res[i].dtadd)
                     label=label + '<td><button class="btn-danger btn-sm" value="'+ x++ +'"></button></td>';
                 else
