@@ -11,9 +11,12 @@ var lt="";
 var f;
 var dtl;
 var choice="";
+var n=0;
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     lotto.length=0;
+    $("#brand").text("Nuova Fattura");
+
     $("#chc").hide();
     $("#css").hide();
     $("#dsc").hide();
@@ -65,8 +68,10 @@ $(document).ready(function(){
     $("#pagam").click(function(){
         if($("#pagam").val()==0)
             $("#chc").show();
-        else
+        else{
             $("#btadd").show();
+            $("#chc").hide();
+        }
     });
     
     $("#chc").click(function(){
@@ -107,7 +112,9 @@ $(document).ready(function(){
     });
     
     $("#prezzo").keypress(function(){
-            $("#pgm").show();
+        if(n==1)
+            $("#btadd").show();
+        $("#pgm").show();
     });
     
     $("#btsps").click(function(){
@@ -143,6 +150,8 @@ $(document).ready(function(){
     });
     
     $("#btadd").click(function(){
+        n=1;
+        $("#chc").hide();
         a=$("#peso").val();
         b=$("#prezzo").val();
         c=$("#cassa").val();
