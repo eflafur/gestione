@@ -1,15 +1,17 @@
 var res=[];
 var d = new Date();
 var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+var choice="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    
+    $("#chc").hide();
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",
         onSelect: function (date) {
             $("#tb62").html(" ");
             $("#tbf2").hide();
             GetTable(date);
             $("#pf").hide();
+            $("#chc").show();
         }
     });
     
@@ -23,7 +25,15 @@ $(document).ready(function(){
         $("#tbf2").show();
     });
     
+    $("#chc").click(function(){
+        choice=$("#chc :checked").val();
+    });
+    
     $("#tb6").on('click','button',function(){
+        if(choice==""){
+            alert("Inserire Banca/Cassa")
+            return 1;
+        }
         p=$(this).val();
         Pagato(p);
     });
@@ -56,7 +66,7 @@ function Pagato(pgm){
     }
     $.post(
         "regfattfrn",
-        {pg:ft,nt:txt,azione:"p",part:p,frn:f,pgm:pg},
+        {pg:ft,nt:txt,azione:"p",part:p,frn:f,pgm:pg,chc:choice},
         function(){
     });
 }

@@ -5,16 +5,13 @@ import openpyxl,time,os,subprocess,datetime
 from datetime import datetime,timedelta,date
 
 class Commercio:
-    def __init__(self,tot,imp,erario,cod,pg,cl,fatt,data=date.today()):
-#        if(pg==1 and Decimal(tot)<imp+erario  ):
-            #self.tot=imp+erario
-        #else:
-            #pg=0
+    def __init__(self,conto,tot,imp,erario,cod,pg,cl,fatt,data=date.today()):
         self.tot=Decimal(tot)
         if(self.tot>0):
             self.pg=0
         else:
             self.pg=pg
+        self.conto=conto
         self.tot=Decimal(tot)
         self.imp=imp
         self.erario=erario
@@ -27,19 +24,20 @@ class Commercio:
         self.iva=self.s.get(cod="20.20")
         prt=libro.objects.latest("id")
         self.p=prt.id
-    def Vendita(self):
-        self.cln.attivo+=self.imp+self.erario
-        self.iva.passivo+=self.erario
-        rc=ce.objects.get(cod="80.80")
-        rc.ricavi+=self.imp
-        self.iva.save()
-        rc.save()
+    def Vendita(self,chc=0):
+        if(chc==0):
+            self.cln.attivo+=self.imp+self.erario
+            self.iva.passivo+=self.erario
+            rc=ce.objects.get(cod="80.80")
+            rc.ricavi+=self.imp
+            self.iva.save()
+            rc.save()
         if(self.pg==0):
             self.cln.passivo+=self.tot#self.imp+self.erario
-            cs=self.s.get(cod="1.1")
+            cs=self.s.get(cod=self.conto)
             cs.attivo+=self.tot#self.imp+self.erario
             cs.save()
-            l=libro(id=self.p+4,prot=self.p+4,doc=self.fatt,desc="Cassa per vendita a " +self.cl,conto="1.1",
+            l=libro(id=self.p+4,prot=self.p+4,doc=self.fatt,desc="Cassa/Banca per vendita a " +self.cl,conto=self.conto,
                         dare=self.tot)#self.erario+self.imp)
             l1=libro(id=self.p+5,prot=self.p+4,doc=self.fatt,desc="fattura acquisto da " +self.cl,conto=self.cod,
                             avere=self.tot)#self.erario+self.imp)
@@ -103,7 +101,8 @@ class ComVen(Commercio):
 
     
 class Banca:
-    def __init__(self,tot,imp,erario,cod,sgn,doc,data,cl):
+    def __init__(self,conto,tot,imp,erario,cod,sgn,doc,data,cl):
+        self.conto=conto
         self.tot=Decimal(tot)
         self.imp=imp
         self.erario=erario
@@ -135,12 +134,12 @@ class Banca:
         ss=ivaforn.objects.get(fatt=self.doc)
         ss.saldo-=self.tot
         ss.save()
-        bc=sp.objects.get(cod="1.2")
+        bc=sp.objects.get(cod=self.conto)#"1.2")
         if(self.sgn==0):
             bc.passivo+=self.tot#self.imp+self.erario
             cln=sp.objects.get(cod="53.1")
             cln.attivo+=self.tot#self.imp+self.erario
-            l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.cl,conto="1.2",
+            l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.cl,conto=self.conto,
                             avere=self.tot)#self.erario+self.imp)
             l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc="Storno fornitore acquisto da " +self.cl,conto="53.1",
                              dare=self.tot)#self.erario+self.imp)

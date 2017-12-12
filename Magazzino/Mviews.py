@@ -168,11 +168,10 @@ def ContovT(request):
         context={"items":""}
         return render(request,"Magazzino/Consultazione/contovt.html",context)
 
-
 def FattFrn(request):
     if(login==0):
         context={}
-        return render(request,"Validazione/login.html",context)         
+        return render(request,"Validazione/login.html",context)
     if(request.method=="POST"):
         message=request.POST
         if(message["azione"]=="g"):

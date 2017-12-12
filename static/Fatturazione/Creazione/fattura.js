@@ -10,9 +10,11 @@ var sos=[];
 var lt="";
 var f;
 var dtl;
+var choice="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     lotto.length=0;
+    $("#chc").hide();
     $("#css").hide();
     $("#dsc").hide();
     $("#pgm").hide();
@@ -61,6 +63,14 @@ $(document).ready(function(){
     });
 
     $("#pagam").click(function(){
+        if($("#pagam").val()==0)
+            $("#chc").show();
+        else
+            $("#btadd").show();
+    });
+    
+    $("#chc").click(function(){
+        choice=$("#chc :checked").val();
         $("#btadd").show();
     });
 
@@ -98,7 +108,6 @@ $(document).ready(function(){
     
     $("#prezzo").keypress(function(){
             $("#pgm").show();
-            $("#btadd").show();
     });
     
     $("#btsps").click(function(){
@@ -262,7 +271,7 @@ function Invia(act){
         
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t},
+      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t,chc:choice},
     function (result){
     });
     return;  

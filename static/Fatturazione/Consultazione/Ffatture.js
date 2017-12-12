@@ -1,11 +1,14 @@
 var res=[];
 var d = new Date();
 var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+var choice="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#chc").hide();
     
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01", 
         onSelect: function (date) {
+            $("#chc").show();
             $("#tb62").html(" ");
             $("#tbf2").hide();
             GetTable(date);
@@ -24,8 +27,16 @@ $(document).ready(function(){
     });
     
     $("#tb6").on('click','button',function(){
+        if(choice==""){
+            alert("Inserire Banca/Cassa")
+            return 1;
+        }
         p=$(this).val();
         Pagato(p,$(this));
+    });
+    
+    $("#chc").click(function(){
+        choice=$("#chc :checked").val();
     });
 });
 
@@ -54,7 +65,7 @@ function Pagato(fts,btc){
     }
     $.post(
     "lkftr",
-    {pg:ft,nt:txt,azione:"p",part:p,ppg:pgm},
+    {pg:ft,nt:txt,azione:"p",part:p,ppg:pgm,chc:choice},
     function(){
     });
 }

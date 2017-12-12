@@ -1,13 +1,15 @@
 var x=0;
 var sum=0;
 var ar=[];
+var choice="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#tt").hide();
     $("#tbf2").hide();
     $("#pgm").hide();
     $("#btsel").hide();
-
+    $("#chc").hide();
+    
     $("#clientes").click(function(){
         ar.length=0;
         $("#tt").hide();
@@ -22,8 +24,17 @@ $(document).ready(function(){
         $("#btsel").show();
     });
     
-   $("#btsel").click(function(){
+    $("#chc").click(function(){
+        choice=$("#chc :checked").val();
+        $("#btsel").show();
         $("#btddt").show();
+    });
+    
+   $("#btsel").click(function(){
+        if($("#pagam").val()==0)
+            $("#chc").show();
+        else
+            $("#btddt").show();
         $("#tt").show();
         $("#tot").attr("readonly",false);
         GetDdt();
@@ -111,7 +122,7 @@ function SendDdt(){
         pg=1
     $.post(
         "ddt",
-        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val(),pgm:pg,tot:t},
+        {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val(),pgm:pg,tot:t,chc:choice},
         function(res){
             //var label="";
             //for (i=0;i<res.length;i++){

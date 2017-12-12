@@ -160,8 +160,9 @@ def Fattura(request):
             itm=message["item"]
             tot=message["tot"]
             pgm=message["pgm"]
+            chc=message["chc"]
             lst = jsonpickle.decode(message['res'])
-            res=objf.ScriviFattura(lst,itm,pgm,tot)
+            res=objf.ScriviFattura(lst,itm,pgm,tot,chc)
         elif (message["azione"]=="S"):
             itm=message["item"]
             lst = json.loads(message['res'])
@@ -281,7 +282,8 @@ def DDT(request):
             cln=message["cln"]
             pgm=message["pgm"]
             tot=message["tot"]
-            res=objf.DdtEmit(ddtls,cln,pgm,tot)
+            conto=message["chc"]
+            res=objf.DdtEmit(ddtls,cln,pgm,tot,conto)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         obj=GetProduct.LKPData()

@@ -125,10 +125,11 @@ import webbrowser
 #stampa procedurale
 
 class PrintTable:
-    def __init__(self,filename,line,pagesize=(595.27,841.89),bottomup = 1,pageCompression=0,verbosity=0,encrypt=None):
+    def __init__(self,filename,line,tot,pagesize=(595.27,841.89),bottomup = 1,pageCompression=0,verbosity=0,encrypt=None):
         self.filename=filename
         self.line=line
         self.c=canvas.Canvas(self.filename)
+        self.tot=str(tot)
     def PrintArt(self):
         tot=0
         totp=0
@@ -207,8 +208,9 @@ class PrintTable:
         self.c.drawString(30,610,cln.indirizzo+" "+cln.citta)
         self.c.drawString(30,595,"P.I.")
         self.c.drawString(60,595,cln.pi)
+        self.c.drawString(30,570,"Da pagare: "+self.tot)
         if(lsddt is not None):
-            self.c.drawString(10,560,"Rif.  "+lsddt)
+            self.c.drawString(30,550,"Rif.  "+lsddt)
         self.c.showPage()
         self.c.save()
         webbrowser.open_new(self.filename)

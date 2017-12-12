@@ -37,7 +37,7 @@ class Produt:
         )
         return (1)
     
-    def ScriviFattura(self,line,sps,pgm,tot):
+    def ScriviFattura(self,line,sps,pgm,tot,conto):
         ltstr=""
         i=0
         bl=[]
@@ -115,11 +115,11 @@ class Produt:
             lsdc.append(ls)
     
 #registrazione contabile
-        res=Registra.ComVen(tot,imp,erario,"3.1",pg,line[0]["cln"],fatt)
+        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,line[0]["cln"],fatt)
         res.SetErarioCliente()
         res.Vendita()
 #registrazione contabile
-        obj=Pdf.PrintTable("FATTURA",lsdc)
+        obj=Pdf.PrintTable("FATTURA",lsdc,imp+erario-Decimal(tot))
         obj.PrintArt()
         obj.PrintAna(fatt,c)
         return 0
@@ -391,8 +391,9 @@ class Produt:
         for item in s1:
             imp+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]
             erario+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]*(item["idcod__genere__iva"])
-        res=Registra.ComVenBnc(line["part"],imp,erario,"3.1",0,line["pg"],s1[0]["data"],s1[0]["cliente__azienda"])
-        res.put() 
+        res=Registra.ComVen(line["chc"],line["part"],imp,erario,"3.1",0,s1[0]["cliente__azienda"],line["pg"])
+        #res.put() 
+        res.Vendita(1)
         
     def GetFatturabyNum(self,num):
         recls=Scarico.objects.filter(fattura=num).values("id","idcod__cod","idcod__genere__iva","q","cassa","fattura",
@@ -439,7 +440,7 @@ class Produt:
         return data          
     
     
-    def DdtEmit(self,ls,cln,pgm,tot):
+    def DdtEmit(self,ls,cln,pgm,tot,conto):
         ddtls=[]
         ls1=[]
         lsddt=""
@@ -454,10 +455,10 @@ class Produt:
             for el in data:
                 ddtls.append(el)
         lsddt=" ".join(ls)
-        self.Ddt2Fatt(ddtls,cln,pgm,lsddt,tot)
+        self.Ddt2Fatt(ddtls,cln,pgm,lsddt,tot,conto)
         return ddtls
         
-    def Ddt2Fatt(self,line,cliente,pgm,lsddt,tot):
+    def Ddt2Fatt(self,line,cliente,pgm,lsddt,tot,conto):
         erario=0
         imp=0
         pg=0
@@ -490,11 +491,11 @@ class Produt:
             ls["css"]=item["cassa"]
             ls["ps"]=item["q"]
             lsdc.append(ls)
-        res=Registra.ComVen(tot,imp,erario,"3.1",pg,cliente,fatt)
+        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,cliente,fatt)
         res.Vendita()
         res.SetErarioCliente()
    
-        obj=Pdf.PrintTable("FATTURA",lsdc)
+        obj=Pdf.PrintTable("FATTURA",lsdc,imp+erario-Decimal(tot))
         obj.PrintArt()
         obj.PrintAna(fatt,cln,lsddt)       
         return ls        
