@@ -5,7 +5,7 @@ var choice="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#chc").hide();
-    
+    $("#brand").text("Salda Fatture");
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01", 
         onSelect: function (date) {
             $("#chc").show();

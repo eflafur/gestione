@@ -118,10 +118,6 @@ import webbrowser
         #self.pdfbody.append(["txt",520,ycoord,12,"Times-Roman",black,total])
 
 
-
-
-
-
 #stampa procedurale
 
 class PrintTable:

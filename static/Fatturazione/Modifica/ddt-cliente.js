@@ -42,6 +42,7 @@ $(document).ready(function(){
 
    $("#btddt").click(function(){
         SendDdt()
+        $("#chc").hide();
         $("#pgm").hide();
         $("#tbddt").hide();
         $("#tbsel").hide();
@@ -114,7 +115,7 @@ function SendDdt(){
     var pg=$("#pagam").val();
     if(pg>0)
         t=0;
-    else if(t.toFixed(2)>sum.toFixed(2) || t<0){
+    else if(t>sum || t<0){
         alert ("valore inammissibile")
         return 1;
     }

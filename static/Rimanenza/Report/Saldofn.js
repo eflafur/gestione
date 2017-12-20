@@ -34,7 +34,7 @@ function Write(res,cod){
         
         
         $("#slce").val((res[0]-res[1]).toFixed(2));
-        $("#slsp").val((res[2]-res[3]).toFixed(2));
+        $("#slsp").val((res[3]-res[2]).toFixed(2));
         $("#slsp1").val((res[4]-res[5]).toFixed(2));
     }
     else if(cod==2){

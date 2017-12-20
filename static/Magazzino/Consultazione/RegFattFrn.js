@@ -4,6 +4,7 @@ var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
 var choice="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#brand").text("Salda Fattura");
     $("#chc").hide();
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",
         onSelect: function (date) {

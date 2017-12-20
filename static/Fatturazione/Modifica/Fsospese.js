@@ -5,6 +5,7 @@ var TempUserTable=null;
 var option=""
 var optionValues=[];
 $(document).ready(function(){
+    $("#brand").text("Ricerca Sospesa");
     $.ajaxSetup({cache:false});
 
     $("#dt2").datepicker({dateFormat:"yy-mm-dd",defaultDate:"2017-01-01",//autoSize:true,appendText: "(yyyy-mm-dd)",// 

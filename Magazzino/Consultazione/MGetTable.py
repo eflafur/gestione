@@ -128,7 +128,7 @@ class GetData:
             c1.update(fattimp=item["fatt"],mrg=mrgn,p=1,cv=fatt)
             ls.append(ddt)
             lsblt="Bolle: "+" ".join(lsbl)
-        obj=Pdf.PrintTable("CV",ls)
+        obj=Pdf.PrintTable("CV",ls,0)
         obj.PrintCV()
         obj.PrintAna(str(fatt),cliente,lsblt)         
         return
@@ -144,7 +144,7 @@ class GetData:
         dic={}
         if(line["chc"]=="bl"):
             chc=0
-            rec=Carico.objects.filter(p__gte=0)
+            rec=Carico.objects.filter(Q(p__gte=0),Q(idcod__produttore__azienda=line["cln"]))
         else:
             chc=1
             rec=Carico.objects.filter(p__gte=1)
@@ -165,7 +165,7 @@ class GetData:
         if(line["ch"]=="cv"):
             rec=Carico.objects.filter(cv=line["cvd"]).values("qn","idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         else:
-            rec=Carico.objects.filter(bolla=line["cvd"]).values("qn","idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
+            rec=Carico.objects.filter(Q(bolla=line["cvd"]),Q(idcod__produttore__azienda=line["frn"])).values("qn","idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         data=list(rec)
         return data
     def SaveCvFatt(self,cvls,ft,frn,mrgg,data=date.today()):

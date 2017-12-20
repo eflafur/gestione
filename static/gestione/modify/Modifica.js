@@ -2,7 +2,7 @@
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-            $("#brand").text("Elimina Fornitore");
+    $("#brand").text("Modifica");
 
     $("#azienda").click(function(){
       var a=$("#azienda option:selected").text();

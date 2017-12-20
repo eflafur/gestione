@@ -1,12 +1,18 @@
 
 //var UserTable=$("#mytable");
 //var TempUserTable=null;
-
+var choice="";
 var fatt=""
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-
+    $("#brand").text("Nota di Credito");
+    $("#rmb").hide();
+    $("#chc").hide();
+    $("#btctrl").hide();
     $("#cln").click(function(){
+        $("#rmb").hide();
+        $("#chc").hide();
+        $("#btctrl").hide();
         $("#tbf").hide();
         GetTable();
     });
@@ -14,6 +20,7 @@ $(document).ready(function(){
     $("#tablef").on('click','a',function(){
         fatt=$(this).text();
         cl=$('#cln').val();
+        $("#chc").show();
 // funzione di reso tabellare
         GetFatt(fatt,cl);
 //        window.location.replace("reso?nome="+a+"&cln="+cl);
@@ -22,6 +29,13 @@ $(document).ready(function(){
     $("#btrs").on('click',function(){
         LoopTable();
     });
+    
+    $("#chc").click(function(){
+        choice=$("#chc :checked").val();
+        $("#btctrl").show();
+        $("#rmb").show();
+    });
+    
 });
 
 function GetTable(){
@@ -67,8 +81,8 @@ function GetFatt(fatt,cl){
                 label = label + '<td>' + res[i].prezzo+ '</td>';
                 label = label + '<td>' + imp.toFixed(2)+ '</td>';
                 label = label + '<td>' + res[i].lotto+ '</td>';
-                label = label + '<td><input type="text"  size="8"></td>';
-                label = label + '<td><input type="text"  size="8"></td>';
+                label = label + '<td><input type="integer"  size="8"></td>';
+                label = label + '<td><input type="integer"  size="8"></td>';
                 label = label + '<td>' + net+ '</td>';
                 label = label + '<td>' + netcss+ '</td>';
                 label = label + '</tr>';
@@ -84,6 +98,9 @@ function GetFatt(fatt,cl){
 
 function LoopTable(){
     var ls=[];
+    //var t=parseFloat($("#rimb").val())
+    //if(isNaN(t))
+        //t=-1
     $("#tbfb tr").each(function(){
         cod=$(this).find("td:eq(1)").text();
         rs=$(this).find("td:eq(8)").find("input").val();
@@ -103,7 +120,7 @@ function LoopTable(){
     ret=JSON.stringify(ls);
     $.post(
         "recfatt",
-        {rsls:ret,ft:fatt,action:"rs",cln:$("#cln").val()},
+        {rsls:ret,ft:fatt,action:"rs",cln:$("#cln").val(),chc:choice},
         function(res){
           
         });

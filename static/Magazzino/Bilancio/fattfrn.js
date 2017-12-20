@@ -4,6 +4,7 @@ var choice;
 var dt="";
 $(document).ready(function(){
 //    $.ajaxSetup({cache:false});
+    $("#brand").text("Fattura Fornitore");
     $("#cl").hide();
     $("#chc").hide();
     $("#dtt").hide();
@@ -146,7 +147,7 @@ function Write(res) {
 function PushCv(cv){
     $.post(
         "fattfrn",
-        {cvd:cv,azione:"v",ch:choice},
+        {cvd:cv,azione:"v",ch:choice,frn:$("#azienda").val()},
         function(ret){
             res1=ret;
             WriteCv(0);

@@ -4,7 +4,7 @@ from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto
 from decimal import Decimal
 from django.db.models import Q,F
 import time,os,subprocess,datetime
-import Registra,Pdf
+import Registra,Pdf,math,io,sys
 from datetime import datetime,timedelta,date
 
 class Modelddt:
@@ -72,11 +72,18 @@ class Produt:
             qcss=ps/css-tara
             cod=IDcod.objects.get(cod=item["cod"])
             ltcod=lotto.filter(idcod__cod=item["cod"])
+            
             if(item["lotto"]!=""):
                 ltt=item["lotto"]
             else:
-                ltt=ltcod[0].id
-            ltt1=ltcod.get(id=ltt)
+                try:
+                    ltt=ltcod[0].id
+                    ltt1=ltcod.get(id=ltt)
+                except:
+                    f=open("/home/djangolog","w")
+                    f.write("errore su assegnazione Lotto :+"+item + datetime.now())
+                    f.close()
+                    return 1
             bl.append(ltt)
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
@@ -166,6 +173,9 @@ class Produt:
                 try:
                     ltt=ltcod[0].id
                 except:
+                    f=open("/home/jafu/djangolog","w")
+                    f.write("errore su assegnazione Lotto :+"+item["lotto"] + datetime.now())
+                    f.close()
                     return 1
             bl.append(ltt)
             ltt1=ltcod.get(id=ltt)
@@ -202,7 +212,7 @@ class Produt:
             ls["css"]=css
             ls["ps"]=ps
             lsdc.append(ls)
-        obj=Pdf.PrintTable("DDT",lsdc)
+        obj=Pdf.PrintTable("DDT",lsdc,0)
         obj.PrintArt()
         obj.PrintAna(fatt,c)
         return 0
@@ -500,7 +510,7 @@ class Produt:
         obj.PrintAna(fatt,cln,lsddt)       
         return ls        
     
-    def ScriviNotaC(self,line,fatt,cln):
+    def ScriviNotaC(self,line,fatt,cln,conto,tot=0):
         lslotti=[]
         lsdc=[]
         bl=[]
@@ -572,12 +582,14 @@ class Produt:
             ls["ps"]=psrs
             lsdc.append(ls)
 #registrazione contabile
-        res=Registra.ComVen(-imp,-erario,"3.1",0,cln,prg)
+        #if(int(tot)==-1):
+            #tot=-imp-erario
+        res=Registra.ComVen(conto,-imp-erario,-imp,-erario,"3.1",0,cln,prg)
         res.SetErarioCliente(1)
         res.Vendita()
 #registrazione contabile  
 #        self.stampaFattura(fatt,c,rg)
-        obj=Pdf.PrintTable("Nota di Credito",lsdc)
+        obj=Pdf.PrintTable("Nota di Credito",lsdc,0)
         obj.PrintArt()
         obj.PrintAna(prg,c,fatt)       
         

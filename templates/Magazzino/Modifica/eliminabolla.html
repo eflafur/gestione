@@ -4,17 +4,12 @@
 {%block insert%}
 
 <div class="container col-md-offset-2">
- <div class="row">
-  <div class="col-md-8 "><h4>Elimina Bolla</h4> </div>      
- </div>
- <br/>
 
  <div class="row">
   <form class="form-horizontal" action="elimina" method="post">
    <div class="col-md-4">
     <div class="input-group">
-     <span class="input-group-addon">Bolla </span>
-     <select class="form-control" name="a1" id="bolla">
+     <p>Numero Bolla<select class="form-control" name="a1" id="bolla"></p>
        {% for entry in items %}
            <option >{{ entry.bolla}}:{{ entry.idcod__produttore__azienda}}</option>
        {% endfor %}

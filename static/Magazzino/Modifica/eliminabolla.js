@@ -1,5 +1,6 @@
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#brand").text("Elimina Bolla");
     $("#bolla").click(function(){
         var a=$("#bolla option:selected").text();
         $("#cldt2").show();

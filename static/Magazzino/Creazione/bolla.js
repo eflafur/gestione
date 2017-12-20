@@ -4,6 +4,7 @@ var pvl=$("#psps").text();
 var dt1="";   
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#brand").text("Nuova Bolla");
     if(pvl!=""){
         $("#cln").show();
         $("#cliente").attr('disabled',true);
@@ -52,13 +53,12 @@ $(document).ready(function(){
         $("#btadd").show();
     });
     
- 
-    
     $("#btems").click(function(){
         Invia('I');
         if(pvl!="")
             window.location.replace("lktotale");
         ar1.length=0
+        $("#dtft").hide("");
         $("#tbf").hide("");
         $("#cliente").attr('disabled',false);
         $("#bolla").attr('disabled',false);
@@ -86,10 +86,14 @@ $(document).ready(function(){
         $("#ps").hide();
         ("#css").hide();
         $("#btadd").hide();
-        $("#dtft").show();
+        $("#ps").hide();
+        ("#css").hide();
+        $("#btadd").hide();
+
     });
     
     $("#btadd").click(function(){
+        var obj={}
         a=$("#peso").val();
         b=$("#cassa").val();
         if(a==""){
@@ -101,7 +105,18 @@ $(document).ready(function(){
             $("#cassa").focus()
         }
         else {
-            var obj={}
+            for(i=0;i<ar1.length;i++)
+                if ($("#codice option:selected").text()==ar1[i].cod){
+                    alert("codice gia presente")
+                    return 1;
+                }
+    
+           if(parseFloat($("#cassa").val()) % 1 !=0){
+                alert(" Valore Colli non valido")
+                $("#cassa").focus();
+                return false;
+            }
+                
             obj['cod'] =$("#codice option:selected").text();
             obj['ps'] =$("#peso").val();
             obj['css'] =$("#cassa").val();

@@ -2,6 +2,7 @@ var res1="";
 var xx=0;
 $(document).ready(function(){
 //    $.ajaxSetup({cache:false});
+    $("#brand").text("Clienti CV");
     Evidance();
     $("#azienda").click(function(){
         $("#btddt").hide();

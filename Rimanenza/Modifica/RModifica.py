@@ -7,6 +7,7 @@ class MRim:
         data=list(c)
         return data
     def PushLotto(self,message):
+        psm=0
         ltcod=Carico.objects.filter(idcod__id=message["cod"],cassa__gt=F("cassaexit")).order_by("id")
         rim=int(message["css"])
         ltt=int(message["lotto"])
@@ -14,25 +15,31 @@ class MRim:
         lt1=ltcod.get(id=ltt)
         rimp=rim
         rim=rimp-(lt1.cassa-lt1.cassaexit)
+        psm=lt1.qn/lt1.cassa
         if(rim<=0):
+            lt1.q+=psm*rimp
             lt1.cassaexit+=rimp
             lt1.save()
             rim=0
         else:
+            lt1.q+=psm*lt1.cassa
             lt1.cassaexit=lt1.cassa
             lt1.save()
         if(rim>0):
             for item1 in ltcod:
                 if(item1.id==ltt1):
                     continue
+                psm=item1.qn/item1.cassa
                 rimp=rim
                 rim=rimp-(item1.cassa-item1.cassaexit)
                 if (rim<=0 and rimp>0):
+                    item1.q+=psm*rimp
                     item1.cassaexit+=rimp
                     item1.save()
                     rim=0
                     break
                 else:
+                    item1.q+=psm*item1.cassa
                     item1.cassaexit=item1.cassa
                     item1.save()
         rec1=Saldo.objects.get(idcod__id=message["cod"])

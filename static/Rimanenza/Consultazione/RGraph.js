@@ -4,6 +4,7 @@ flag=$("#fl").text();
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+    $("#brand").text("Inventario");
     $("#ggraph").hide();
     if(flag=='m'){
         $("#ggraph").hide();
@@ -110,12 +111,12 @@ function GetLotto(){
      });
 }
 
-function PushLotto(){
+function PushLotto(ltt){
     var ps=parseInt($("#peso").val());
     var mul=node.name.split(":");
     ltot=parseInt(mul[1])
-    if(ps>ltot){
-        alert ("Lotti insufficienti. Valore ammesso: "+mul[i] ) 
+    if(ps>ltot || isNaN(ps)){
+        alert ("Valore non ammesso:Casse comprese tra 1 e "+mul[1] ) 
         $("#peso").val(" ")
         $("#peso").focus()
         return;

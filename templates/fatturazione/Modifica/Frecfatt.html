@@ -6,18 +6,37 @@
 <div class="container col-md-offset-2">
 
     <div class="row">
-        <div class="col-md-2">     
+        <div class="col-md-4">     
             <p>Cliente<select id="cln"></p>
                 {% for entry in items %}
                     <option> {{entry.azienda}}</option>
                 {%endfor%}
             </select>
         </div>
-      <div class="btn-group-sm">
+        
+        <div class="col-md-2 " >  
+          <div class="input-group" id="chc">
+            <div class="radio">
+              <label><input type="radio" name="linguaggio" value="1.1">Cassa</label>
+            </div>
+            <div class="radio">
+              <label><input type="radio" name="linguaggio" value="1.2">Banca</label>
+            </div>
+          </div>
+        </div>
+
+        <!--<div class="col-md-2 col-md-offset-1" id="rmb">-->
+          <!--<label><input type="integer" id="rimb">Rimborso</label>-->
+            <!--</div>-->
+
+        
+    <div class="col-md-3">     
+          <div class="btn-group-sm" id="btctrl">
               <button type="button" class="btn  btn-success" id="btrs">Reso</button>
               <button type="button" class="btn  btn-success" id="btanl">Annulla</button>        
-      </div>
+        </div>
     </div>
+</div>
 
     <div class="row">
         <div class=" col-md-8" id="tbf1" >
@@ -36,7 +55,7 @@
     </div>
         
   <div class="row">
-    <div class=" col-md-10" id="tbf" >
+    <div class=" col-md-12" id="tbf" >
       <table id="mytable"  class="table table-hover">
           <thead id="thd">
               <tr>
@@ -49,7 +68,9 @@
                   <th>Lotto</th>
                   <th>Peso</th>
                   <th>Casse</th>
-                  <th>Residuo</th>
+                  <th>Peso Residuo</th>
+                  <th>Casse Residuo</th>
+                  <!--<th>Rimborso</th>-->
               </tr>
           </thead>
           <tbody id="tbfb"></tbody>

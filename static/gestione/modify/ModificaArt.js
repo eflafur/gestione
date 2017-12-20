@@ -3,6 +3,7 @@ var TempUserTable=null;
 
 $(document).ready(function(){
   $.ajaxSetup({cache:false});
+  $("#brand").text("Nuovo Codice");
   $("#azienda").first().focus();
   $("#catls").text("");
   

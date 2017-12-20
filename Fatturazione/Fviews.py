@@ -217,8 +217,10 @@ def RecFatt(request):
             ret=jsonpickle.decode(message["rsls"])
             fatt=message["ft"]
             cln=message["cln"]
+            conto=message["chc"]
+#            tot=message["tot"]
             obj=FCreateTable.Produt()
-            res=obj.ScriviNotaC(ret,fatt,cln)
+            res=obj.ScriviNotaC(ret,fatt,cln,conto)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         objf=FGetTable.GetData()

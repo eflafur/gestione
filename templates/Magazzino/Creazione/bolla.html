@@ -4,15 +4,12 @@
 {%block insert%}
 
 <div class="container col-md-offset-2">
- <div class="row">
-  <div class="col-md-8 col-md-offset-2"><h4>Nuova Bolla</h4> </div>      
- </div>
  
   <div class="row">
 
-   <div class="col-md-5">
+   <div class="col-md-4">
      <div class="row">
-      <div class="col-md-5"> 
+      <div class="col-md-4"> 
        <div class="input-group" id="bl">
         <p>Bolla<input type="text" id="bolla" class="form-control" name="a2" ></p>
        </div>
@@ -28,7 +25,7 @@
  
   <div class="row">
 
-   <div class="col-md-5">  
+   <div class="col-md-7">  
     <div class="input-group" id="cln">
      <p>Cliente<select class="form-control" name="cln" id="cliente"></p>
        {% for entry in prod %}
@@ -37,20 +34,18 @@
      </select>
     </div>
    </div>
-     <div class="col-md-2">     
+     <div class="col-md-3">     
             <div class="input-group" id="dtft">
-                <p>Data:<input type = "text" id = "dt2"></p>
+                <p>Data:<input type = "text" id = "dt2" style="width: 85px"></p>
             </div>   
         </div>     
   </div>
   </br>
   
   <div class="row">
-    <div class="col-md-9">  
-    <div class="input-group" id="cod">
+    <div class="col-md-11" id="cod">  
      <p>Codice<select class="form-control" name="a1" id="codice"></p>
      </select>
-    </div>
    </div>
   </div>
   
@@ -87,7 +82,7 @@
  </div>
  
      
-   <div class=" col-md-6 " id="tbf" >
+   <div class=" col-md-7" id="tbf" >
       <table id="mytable"  class="table table-hover">
           <thead id="thd">
               <tr>

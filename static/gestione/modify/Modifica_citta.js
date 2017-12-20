@@ -2,7 +2,7 @@
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    
+    $("#brand").text("Cerca/Elimina");
     $("#ct").click(function(){
       var a=$("#ct option:selected").text();
      Put(a);
