@@ -18,14 +18,14 @@ class GetData:
     def GetClienteByNumSospese(self,nome):
         dic={}
         if(nome[:2]=="sc"):
-            rec=Sospese.objects.filter(fatturas=nome).values("tara","cliente__azienda","data","fatturas","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
+            rec=Sospese.objects.filter(fatturas=nome).values("idcod__id","tara","cliente__azienda","data","fatturas","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
             c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
             d2=list(c)
             dic["cr"]=d2
         elif(nome[:2]=="fc"):
-            rec=Scarico.objects.filter(fattura=nome).values("tara","cliente__azienda","data","fattura","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
+            rec=Scarico.objects.filter(fattura=nome).values("idcod__id","tara","cliente__azienda","data","fattura","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
         else:
-            rec=trasporto.objects.filter(ddt=nome).values("tara","cliente__azienda","data","ddt","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
+            rec=trasporto.objects.filter(ddt=nome).values("idcod__id","tara","cliente__azienda","data","ddt","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
         d1=list(rec)
         dic["doc"]=d1
         return dic

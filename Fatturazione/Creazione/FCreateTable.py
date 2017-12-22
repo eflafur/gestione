@@ -70,20 +70,20 @@ class Produt:
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qcss=ps/css-tara
-            cod=IDcod.objects.get(cod=item["cod"])
-            ltcod=lotto.filter(idcod__cod=item["cod"])
+            cod=IDcod.objects.get(id=item["id"])
+            ltcod=lotto.filter(idcod__id=item["id"])
             
             if(item["lotto"]!=""):
                 ltt=item["lotto"]
             else:
                 try:
                     ltt=ltcod[0].id
-                    ltt1=ltcod.get(id=ltt)
                 except:
                     f=open("/home/djangolog","w")
                     f.write("errore su assegnazione Lotto :+"+item + datetime.now())
                     f.close()
                     return 1
+            ltt1=ltcod.get(id=ltt)
             bl.append(ltt)
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
@@ -102,7 +102,7 @@ class Produt:
                 ltt2=ltcod.exclude(id=ltt).order_by("id")
                 data=list(ltt2)
                 rim=self.DelLotto(ltt2,-rim,prz,qcss,0,bl,bls)
-            rec1=Saldo.objects.get(idcod__cod=item["cod"])
+            rec1=Saldo.objects.get(idcod__id=item["id"])
             rec1.q=rec1.q-css+rim
             rec1.save()
             imp+=round(prz*qcss*(css-rim),2)
@@ -111,7 +111,7 @@ class Produt:
             rec=Scarico(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css-rim,fattura=fatt,lotto=ltstr,scadenza=gg,pagato=pg,tara=tara,iva=iva-1)
             rec.save()
             ls={}
-            ls["cod"]=item["cod"]
+            ls["cod"]=cod.cod
             ls["imp"]=round(prz*qcss*(css-rim),2)
             ls["iva"]=iva-1
             ls["tara"]=tara*css
@@ -161,8 +161,8 @@ class Produt:
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qcss=ps/css-tara
-            cod=IDcod.objects.get(cod=item["cod"])
-            ltcod=lotto.filter(idcod__cod=item["cod"])
+            cod=IDcod.objects.get(cod=item["id"])
+            ltcod=lotto.filter(idcod__cod=item["id"])
             if(sps[:2]=="dd"):    
                 fatt=sps                
                 rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=item["lotto"],tara=tara)
@@ -196,7 +196,7 @@ class Produt:
                 ltt2=ltcod.exclude(id=ltt)
                 data=list(ltt2)
                 rim=self.DelLotto(ltt2,-rim,prz,qcss,0,bl,bls)
-            rec1=Saldo.objects.get(idcod__cod=item["cod"])
+            rec1=Saldo.objects.get(idcod__cod=item["id"])
             rec1.q=rec1.q-css+rim
             rec1.save()
             ltstr=' '.join(str(x) for x in bls)
