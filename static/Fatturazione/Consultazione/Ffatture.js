@@ -49,11 +49,13 @@ function Pagato(fts,btc){
             txt=$(this).find("input.note").val();//.find("td:eq(6)").text()
             p=parseFloat($(this).find("input.part").val());
             rim=parseFloat($(this).find("td:eq(8)").text());
+            th=$(this).find("td:eq(8)");
             return false;
         }
     });
     if(p>=0 && p<rim){
         pgm=1
+        th.text(rim-p);
     }
     else if (p<0 || p>rim){
         alert("Valore inammissibile")

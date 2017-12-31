@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import Produttore,Settore,Genere,Area,Sito
+from gestione.models import Produttore,Settore,Genere,Area,Sito,saldoprod
 from django.db.models import Q
 
 #nuova release salvata
@@ -23,6 +23,9 @@ class Produt:
             tel=self.row["a9"],
             pi=self.row["a13"],
         )
+        pr=Produttore.objects.get(azienda=azn)
+        spr=saldoprod(prod=pr)
+        spr.save()
         return (1)
 
 

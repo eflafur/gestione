@@ -44,15 +44,15 @@ function Pagato(pgm){
     var txt="";
     var pg=0;
     var line;
+    var th;
    $("#tb6 tr").each(function(index){
         line=$(this).find("button");
         if(index==pgm){
+            th=$(this).find("td:eq(9)");
             p=parseFloat($(this).find("input.part").val());
             f=$(this).find("td:eq(1)").text();
             tot=parseFloat($(this).find("td:eq(9)").text());
             ft=$(this).find("td:eq(0)").text();
-        //if(ft==pgm){
-            //txt=$(this).find("input").val();//.find("td:eq(6)").text()
             return false;
         }
     });
@@ -65,6 +65,7 @@ function Pagato(pgm){
         pg=1
         line.css('background-color','green');
     }
+    th.text(tot-p);
     $.post(
         "regfattfrn",
         {pg:ft,nt:txt,azione:"p",part:p,frn:f,pgm:pg,chc:choice},

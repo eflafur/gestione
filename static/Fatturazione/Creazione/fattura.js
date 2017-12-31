@@ -14,22 +14,13 @@ var choice="";
 var n=0;
 var codls=[]
 var lt0;
+var trl=[];
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     lotto.length=0;
     $("#brand").text("Nuova Fattura");
     Eval();
-    //$("#btadd").hide();
-    //$("#btemit").hide();
-    //$("#chc").hide();
-    //$("#css").hide();
-    //$("#dsc").hide();
-    //$("#pgm").hide();
-    //$("#cod").hide();
-    //$("#lt").hide();
-    //$("#btltsos").hide();    
-    //$("#tr").hide();
     if(tipo=="dd" ){
         $("#cliente").attr('disabled',true);
         $("#codice").attr('disabled',true);
@@ -60,6 +51,7 @@ $(document).ready(function(){
 //        GetSospesaSos();
     } 
     $("#cliente").click(function(){
+        Eval();
         GetLotto();
         $("#pagam").attr('disabled',false);
         $("#cod").show();
@@ -74,7 +66,7 @@ $(document).ready(function(){
 
     $("#pagam").click(function(){
         if (tipo=="sc"){
-            if($("#pagam").val()==0)
+            if($(this).val()==0)
                 $("#chc").show();
             n=1;
             GetSospesaSos();
@@ -82,13 +74,21 @@ $(document).ready(function(){
             $("#codice").attr("disabled",false);
             return false;
         }
-        if($("#pagam").val()==0)
+        if($(this).val()==0){
+            $("#btadd").hide();
             $("#chc").show();
-        else
+            $(".tot").attr("readonly",false);
+        }
+        else{
             $("#chc").hide();
+            $(".tot").attr("readonly",true);
+            $("#btadd").show();
+        }
+        if($(this).val()==0 && ar1.length==0 && n==1)
+            $("#btadd").hide();
         if(n==1)
             return false;
-        $("#btadd").show();
+//        $("#btadd").show();
 //        $("#chc").hide();
     });
     
@@ -96,16 +96,15 @@ $(document).ready(function(){
         choice=$("#chc :checked").val();
         if (tipo=="sc")
             return;
-        if(ar1.length==0)
-            $("#btadd").show();
+        $("#btadd").show();
     });
 
      $("#btltsos").click(function(){
-        var cod=$("#codice option:selected").text();
+//        var cod=$("#codice option:selected").text();
         if(f==0)
-            SelLotto(cod);
+            SelLotto(codls[1]);
         else
-            SelLottoSos(cod);
+            SelLottoSos(codls[1]);
     });
     
      $("#codice").click(function(){
@@ -120,10 +119,18 @@ $(document).ready(function(){
                 return false;
             }
         Eval();
-        SelLotto(cod);
-        $("#dsc").show();
-        $("#desc").focus();
-        $("#lt").show();
+        ret=SelLotto(codls[1]);
+        if(ret!=0){
+            $("#dsc").show();
+            $("#desc").focus();
+            $("#lt").show();
+        }
+    else{
+        alert("lOTTI NON DISPONIBILI");
+        //Eval();
+        Fill();
+        $("#btemit").show();
+    }
     });
     
     $("#peso").keypress(function(){
@@ -175,7 +182,6 @@ $(document).ready(function(){
     $("#btadd").click(function(){
         var obj={}
         n=1;
-        $("#btemit").show();
         a=$("#peso").val();
         b=$("#prezzo").val();
         c=$("#cassa").val();
@@ -192,9 +198,14 @@ $(document).ready(function(){
             $("#cassa").focus()
         }
         else {
-            if(isNaN(dtl) || dtl=="")
-              dtl=0;
-
+            if((isNaN(dtl) || dtl=="") && (trl[3]=="na" || isNaN(trl[3]))){
+                alert("Specificare la tara");
+                $("#tara1").focus();
+                return false;
+            }
+            if(trl[3]!="na" && (isNaN(dtl) || dtl=="" ))
+                dtl=trl[3]
+        
             if(parseFloat($("#cassa").val()) % 1 !=0){
                 alert(" Valore Colli non valido")
                 $("#btemit").hide();
@@ -226,10 +237,14 @@ $(document).ready(function(){
                 $("#codice").attr('disabled',false);
             $("#btadd").hide();
         }
+        dtl="";
+        trl.length=0;
+        $("#btemit").show();
         return;
     });
 
     $("#lotto").on('click',function(){
+        trl=($("#lotto option:selected").text()).split(":");
         lt=$("#lotto option:selected").val();
         if(isNaN(lt))
             lt="";
@@ -273,6 +288,7 @@ function Eval(){
 function Fill(){
     var label="";
     var k=0;
+    var imp=0;
     sumf=0;
     for (i = 0; i < ar1.length; i++) {
         k=k+1
@@ -285,7 +301,7 @@ function Fill(){
         label = label + '<td>' + ar1[i].css+ '</td>';
         label = label + '<td>' + ar1[i].iva+ '</td>';
         label = label + '<td>' + ar1[i].prz+ '</td>';
-        label = label + '<td>' + imp+ '</td>';
+        label = label + '<td>' + imp.toFixed(2)+ '</td>';
         if(pvl=="" || tipo=="sc"){
             label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
             label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
@@ -309,11 +325,11 @@ function Fill(){
 function Invia(act){
 //$(".tot").trigger(function(e){
 //});
-    var t=parseFloat($(".tot").val()).toFixed(2);
+    var t=parseFloat($(".tot").val());
     var pg=$("#pagam").val();
     if(pg>0)
         t=0;
-    else if(sumf.toFixed(2)>t)
+    else if(sumf.toFixed(2)>t.toFixed(2))
         pg=1
         
     $.post(
@@ -322,6 +338,8 @@ function Invia(act){
     function (result){
     });
     ar1.length=0
+    lotto.length=0;
+    $("#cod").hide();
     n=0;
     Eval();
     return;  
@@ -391,6 +409,7 @@ function GetSospesaSos(){
                 for (k=0;k<lotto.length;k++)
                     if(res[i].idcod__id==lotto[k].idcod__id){
                         t+=lotto[k].cassa-lotto[k].cassaexit;
+                        lt=lotto[k].id
                         ctr=1;
                     }
                 if(ctr==1){
@@ -434,9 +453,11 @@ function GetLotto(){
 function SelLotto(cod){
     var option=" ";
     var cassat=0,cassat1=0;
+    var islotto=0;
+    lt="";
     sum=0;
     for (k=0;k<sos.length;k++)
-        if(sos[k].idcod__cod==cod){
+        if(sos[k].idcod__id==cod){
             cassat=sos[k].css_sum;
             cassat1=cassat;
             $("#btltsos").show();
@@ -444,7 +465,8 @@ function SelLotto(cod){
             break;
         }
     for (var i=0;i<lotto.length;i++){
-        if(lotto[i].idcod__cod==cod){
+        if(lotto[i].idcod__id==cod){
+            islotto=1;
             cassa=lotto[i].cassa-lotto[i].cassaexit;
             if(cassat>0){
                 if(cassat>=cassa){
@@ -457,12 +479,16 @@ function SelLotto(cod){
                 }
             }
             sum=sum+lotto[i].cassa-lotto[i].cassaexit
-            option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +cassa + '</option>';
+            if(lt=="")
+                lt=lotto[i].id
+            if(parseFloat(lotto[i].tara)==-1)
+                lotto[i].tara="na"
+            option += '<option value='+ lotto[i].id+ '> Lotto:'+ lotto[i].bolla+ " -Casse:" +cassa +" - Tara:"+lotto[i].tara + '</option>';
         }
     }
-        lt0=lotto[0].id
-        sum=sum-cassat1
+    sum=sum-cassat1
     $('#lotto').html(option);
+    return islotto;
     };
 
 function SelLottoSos(cod){
@@ -470,7 +496,7 @@ function SelLottoSos(cod){
     sum=0;
     f=0;
     for (var i=0;i<lotto.length;i++)
-        if(lotto[i].idcod__cod==cod){
+        if(lotto[i].idcod__id==cod){
             cassa=lotto[i].cassa-lotto[i].cassaexit;
             sum=sum+lotto[i].cassa-lotto[i].cassaexit
             option += '<option value='+ lotto[i].id+ '>' + lotto[i].bolla+ " : " +cassa+ '</option>';

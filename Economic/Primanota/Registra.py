@@ -1,4 +1,4 @@
-from gestione.models import Cliente,sp,ce,ivacliente,ivaforn,libro
+from gestione.models import Cliente,sp,ce,ivacliente,ivaforn,libro,saldocliente,saldoprod,Produttore
 from decimal import Decimal
 from django.db.models import Q,F
 import openpyxl,time,os,subprocess,datetime
@@ -24,8 +24,15 @@ class Commercio:
         self.iva=self.s.get(cod="20.20")
         prt=libro.objects.latest("id")
         self.p=prt.id
+        
+
     def Vendita(self,chc=0):
+        cl=Cliente.objects.get(azienda=self.cl)
+        sl=saldocliente.objects.get(cliente=cl)
         if(chc==0):
+            sl.attivo+=self.imp+self.erario
+            sl.save()
+            
             self.cln.attivo+=self.imp+self.erario
             self.iva.passivo+=self.erario
             rc=ce.objects.get(cod="80.80")
@@ -33,6 +40,9 @@ class Commercio:
             self.iva.save()
             rc.save()
         if(self.pg==0):
+            sl.passivo+=self.tot
+            sl.save()            
+            
             self.cln.passivo+=self.tot#self.imp+self.erario
             cs=self.s.get(cod=self.conto)
             cs.attivo+=self.tot#self.imp+self.erario
@@ -45,6 +55,11 @@ class Commercio:
             l1.save()
         self.cln.save()
     def Acquisto(self):
+        prd=Produttore.objects.get(azienda=self.cl)
+        sprd=saldoprod.objects.get(prod=prd)
+        sprd.passivo+=self.imp+self.erario
+        sprd.save()
+
         self.cln.passivo+=self.imp+self.erario
         self.iva.attivo+=self.erario
         rc=ce.objects.get(cod="72.72")
@@ -53,6 +68,10 @@ class Commercio:
         self.iva.save()
         rc.save()
         if(self.pg==1):
+            sprd.attivo+=self.tot
+            sprd.save()
+            
+            sprd.save()
             cs=self.s.get(cod="1.1")
             cs.passivo+=self.imp+self.erario
             cs.save()
@@ -131,6 +150,11 @@ class Banca:
         cln.save()
  
     def putfrn(self):
+        prd=Produttore.objects.get(azienda=self.cl)
+        sprd=saldoprod.objects.get(prod=prd)
+        sprd.attivo+=self.tot
+        sprd.save()
+
         ss=ivaforn.objects.get(fatt=self.doc)
         ss.saldo-=self.tot
         ss.save()

@@ -115,11 +115,11 @@ function SendDdt(){
     var pg=$("#pagam").val();
     if(pg>0)
         t=0;
-    else if(t>sum || t<0){
+    else if(t.toFixed(2)>sum.toFixed(2) || t<0){
         alert ("valore inammissibile")
         return 1;
     }
-    else if(t<sum.toFixed(2))
+    else if(t.toFixed(2)<sum.toFixed(2))
         pg=1
     $.post(
         "ddt",

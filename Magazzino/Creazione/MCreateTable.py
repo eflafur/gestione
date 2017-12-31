@@ -26,6 +26,8 @@ class CreateData:
         cod=IDcod.objects.all()
   
         for item in line:
+            if(item["tara"]==""):
+                item["tara"]=-1
             diff=int(item["css"])
             csx=0
             try:
@@ -40,7 +42,7 @@ class CreateData:
             s1.q=qs+diff
             s1.save()
             codid=cod.get(id=item["id"])
-            rec=Carico(qn=item["ps"],cassa=item["css"],bolla=bl,idcod=codid,data=dt,cassaexit=csx)
+            rec=Carico(tara=item["tara"],qn=item["ps"],cassa=item["css"],bolla=bl,idcod=codid,data=dt,cassaexit=csx)
             rec.save()
         return 2        
     

@@ -91,6 +91,7 @@ class Carico(models.Model):
 	pagato=models.BooleanField(default=0)
 	note=models.TextField(max_length=30,default="")
 	qn=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	tara=models.DecimalField(max_digits=3,decimal_places=2,null=True,blank=True,default=0)
 	def __str__(self):
 		return "%s" % (self.bolla)	
 	
@@ -206,4 +207,15 @@ class libro(models.Model):
 	conto=models.CharField(max_length=10,null=True)
 	dare=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
 	avere=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	
+	
+class saldocliente(models.Model):
+	cliente=models.OneToOneField(Cliente,on_delete=models.CASCADE)
+	attivo=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	passivo=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	
+class saldoprod(models.Model):
+	prod=models.OneToOneField(Produttore,on_delete=models.CASCADE)
+	attivo=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True,default=0)
+	passivo=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True,default=0)
 	

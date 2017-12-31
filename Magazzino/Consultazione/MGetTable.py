@@ -49,8 +49,8 @@ class GetData:
         return data    
     def GetCaricobyIdcod(self):
         dic={}
-        s=Sospese.objects.values("idcod__cod").annotate(css_sum=Sum("cassa")).exclude(id=188)
-        c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
+        s=Sospese.objects.values("idcod__id").annotate(css_sum=Sum("cassa")).exclude(id=1)
+        c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("tara","idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
         d1=list(s)
         dic["sp"]=d1
         d2=list(c)
@@ -241,7 +241,7 @@ class GetData:
         dic["pg"]=pg
         dic["saldo"]=ss.saldo
         ll.append(dic)
-        return ll            
+        return ll
     
     def Pagato(self,line):
         imp=0

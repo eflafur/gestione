@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto,ivacliente
+from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto,ivacliente,saldocliente
 from decimal import Decimal
 from django.db.models import Q,F
 import time,os,subprocess,datetime
@@ -29,12 +29,14 @@ class Produt:
             citta=self.row["a4"],
             regione=self.row["a3"],
             pi=self.row["a2"],
-#            indirizzo=self.row["a7"],
             acquisizione=self.row["a5"],
             email=self.row["a6"],
             trpag=self.row["a9"],
             tel=self.row["a8"],
         )
+        c=Cliente.objects.get(azienda=azn)
+        sc=saldocliente(cliente=c)
+        sc.save()
         return (1)
     
     def ScriviFattura(self,line,sps,pgm,tot,conto):
@@ -62,28 +64,28 @@ class Produt:
         fatt=f[0]+"-"+str(r)
         c=Cliente.objects.get(azienda=line[0]["cln"])
         for item in line:
+            ltt=item["lotto"]
+            ltcod=lotto.filter(idcod__id=item["id"])
+            try:
+                ltt1=ltcod.get(id=ltt)
+            except:
+                f=open("/home/jafu/djangolog","w")
+                f.write("errore su assegnazione Lotto :+"+item + datetime.now())
+                f.close()
+                return 1
             bls.clear()
             bl.clear()
+            if(item["tara"]==""):
+                tara=ltt1.tara
+            else:
+                tara=Decimal(item["tara"])
             iva=Decimal(item["iva"])+1
             prz=Decimal(item["prz"])
-            tara=Decimal(item["tara"])
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qcss=ps/css-tara
             cod=IDcod.objects.get(id=item["id"])
-            ltcod=lotto.filter(idcod__id=item["id"])
-            
-            if(item["lotto"]!=""):
-                ltt=item["lotto"]
-            else:
-                try:
-                    ltt=ltcod[0].id
-                except:
-                    f=open("/home/djangolog","w")
-                    f.write("errore su assegnazione Lotto :+"+item + datetime.now())
-                    f.close()
-                    return 1
-            ltt1=ltcod.get(id=ltt)
+    
             bl.append(ltt)
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
@@ -153,32 +155,46 @@ class Produt:
         fatt=f[0]+"-"+str(r)
         c=Cliente.objects.get(azienda=line[0]["cln"])
         for item in line:
+            ltt=item["lotto"]
+            cod=IDcod.objects.get(id=item["id"])
+            ltcod=lotto.filter(idcod__id=item["id"])
+            if(sps[:2]=="dd"):    
+                fatt=sps                
+                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=ltt,tara=tara)
+                bl.append(ltt)
+            try:
+                ltt1=ltcod.get(id=ltt)
+            except:
+                f=open("/home/jafu/djangolog","w")
+                f.write("errore su assegnazione Lotto :+"+item + datetime.now())
+                f.close()
+                return 1
             bl.clear()
             bls.clear()
+            if(item["tara"]==""):
+                tara=ltt1.tara
+            else:
+                tara=Decimal(item["tara"])
             iva=Decimal(item["iva"])+1
             prz=Decimal(item["prz"])
-            tara=Decimal(item["tara"])
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qcss=ps/css-tara
-            cod=IDcod.objects.get(cod=item["id"])
-            ltcod=lotto.filter(idcod__cod=item["id"])
+            ltt=item["lotto"]
+            cod=IDcod.objects.get(id=item["id"])
+            ltcod=lotto.filter(idcod__id=item["id"])
             if(sps[:2]=="dd"):    
                 fatt=sps                
-                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=item["lotto"],tara=tara)
-                bl.append(item["lotto"])
-            if(item["lotto"]!=""):
-                ltt=item["lotto"]
-            else:
-                try:
-                    ltt=ltcod[0].id
-                except:
-                    f=open("/home/jafu/djangolog","w")
-                    f.write("errore su assegnazione Lotto :+"+item["lotto"] + datetime.now())
-                    f.close()
-                    return 1
+                rec=trasporto(idcod=cod,cliente=c,prezzo=prz,q=ps,cassa=css,ddt=fatt,lotto=ltt,tara=tara)
+                bl.append(ltt)
+            try:
+                ltt1=ltcod.get(id=ltt)
+            except:
+                f=open("/home/djangolog","w")
+                f.write("errore su assegnazione Lotto :+"+item + datetime.now())
+                f.close()
+                return 1
             bl.append(ltt)
-            ltt1=ltcod.get(id=ltt)
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
                 bls.append(str(ltt)+"-"+str(css))
@@ -196,7 +212,7 @@ class Produt:
                 ltt2=ltcod.exclude(id=ltt)
                 data=list(ltt2)
                 rim=self.DelLotto(ltt2,-rim,prz,qcss,0,bl,bls)
-            rec1=Saldo.objects.get(idcod__cod=item["id"])
+            rec1=Saldo.objects.get(idcod__id=item["id"])
             rec1.q=rec1.q-css+rim
             rec1.save()
             ltstr=' '.join(str(x) for x in bls)

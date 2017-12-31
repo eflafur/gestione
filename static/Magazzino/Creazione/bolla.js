@@ -50,6 +50,7 @@ $(document).ready(function(){
     });
     
     $("#cassa").keypress(function(){
+        $("#prz").show();
         $("#btadd").show();
     });
     
@@ -58,19 +59,7 @@ $(document).ready(function(){
         if(pvl!="")
             window.location.replace("lktotale");
         ar1.length=0
-        $("#dtft").hide("");
-        $("#tbf").hide("");
-        $("#cliente").attr('disabled',false);
-        $("#bolla").attr('disabled',false);
-        $("#bolla").focus();
-        $("#bolla").val(" ");
-        $("#cod").hide("");
-        $("#cln").hide("");
-        $("#ps").hide();
-        ("#css").hide();
-        $("#btadd").hide();
-        $("#dtft").hide();
-        $("#dtft").hide();
+        Eval();
         if(pvl)
             window.location.replace("lktotale");
     });
@@ -79,17 +68,7 @@ $(document).ready(function(){
         ar1.length=0
         if(pvl)
             window.location.replace("base");
-        $("#tbf").hide("");
-        $("#cliente").attr('disabled',false);
-        $("#cliente").focus();
-        $("#cod").hide("");
-        $("#ps").hide();
-        ("#css").hide();
-        $("#btadd").hide();
-        $("#ps").hide();
-        ("#css").hide();
-        $("#btadd").hide();
-
+        Eval();
     });
     
     $("#btadd").click(function(){
@@ -116,7 +95,10 @@ $(document).ready(function(){
                 $("#cassa").focus();
                 return false;
             }
-                
+            //if(isNaN($("#prezzo").val()) || $("#prezzo").val()=="")
+                //obj['tara']="";
+            //else
+            obj['tara']=$("#prezzo").val();
             obj['cod'] =$("#codice option:selected").text();
             obj['ps'] =$("#peso").val();
             obj['css'] =$("#cassa").val();
@@ -132,6 +114,8 @@ $(document).ready(function(){
             $("#cod").focus();
             $("#cliente").attr('disabled',true);
             $("#bolla").attr('disabled',true);
+            $("#prezzo").val("");
+            $("#prz").hide();
         }
         return;
     });
@@ -147,6 +131,26 @@ $(document).ready(function(){
     
     return;
 });
+
+function Eval(){
+        $("#prz").hide("");
+        $("#dtft").hide("");
+        $("#tbf").hide("");
+        $("#cliente").attr('disabled',false);
+        $("#bolla").attr('disabled',false);
+        $("#bolla").focus();
+        $("#bolla").val(" ");
+        $("#cod").hide("");
+        $("#cln").hide("");
+        $("#ps").hide();
+        $("#btadd").hide();
+        $("#dtft").hide();
+        $("#prezzo").val("");
+        $("#prz").hide();
+        $("#cassa").val("");
+        $("#css").hide();
+        $("#btadd").hide();
+}
 
 function GetCod(){
     var cl=$("#cliente option:selected").val();
@@ -203,6 +207,7 @@ function Fill(){
         label = label + '<td>' + ar1[i].cod+ '</td>';
         label = label + '<td>' + ar1[i].ps+ '</td>';
         label = label + '<td>' + ar1[i].css+ '</td>';
+        label = label + '<td>' + ar1[i].tara+ '</td>';
         label = label + '<td> <a href="#" ><p>'+k+'-A'+'</p></a></td>';
         label = label + '<td> <a href="#" ><p>'+k+'-E'+'</p></a></td>';
         label = label + '</tr>';
