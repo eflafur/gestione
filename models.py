@@ -34,6 +34,9 @@ class Specifica(models.Model):
 	def __str__(self):
 		return "%s" % (self.nome)	
 
+class Tipo(models.Model):
+	nome=models.CharField(max_length=15)
+	
 class Produttore(models.Model):
 	settore=models.ManyToManyField(Settore)
 	regione=models.CharField(max_length=20,null=True)
@@ -52,11 +55,12 @@ class Produttore(models.Model):
 		return "%s %s %s %s" % (self.azienda,self.regione,self.contatto,self.citta)
 
 class IDcod(models.Model):
-	cod=models.CharField(max_length=40,null=True)
+	cod=models.CharField(max_length=60,null=True)
 	genere=models.ForeignKey(Genere,on_delete=models.CASCADE,null=True)
 	settore=models.ForeignKey(Settore,on_delete=models.CASCADE,null=True)
 	specifica=models.ForeignKey(Specifica,on_delete=models.CASCADE,null=True)
 	produttore=models.ForeignKey(Produttore,on_delete=models.CASCADE,null=True)
+	tipo=models.ForeignKey(Tipo,on_delete=models.CASCADE,null=True)
 	def __str__(self):
 		return "%s" % (self.cod)	
 

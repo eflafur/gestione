@@ -1,6 +1,6 @@
 import django
 django.setup()
-from gestione.models import Produttore,Settore,Genere,Area,Sito,Preferenza,Specifica,IDcod,Saldo
+from gestione.models import Produttore,Settore,Genere,Area,Sito,Preferenza,Specifica,IDcod,Saldo,Tipo
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -123,42 +123,112 @@ class ModProd:
         p.settore.remove(s)
         return
     
+    #def ChangeSpec(self,message,cat):
+        #msgt=message["a5"]
+        #try:
+            #tp=Tipo.objects.get(nome=msgt)
+        #except ObjectDoesNotExist:
+            #tp=None
+        #if((tp is None) & (msgt!="")):
+            #tp=Tipo(nome=msgt)
+            #tp.save()
+            #tp=Tipo.objects.get(nome=msgt)
+            
+            
+            
+        #try:
+            #sp=Specifica.objects.get(nome=cat)
+        #except ObjectDoesNotExist:
+            #sp=None
+        #sttr=Settore.objects.filter()
+        #st=sttr.filter(Q(articolo=message["a3"]),  Q(specifica__nome=message["a4"]))
+        #if((not sp) & (cat!="")):
+            #sp=Specifica(nome=cat)
+            #sp.save()
+            #st=sttr.get(articolo=message["a3"])
+            #sp.settore.add(st)
+        #elif ((sp is not None) & (cat!="") & (not st)):
+                #st=sttr.get(articolo=message["a3"])
+                #sp.settore.add(st)
+        #codifica=message["a1"] + "-" + message["a2"] + "-"  + message["a3"] + "-"  + cat 
+        #if (tp is not None):
+            #codifica+="-" + msgt
+        #try:
+            #c=IDcod.objects.get(cod=codifica)
+        #except ObjectDoesNotExist:
+            #c=None
+        #if (c):
+            #return 2
+        #p=Produttore.objects.get(azienda=message["a1"])
+        #g=Genere.objects.get(nome=message["a2"])
+        #st=sttr.get(articolo=message["a3"])
+        #if(cat==""):
+            #c=IDcod(cod=codifica,genere=g,settore=st,produttore=p)
+        #elif ((cat!="") &  (tp is None)):
+            #sp=Specifica.objects.get(nome=cat)
+            #c=IDcod(cod=codifica,genere=g,settore=st,specifica=sp,produttore=p)
+        #else:
+            #sp=Specifica.objects.get(nome=cat)
+            #c=IDcod(cod=codifica,genere=g,settore=st,specifica=sp,produttore=p,tipo=tp)
+        #c.save()
+        #c=IDcod.objects.get(cod=codifica)
+        #s=Saldo(idcod=c)
+        #s.save()
+        #return 1
+
+        
+    
     def ChangeSpec(self,message,cat):
-        try:
-            sp=Specifica.objects.get(nome=cat)
-        except ObjectDoesNotExist:
-            sp=None
-        sttr=Settore.objects.filter()
-        st=sttr.filter(Q(articolo=message["a3"]),  Q(specifica__nome=message["a4"]))
-        if((not sp) & (cat!="")):
-            sp=Specifica(nome=cat)
-            sp.save()
-            st=sttr.get(articolo=message["a3"])
-            sp.settore.add(st)
-        elif ((sp is not None) & (cat!="") & (not st)):
-                st=sttr.get(articolo=message["a3"])
+        msgt=message["a5"]
+        codifica=message["a1"] + "-" + message["a2"] + "-"  + message["a3"] 
+
+        if(cat!=""):
+            try:
+                sp=Specifica.objects.get(nome=cat)
+                try:
+                    st=Settore.objects.get(Q(articolo=message["a3"]),  Q(specifica__nome=cat))
+                except:
+                    st=Settore.objects.get(articolo=message["a3"])
+                    sp.settore.add(st)
+            except ObjectDoesNotExist:
+                sp=Specifica(nome=cat)
+                sp.save()
+                st=Settore.objects.get(articolo=message["a3"])
                 sp.settore.add(st)
-        codifica=message["a1"] + "-" + message["a2"] + "-"  + message["a3"] + "-"  + cat 
+            codifica+="-"  + cat 
+
+
+        if(msgt!=""):
+            try:
+                tp=Tipo.objects.get(nome=msgt)
+            except ObjectDoesNotExist:
+                tp=Tipo(nome=msgt)
+                tp.save()
+            tp=Tipo.objects.get(nome=msgt)
+            codifica+="-" + msgt
+        
         try:
             c=IDcod.objects.get(cod=codifica)
         except ObjectDoesNotExist:
             c=None
         if (c):
             return 2
+        
         p=Produttore.objects.get(azienda=message["a1"])
         g=Genere.objects.get(nome=message["a2"])
-        st=sttr.get(articolo=message["a3"])
+        st=Settore.objects.get(articolo=message["a3"])
         if(cat==""):
             c=IDcod(cod=codifica,genere=g,settore=st,produttore=p)
-        else:
+        elif (msgt==""):
             sp=Specifica.objects.get(nome=cat)
             c=IDcod(cod=codifica,genere=g,settore=st,specifica=sp,produttore=p)
+        else:
+            sp=Specifica.objects.get(nome=cat)
+            c=IDcod(cod=codifica,genere=g,settore=st,specifica=sp,produttore=p,tipo=tp)
         c.save()
         c=IDcod.objects.get(cod=codifica)
         s=Saldo(idcod=c)
         s.save()
         return 1
 
-        
-    
         

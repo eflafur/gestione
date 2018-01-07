@@ -104,8 +104,30 @@ def RFrn(request):
         context={"items":" "}
         return render(request,"Rimanenza/Report/Giornale.html",context)  
 
+def RScln(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
+    if(request.method=="POST"):
+        message=request.POST
+        res=ReportBilancio.Estrazionecn.SaldoClienti()
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        context={"items":" "}
+        return render(request,"Rimanenza/Report/SaldoCliente.html",context)          
 
 
+def FattMese(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
+    if(request.method=="POST"):
+        message=request.POST
+        res=ReportBilancio.Estrazionecn.Fatturato()
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        context={"items":" "}
+        return render(request,"Rimanenza/Report/FattMese.html",context)          
 
 
 

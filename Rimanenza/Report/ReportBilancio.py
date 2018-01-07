@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import Produttore,IDcod,Carico,libro,sp,ce
+from gestione.models import Produttore,IDcod,Carico,libro,sp,ce,saldocliente,ivacliente,ivaforn
 from django.db.models import Q,F,Sum
 import os,time,openpyxl,subprocess,decimal
 
@@ -158,4 +158,17 @@ class Estrazionecn:
             rec=libro.objects.filter(Q(dtreg__gte=line["datacn"]),Q(conto=line["codcn"])).values("doc","prot","conto","dare","avere","desc","dtreg")
         data=list(rec)
         return data
+    
+    @staticmethod
+    def SaldoClienti():
+        res=saldocliente.objects.values("attivo","passivo","cliente__azienda")
+        data=list(res)
+        return data
+    
+    @staticmethod
+    def Fatturato():
+        res=ivacliente.objects.values("dtreg","nome","tot","imp","erario","saldo").order_by("dtreg")
+        data=list(res)
+        return data    
+        
             

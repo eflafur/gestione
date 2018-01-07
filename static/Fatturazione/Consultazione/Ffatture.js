@@ -64,6 +64,7 @@ function Pagato(fts,btc){
     else if(isNaN(p) || p==rim){
         p=rim;
         btc.css('background-color','green');
+        th.text(0);
     }
     $.post(
     "lkftr",

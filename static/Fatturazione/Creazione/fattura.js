@@ -126,10 +126,12 @@ $(document).ready(function(){
             $("#lt").show();
         }
     else{
-        alert("lOTTI NON DISPONIBILI");
+        alert("LOTTI NON DISPONIBILI");
         //Eval();
-        Fill();
-        $("#btemit").show();
+        if(n>0){
+            Fill();
+            $("#btemit").show();
+        }
     }
     });
     

@@ -6,7 +6,7 @@ $(document).ready(function(){
   $("#brand").text("Nuovo Codice");
   $("#azienda").first().focus();
   $("#catls").text("");
-  
+  $("#cadtipo").hide();
   $("#azienda").click(function(){
 //     $("#azienda").first().focus();
     var a=$("#azienda option:selected").text();
@@ -30,9 +30,14 @@ $(document).ready(function(){
     var a=$("#art1 option:selected").text();
     GetSpec(a);
     $("#caddcat").show();
+  });
+
+ $("#cat").click(function(){
+    $("#cadtipo").show();
     $("#btn1").show();
   });
-  });
+
+});
   
   function GetGenere(name){
   $.post(
