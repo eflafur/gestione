@@ -171,6 +171,11 @@ def Fattura(request):
             itm=message["item"]
             lst = jsonpickle.decode(message['res'])
             res=objf.ScriviDDT(lst,itm)
+        elif (message["azione"]=="R"):
+            itm=message["item"]
+            lst = jsonpickle.decode(message['res'])
+            res=objf.ResoDDT(lst,message["item"])
+           # res=objf.ScriviDDT(lst,itm)
         elif (message["azione"]=="reazione"):
             itm=message["item"]
             objf=FGetTable.GetData()

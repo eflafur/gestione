@@ -608,8 +608,87 @@ class Produt:
         obj=Pdf.PrintTable("Nota di Credito",lsdc,0)
         obj.PrintArt()
         obj.PrintAna(prg,c,fatt)       
-        
-
         return 0        
     
   
+    def ResoDDT(self,line,fatt):
+        s=""
+        impfatt=0
+        imp=0;
+        erario=0;
+        lslotti=[]
+        lslotti1=[]
+        lsdc=[]
+        bl=[]
+        nodi=trasporto.objects.filter(ddt=fatt)
+        crc=Carico.objects.filter(pagato=0)
+        c=Cliente.objects.get(azienda=line[0]["cln"])
+
+        for item in line:
+            rm=0
+            lotln=""
+            d=0
+            ar=[]
+            bl.clear()
+            nodo=nodi.get(idcod_id=item["id"])
+            psrs=nodo.q-Decimal(item["ps"])
+            css=nodo.cassa-int(item["css"])
+            rec1=Saldo.objects.get(idcod__id=nodo.idcod_id)
+            rec1.q+=css
+            rec1.save()
+            lslotti=(nodo.lotto).split(" ")
+            lslotti1=lslotti[:]
+            if(css!=0):
+                pscss=psrs/css-nodo.tara
+                for i in lslotti:
+                    ar=i.split("-")
+                    try:
+                        lt=crc.get(id=ar[0])
+                    except:
+                        continue
+                    d=int(ar[1])-css
+                    if(d>=0):
+                        lt.costo-=nodo.prezzo*css*pscss
+                        lt.cassaexit-=css
+                        lt.q-=css*pscss
+                        lt.save()
+                        bl.append(ar[0])
+                        lotln+=ar[0]+"-"+str(css)
+                        lslotti1.remove(i)
+                        lslotti1.append(ar[0]+"-"+str(d))
+                        break
+                    else:
+                        lt.costo-=nodo.prezzo*int(ar[1])*pscss
+                        lt.cassaexit-=int(ar[1])
+                        lt.q-=int(ar[1])*pscss
+                        lt.save()
+                        bl.append(ar[0])
+                        css=-d
+                        lslotti1.remove(i)
+                    rm+=1
+                    s=' '.join(str(e) for e in bl)
+                nodo.q=Decimal(item["ps"])
+                nodo.cassa=int(item["css"])
+                s=" ".join(lslotti1)
+                nodo.lotto=" ".join(lslotti1)
+                nodo.save()
+                        
+            impfatt=nodo.prezzo*Decimal(item["ps"])*int(item["css"])
+            imp+=nodo.prezzo*Decimal(item["ps"])*int(item["css"])
+            erario+=Decimal(item["iva"])*nodo.prezzo*Decimal(item["ps"])*int(item["css"])
+            ls={}
+            ls["cod"]=item["cod"]
+            ls["imp"]=round(impfatt,2)
+            ls["iva"]=Decimal(item["iva"])
+            ls["tara"]=nodo.tara
+            ls["lotto"]=bl.copy() 
+            ls["prz"]=-nodo.prezzo
+            ls["css"]=int(item["css"])
+            ls["ps"]=Decimal(item["ps"])
+            lsdc.append(ls)
+    #        self.stampaFattura(fatt,c,rg)
+        
+        obj=Pdf.PrintTable("DDT",lsdc,0)
+        obj.PrintArt()
+        obj.PrintAna(fatt,c)        
+        return 0
