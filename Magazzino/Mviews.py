@@ -184,10 +184,11 @@ def FattFrn(request):
             ret=jsonpickle.decode(message["data"])
             fatt=message["fatt"]
             frn=message["frn"]
+            idfrn=message["idfrn"]
             mrg=message["mrg"]
             dt=message["date"]
             obj=MGetTable.GetData()
-            res=obj.SaveCvFatt(ret,fatt,frn,mrg,dt)
+            res=obj.SaveCvFatt(ret,fatt,frn,mrg,dt,idfrn)
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         obj=Modifica.ModProd()

@@ -18,7 +18,8 @@ $(document).ready(function(){
     
     $("#tb6").on('click','a',function(){
         a=$(this).text();
-        GetFatt(a)
+        frn=$(this).val();
+        GetFatt(a,frn)
         $("#pcln").val(res[0].cliente__azienda);
         $("#pfatt").val(a);
         $("#pf").show();
@@ -53,6 +54,7 @@ function Pagato(pgm){
             f=$(this).find("td:eq(1)").text();
             tot=parseFloat($(this).find("td:eq(9)").text());
             ft=$(this).find("td:eq(0)").text();
+            id=$(this).find("td:eq(11)").text();
             return false;
         }
     });
@@ -68,7 +70,7 @@ function Pagato(pgm){
     th.text(tot-p);
     $.post(
         "regfattfrn",
-        {pg:ft,nt:txt,azione:"p",part:p,frn:f,pgm:pg,chc:choice},
+        {pg:ft,nt:txt,azione:"p",part:p,frn:f,idfrn:id,pgm:pg,chc:choice},
         function(){
     });
 }
@@ -87,7 +89,7 @@ function GetTable(date){
             for (i=0;i<res.length;i++){
                 tot=parseFloat(res[i].erario)+parseFloat(res[i].imp);
                 label=label + '<tr>';
-                label=label + '<td><a href="#" >' + res[i].fatt + '</a></td>';
+                label=label + '<td><a href="#" value="tipo">' + res[i].fatt + '</a></td>';
                 label=label + '<td>' + res[i].frn + '</td>';
                 label=label + '<td>' +res[i].dt+ '</td>';
                 label=label + '<td>' +res[i].dtadd+ '</td>';
@@ -101,6 +103,7 @@ function GetTable(date){
                     label=label + '<td><button class="btn-danger btn-sm" value="'+ x++ +'"></button></td>';
                 else
                     label=label + '<td><button class="btn-success btn-sm" value="'+ x++ +'"></button></td>';
+                label=label + '<td style=display:none>'+res[i].idfrn+'</td>';
                 label=label + '</tr>';
             }
             $("#tbf1").show();
@@ -110,7 +113,7 @@ function GetTable(date){
 };
 
 
-function GetFatt(num){
+function GetFatt(num,f){
     $.post(
         "regfattfrn",
         {fatt:num,azione:"ftr"},

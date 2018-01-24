@@ -144,15 +144,15 @@ class GetData:
         dic={}
         if(line["chc"]=="bl"):
             chc=0
-            rec=Carico.objects.filter(Q(p__gte=0),Q(idcod__produttore__azienda=line["cln"]))
+            rec=Carico.objects.filter(Q(p__gte=0),Q(idcod__produttore__id=line["cln"]))
         else:
             chc=1
             rec=Carico.objects.filter(p__gte=1)
-        r1=rec.filter(Q(idcod__produttore__azienda=line["cln"]),Q(fatt=line["fatt"]))
+        r1=rec.filter(Q(idcod__produttore__id=line["cln"]),Q(fatt=line["fatt"]))
         if(r1):
             return 1
-        r2=rec.filter(Q(idcod__produttore__azienda=line["cln"]),Q(p=chc)).values("bolla","cv","mrg","data").order_by("cv").distinct()
-        frn=Produttore.objects.get(azienda=line["cln"])
+        r2=rec.filter(Q(idcod__produttore__id=line["cln"]),Q(p=chc)).values("bolla","cv","mrg","data").order_by("cv").distinct()
+        frn=Produttore.objects.get(id=line["cln"])
         dic["ct"]=frn.citta
         dic["pi"]=frn.pi
         dic["mrg"]=frn.margine
@@ -165,14 +165,14 @@ class GetData:
         if(line["ch"]=="cv"):
             rec=Carico.objects.filter(cv=line["cvd"]).values("qn","idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         else:
-            rec=Carico.objects.filter(Q(bolla=line["cvd"]),Q(idcod__produttore__azienda=line["frn"])).values("qn","idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
+            rec=Carico.objects.filter(Q(bolla=line["cvd"]),Q(idcod__produttore__id=line["frn"])).values("qn","idcod__genere__iva","id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
         data=list(rec)
         return data
-    def SaveCvFatt(self,cvls,ft,frn,mrgg,data=date.today()):
+    def SaveCvFatt(self,cvls,ft,frn,mrgg,data=date.today(),idfrn=0):
         imp=0
         erario=0
         cst=0
-        res=Carico.objects.filter(Q(p__lte=1),Q(idcod__produttore__azienda=frn))
+        res=Carico.objects.filter(Q(p__lte=1),Q(idcod__produttore__id=idfrn))# azienda->id
         for item in cvls:
             rec=res.get(id=item["id"])
             rec.fattimp=Decimal(item["vnd"])
@@ -183,7 +183,7 @@ class GetData:
             rec.save()
             imp+=Decimal(item["vnd"])
             erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
-        res=Registra.ComVen(0,0,imp,erario,"53.1",0,frn,ft,data)
+        res=Registra.ComVen(0,0,imp,erario,"53.1",0,frn,ft,data,idfrn)
         res.Acquisto()
         res.SetErarioForn()   
         return 0
@@ -199,17 +199,18 @@ class GetData:
         i=0
         ll=[]
         recls=Carico.objects.filter(Q(data__gte=message["data"]),Q(p=2),Q(pagato=0)).values("pagato","idcod__produttore__azienda","fattimp"
-                                ,"fatt","data","idcod__genere__iva","note").order_by("fatt")
+                                ,"fatt","data","idcod__genere__iva","note","idcod__produttore__id").order_by("fatt")
         if(len(recls)==0):
             return 1
         for el in recls:
-            if((el["fatt"]!=beforefatt)  or (el["idcod__produttore__azienda"]!=beforefrn)):
+            if((el["fatt"]!=beforefatt)  or (el["idcod__produttore__id"]!=beforefrn)):
                 if(beforefatt!=" "):
                     dic={}
                     dic["fatt"]=beforefatt
                     dic["imp"]=imp
                     dic["erario"]=erario
                     dic["frn"]=frn
+                    dic["idfrn"]=idfrn
                     dic["dt"]=dt
                     dic["dtadd"]=dt+datetime.timedelta(days=15)
                     dic["note"]=note
@@ -221,20 +222,22 @@ class GetData:
                 imp+=el["fattimp"]
                 erario+=el["fattimp"]*el["idcod__genere__iva"]
                 frn=el["idcod__produttore__azienda"]
+                idfrn=el["idcod__produttore__id"]
                 dt=el["data"]
                 note=el["note"]
                 pg=el["pagato"]
-                ss=ivaforn.objects.get(fatt=el["fatt"])
+                ss=ivaforn.objects.get(Q(fatt=el["fatt"]),Q(nome=el["idcod__produttore__id"]))
             else:
                 imp+=el["fattimp"]
                 erario+=el["fattimp"]*el["idcod__genere__iva"]
             beforefatt=el["fatt"]
-            beforefrn=el["idcod__produttore__azienda"]
+            beforefrn=el["idcod__produttore__id"]
         dic={}
         dic["fatt"]=beforefatt
         dic["imp"]=imp
         dic["erario"]=erario
         dic["frn"]=frn
+        dic["idfrn"]=idfrn
         dic["dt"]=dt
         dic["dtadd"]=dt+datetime.timedelta(days=15)
         dic["note"]=note
@@ -246,11 +249,11 @@ class GetData:
     def Pagato(self,line):
         imp=0
         erario=0
-        s=Carico.objects.filter(Q(fatt=line["pg"]),Q(idcod__produttore__azienda=line["frn"]))
+        s=Carico.objects.filter(Q(fatt=line["pg"]),Q(idcod__produttore__id=line["idfrn"]))
         s.update(pagato=line["pgm"],note=line["nt"])
         s1=s.values("fattimp","idcod__genere__iva","idcod__produttore__azienda","datafatt")
         for item in s1:
             imp+=item["fattimp"]
             erario+=item["fattimp"]*(item["idcod__genere__iva"])
-        res=Registra.ComVenBnc(line["chc"],line["part"],imp,erario,"53.1",0,line["pg"],s1[0]["datafatt"],s1[0]["idcod__produttore__azienda"])
+        res=Registra.ComVenBnc(line["chc"],line["part"],imp,erario,"53.1",0,line["pg"],s1[0]["datafatt"],s1[0]["idcod__produttore__azienda"],line["idfrn"])
         res.putfrn()

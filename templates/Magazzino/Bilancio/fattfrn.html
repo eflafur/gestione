@@ -41,7 +41,7 @@
       <div class="col-md-2" id="cl">  
             <p>Fornitore<select class="form-control" id="azienda"></p> 
                 {% for entry in prod %}
-                    <option value="{{entry.azienda}}">{{entry.azienda}}</option>
+                    <option value="{{entry.id}}">{{entry.azienda}}</option>
                 {%endfor%}
             </select> 
       </div>

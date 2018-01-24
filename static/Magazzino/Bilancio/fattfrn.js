@@ -87,7 +87,7 @@ function Evidance(){
 function GetCv(){
     $.post(
         "fattfrn",
-        {chc:choice,cln:$("#azienda option:selected").text(),fatt:$("#numfatt").val(),azione:"g"},
+        {chc:choice,cln:$("#azienda option:selected").val(),fatt:$("#numfatt").val(),azione:"g"},
         function(res){
             if(res==1){
                 alert("Fattura: "+$("#numfatt").val()+" già esistente")
@@ -237,7 +237,7 @@ function PushDdt(ret){
     ar=JSON.stringify(ret);
     $.post(
         "fattfrn",
-        {data:ar,fatt:$("#numfatt").val(),azione:"p",frn:$("#azienda option:selected").val(),mrg:$("#dt2").val(),date:dt},
+        {data:ar,fatt:$("#numfatt").val(),azione:"p",frn:$("#azienda option:selected").text(),idfrn:$("#azienda option:selected").val(),mrg:$("#dt2").val(),date:dt},
         function(ret){
             if(ret==1)
                 alert("Fattura: "+$("#numfatt").val()+" già esistente")

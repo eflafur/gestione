@@ -12,7 +12,8 @@ $(document).ready(function(){
         $("#bolla").val(pvl);
         GetCod();
     }
-    else
+    elsefined')
+            GetCodId(res);
         $("#dtft").hide();
         $("#cln").hide();
         $("#css").hide();

@@ -77,6 +77,11 @@ class Sito(models.Model):
 	cap=models.CharField(max_length=6,null=True)
 	def __str__(self):
 		return "%s" % (self.citta)
+	
+class ExCsBl(models.Model):
+	facc=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	trasporto=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	vari=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)	
 
 class Carico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
@@ -96,6 +101,7 @@ class Carico(models.Model):
 	note=models.TextField(max_length=30,default="")
 	qn=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	tara=models.DecimalField(max_digits=3,decimal_places=2,null=True,blank=True,default=0)
+	excsbl=models.ForeignKey(ExCsBl,on_delete=models.CASCADE,null=True)
 	def __str__(self):
 		return "%s" % (self.bolla)	
 	
@@ -222,4 +228,5 @@ class saldoprod(models.Model):
 	prod=models.OneToOneField(Produttore,on_delete=models.CASCADE)
 	attivo=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True,default=0)
 	passivo=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True,default=0)
+	
 	

@@ -83,8 +83,8 @@ function Write(mrg){
     var sum=0;
     var sumcst=0;
     for (i=0;i<res1.length-1;i++){
-        nt1=res1[i].costo/res1[i].q*(1-mrg/100);
-        nt=nt1*res1[i].q;
+        nt1=(res1[i].costo/res1[i].q*(1-mrg/100));
+        nt=nt1.toFixed(2)*res1[i].q;
         iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
         sum=sum+nt;
         sumcst=sumcst+parseFloat(res1[i].costo);
@@ -204,7 +204,7 @@ function WriteChecked(ret){
         prz=parseFloat(ret[i].find("input.prz").val());
         p=parseFloat(ret[i].find("td:eq(4)").text());
         iva=1+parseFloat(ret[i].find("td:eq(11)").text());
-        ret[i].find("td:eq(9)").text(prz*p);
+        ret[i].find("td:eq(9)").text((prz*p).toFixed(2));
         ret[i].find("td:eq(10)").text(prz*p*iva);
         label=label+ret;
         sumfatt+=(prz*p*iva);    

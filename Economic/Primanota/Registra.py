@@ -5,7 +5,7 @@ import openpyxl,time,os,subprocess,datetime
 from datetime import datetime,timedelta,date
 
 class Commercio:
-    def __init__(self,conto,tot,imp,erario,cod,pg,cl,fatt,data=date.today()):
+    def __init__(self,conto,tot,imp,erario,cod,pg,cl,fatt,data=date.today(),idfrn=0):
         self.tot=Decimal(tot)
         if(self.tot>0):
             self.pg=0
@@ -17,6 +17,7 @@ class Commercio:
         self.erario=erario
         self.cod=cod
         self.cl=cl
+        self.idfrn=idfrn
         self.fatt=fatt
         self.data=data
         self.s=sp.objects.all()
@@ -55,7 +56,7 @@ class Commercio:
             l1.save()
         self.cln.save()
     def Acquisto(self):
-        prd=Produttore.objects.get(azienda=self.cl)
+        prd=Produttore.objects.get(id=self.idfrn)
         sprd=saldoprod.objects.get(prod=prd)
         sprd.passivo+=self.imp+self.erario
         sprd.save()
@@ -100,7 +101,7 @@ class Commercio:
     def SetErarioForn(self):
         rec=ivaforn.objects.latest("id")
   
-        res=ivaforn(saldo=self.imp+self.erario-self.tot,prot=rec.prot+1,fatt=self.fatt,nome=self.cl,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
+        res=ivaforn(saldo=self.imp+self.erario-self.tot,prot=rec.prot+1,fatt=self.fatt,nome=self.idfrn,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
         res.save()
         prt=libro.objects.latest("id")
         p=prt.id
@@ -120,7 +121,7 @@ class ComVen(Commercio):
 
     
 class Banca:
-    def __init__(self,conto,tot,imp,erario,cod,sgn,doc,data,cl):
+    def __init__(self,conto,tot,imp,erario,cod,sgn,doc,data,cl,idfrn=0):
         self.conto=conto
         self.tot=Decimal(tot)
         self.imp=imp
@@ -130,6 +131,7 @@ class Banca:
         self.doc=doc
         self.data=data
         self.cl=cl
+        self.idfrn=idfrn
         prt=libro.objects.latest("id")
         self.p=prt.id
     def put(self):
@@ -150,12 +152,12 @@ class Banca:
         cln.save()
  
     def putfrn(self):
-        prd=Produttore.objects.get(azienda=self.cl)
+        prd=Produttore.objects.get(id=self.idfrn)
         sprd=saldoprod.objects.get(prod=prd)
         sprd.attivo+=self.tot
         sprd.save()
 
-        ss=ivaforn.objects.get(fatt=self.doc)
+        ss=ivaforn.objects.get(Q(fatt=self.doc),Q(nome=self.idfrn))
         ss.saldo-=self.tot
         ss.save()
         bc=sp.objects.get(cod=self.conto)#"1.2")

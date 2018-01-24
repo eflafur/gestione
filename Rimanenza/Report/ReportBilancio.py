@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import Produttore,IDcod,Carico,libro,sp,ce,saldocliente,ivacliente,ivaforn
+from gestione.models import Produttore,IDcod,Carico,libro,sp,ce,saldocliente,ivacliente,ivaforn,saldoprod
 from django.db.models import Q,F,Sum
 import os,time,openpyxl,subprocess,decimal
 
@@ -162,6 +162,12 @@ class Estrazionecn:
     @staticmethod
     def SaldoClienti():
         res=saldocliente.objects.values("attivo","passivo","cliente__azienda")
+        data=list(res)
+        return data
+
+    @staticmethod
+    def SaldoFrn():
+        res=saldoprod.objects.values("attivo","passivo","prod__azienda")
         data=list(res)
         return data
     
