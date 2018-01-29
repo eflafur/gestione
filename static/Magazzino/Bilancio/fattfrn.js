@@ -154,7 +154,6 @@ function PushCv(cv){
         });
 };
 
-
 function WriteCv(mrgg){
     var label="";
     var sum=0;
@@ -169,8 +168,6 @@ function WriteCv(mrgg){
             nt1=0
             nt=0
             res1[i].q=res1[i].qn
-            //nt1=res1[i].costo/res1[i].q*(1-mrg/100)
-            //nt=nt1*res1[i].q;
         }
         iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
         sum=sum+nt;
@@ -182,9 +179,9 @@ function WriteCv(mrgg){
         label=label + '<td>' + res1[i].q+ '</td>';
         label=label + '<td>' + res1[i].cassa+ '</td>';
         label=label + '<td>' + res1[i].idcod__cod+ '</td>';
-        label=label + '<td><input class="prz" type=number value='+nt1.toFixed(2)+'></input></td>';
+        label=label + '<td><input class="prz" type=number value='+nt1+'></input></td>';
         label=label + '<td>'+nt+'</td>';
-        label=label + '<td>'+iva.toFixed(2)+'</td>';
+        label=label + '<td>'+iva+'</td>';
         label=label + '<td >' + res1[i].idcod__genere__iva+ '</td>';
         label=label + '</tr>';
     }
@@ -192,7 +189,6 @@ function WriteCv(mrgg){
     $("#tb62").html(label);  
     $("#dt6").val(sum);
     $("#dt7").val(sumcosto-sum);
- //   $("#dt7").val(sumcosto-sum);
 };
 
 

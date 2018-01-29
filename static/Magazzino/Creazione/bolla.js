@@ -12,8 +12,7 @@ $(document).ready(function(){
         $("#bolla").val(pvl);
         GetCod();
     }
-    elsefined')
-            GetCodId(res);
+    else
         $("#dtft").hide();
         $("#cln").hide();
         $("#css").hide();
@@ -179,10 +178,14 @@ function GetCodId(res){
         var obj1={}  
         obj1["id"]=res.b[i].idcod__id
         obj1['cod'] =res.b[i].idcod__cod;
-        obj1['ps'] =res.b[i].q;
+        obj1['ps'] =res.b[i].qn;
         obj1['css'] =res.b[i].cassa;
+        obj1['tara'] =res.b[i].tara;
         ar1.push(obj1);
     }
+    $("#facc").val(res.b[0].excsbl__facc);
+    $("#tras").val(res.b[0].excsbl__trasporto);
+    $("#vari").val(res.b[0].excsbl__vari);
     Fill();
     $("#cod").show("");
     $("#tbf").show("");
@@ -218,10 +221,20 @@ function Fill(){
 };
 
 function Invia(act){
-    str = ($("#bolla").val()).replace(/\s/g, '');
+    var str = ($("#bolla").val()).replace(/\s/g, '');
+    var fc=$("#facc").val();
+    var ts=$("#tras").val();
+    var vr=$("#vari").val();
+    if(isNaN(fc) | fc=="")
+        fc=0
+    if(isNaN(ts) | ts=="")
+        ts=0
+    if(isNaN(vr) | vr=="")
+        vr=0
+    
     $.post(
         "entrata",
-        {res:JSON.stringify(ar1),bolla:str,azione:act,dt:dt1},
+        {res:JSON.stringify(ar1),bolla:str,azione:act,dt:dt1,facc:fc,tras:ts,vari:vr},
         function(res){
         });
     return;

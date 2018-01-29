@@ -21,7 +21,8 @@ class GetData:
         data=list(rec)
         return data    
     def GetBolla(self,line):
-        rec=Carico.objects.filter(Q(bolla=line["bolla"]), Q(idcod__produttore__azienda=line["cliente"])).values("idcod__id","idcod__cod","q","cassa","data","bolla")
+        rec=Carico.objects.filter(Q(bolla=line["bolla"]), Q(idcod__produttore__azienda=line["cliente"])).values("idcod__id","idcod__cod","qn","cassa",
+                                                                    "data","bolla","tara","excsbl__facc","excsbl__trasporto","excsbl__vari")
         data=list(rec)
         return data 
     def GetFatt(self,line):
@@ -66,7 +67,7 @@ class GetData:
         cm2=cm1.values("bolla").distinct()
         for  item in cm2:
             ls.append(item["bolla"])
-        cm1=c.filter(Q(cassa=F("cassaexit"))).values("id","idcod__genere__iva",
+        cm1=c.filter(Q(cassa=F("cassaexit"))).values("excsbl__facc","excsbl__trasporto","excsbl__vari","id","idcod__genere__iva",
                                    "idcod__cod","q","cassa","data","bolla","costo").order_by("bolla")
         for item in cm1:
             if(item["bolla"] in ls):

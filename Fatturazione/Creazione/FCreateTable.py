@@ -673,16 +673,16 @@ class Produt:
                 nodo.lotto=" ".join(lslotti1)
                 nodo.save()
                         
-            impfatt=nodo.prezzo*Decimal(item["ps"])*int(item["css"])
-            imp+=nodo.prezzo*Decimal(item["ps"])*int(item["css"])
-            erario+=Decimal(item["iva"])*nodo.prezzo*Decimal(item["ps"])*int(item["css"])
+            impfatt=nodo.prezzo*(Decimal(item["ps"])-int(item["css"])*nodo.tara)
+            imp+=impfatt
+            erario+=Decimal(item["iva"])*nodo.prezzo*(Decimal(item["ps"])-int(item["css"])*nodo.tara)
             ls={}
             ls["cod"]=item["cod"]
             ls["imp"]=round(impfatt,2)
-            ls["iva"]=Decimal(item["iva"])
+            ls["iva"]=round(Decimal(item["iva"]),2)
             ls["tara"]=nodo.tara
             ls["lotto"]=bl.copy() 
-            ls["prz"]=-nodo.prezzo
+            ls["prz"]=nodo.prezzo
             ls["css"]=int(item["css"])
             ls["ps"]=Decimal(item["ps"])
             lsdc.append(ls)

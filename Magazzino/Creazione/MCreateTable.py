@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import IDcod,Carico,Genere,Saldo
+from gestione.models import IDcod,Carico,Genere,Saldo,ExCsBl
 from django.db.models import Q
 from decimal import Decimal
 import re
@@ -9,7 +9,9 @@ import io
 
 class CreateData:
     
-    def EntrataBolla(self,ls,bl,dt):
+    def EntrataBolla(self,ls,bl,dt,facc,tras,vari):
+        rec=0
+        cnt=0
         i=0
         before=" "
         tot=0
@@ -18,10 +20,12 @@ class CreateData:
         seg=line[0]["cod"].split('-')
         pc=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__azienda=seg[0]))
         if(pc):
-            p=pc.filter().values("qn","cassa","cassaexit","idcod__id","data")
+            p=pc.filter().values("qn","cassa","cassaexit","idcod__id","data","excsbl__id")
+            rec=ExCsBl.objects.get(id=p[0].excsbl__id)
             data=list(p)
-            pc.delete()
+#            pc.delete()
             dt=data[0]["data"]
+            cnt=1
         s=Saldo.objects.all()
         cod=IDcod.objects.all()
   
@@ -41,9 +45,13 @@ class CreateData:
             qs=s1.q
             s1.q=qs+diff
             s1.save()
+            if(cnt==0):
+                rec=ExCsBl(facc=Decimal(facc),trasporto=Decimal(tras),vari=Decimal(vari))
+                rec.save()
             codid=cod.get(id=item["id"])
-            rec=Carico(tara=item["tara"],qn=item["ps"],cassa=item["css"],bolla=bl,idcod=codid,data=dt,cassaexit=csx)
-            rec.save()
+            rec1=Carico(excsbl=rec,tara=item["tara"],qn=item["ps"],cassa=item["css"],bolla=bl,idcod=codid,data=dt,cassaexit=csx)
+            rec1.save()
+            cnt+=1
         return 2        
     
  

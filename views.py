@@ -4,7 +4,7 @@ from django.template import loader
 from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-#import CreateTable,Modifica,GetProduct,validazione,Fviews,GetGraph
+import CreateTable,Modifica,GetProduct,validazione,Fviews,GetGraph
 import jsonpickle
 #import wingdbstub
 #nuova relaease salvata

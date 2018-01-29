@@ -82,9 +82,12 @@ function Write(mrg){
     var label="";
     var sum=0;
     var sumcst=0;
+    var excs=0;
+    var totexcsbl=0;
     for (i=0;i<res1.length-1;i++){
-        nt1=(res1[i].costo/res1[i].q*(1-mrg/100));
-        nt=nt1.toFixed(2)*res1[i].q;
+        excs=parseFloat(res1[i].excsbl__trasporto)+parseFloat(res1[i].excsbl__facc)+parseFloat(res1[i].excsbl__vari)
+        nt1=(res1[i].costo/res1[i].q)*(1-mrg/100);
+        nt=nt1*res1[i].q;
         iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
         sum=sum+nt;
         sumcst=sumcst+parseFloat(res1[i].costo);
@@ -101,11 +104,18 @@ function Write(mrg){
         label=label + '<td>' + res1[i].cassa+ '</td>';
         label=label + '<td>' + res1[i].idcod__cod+ '</td>';
         label=label + '<td>' + res1[i].costo+ '</td>';
-        label=label + '<td><input class="prz" type=number value='+nt1.toFixed(2)+'></input></td>';
+        label=label + '<td><input class="prz" type=number value='+nt1+'></input></td>';
         label=label + '<td>'+nt.toFixed(2)+'</td>';
         label=label + '<td>' + iva.toFixed(2)+ '</td>';
         label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
         label=label + '<td style="display: none">' + res1[i].id+ '</td>';
+
+        if(res1[i].bolla!=before){
+            label=label + '<td>' + excs+ '</td>';
+            totexcsbl+=excs
+        }
+
+
         label=label + '</tr>';
         before=res1[i].bolla;
     }
@@ -122,7 +132,7 @@ function Write(mrg){
     $("#tbf2").show();  
     $("#tb62").html(label);  
     $("#dt6").val(sum);
-    $("#dt7").val(sumcst-sum);
+    $("#dt7").val(sumcst-sum-totexcsbl);
 };
 
 
@@ -134,7 +144,8 @@ function ReadChange(n){
             ls.push($(this));
         else if(n==1){
             var dc={}
-             dc["id"]=$(this).find("td:last").text();
+            dc["id"]=$(this).find("td:eq(12)").text();
+//             dc["id"]=$(this).find("td:last").text();
              dc["prz"]=$(this).find("input.prz").val();
              dc["fatt"]=$(this).find("td:eq(9)").text();
              ls.push(dc);
@@ -161,6 +172,10 @@ function GetCheched(){
     var lsck=[]
     var t=0;
     var x=0;
+    var sum=0;
+    var sumcst=0;
+    var excs=0;
+    var totexcsbl=0;
     $("#tbf2 :checked").each(function(index){
         xx=index+1;
         ar[index]=$(this).val();
@@ -172,6 +187,13 @@ function GetCheched(){
              for (i=0;i<ar.length;i++){
                  if(r==ar[i]){
                      lsck.push($(this));
+                     sumcst+=parseFloat($(this).find("td:eq(7)").text())   
+                     sum+=parseFloat($(this).find("td:eq(9)").text())   
+                    io=$(this).find("td:eq(13)").text()
+                     if(isNaN( $(this).find("td:eq(13)").text()) | ($(this).find("td:eq(13)").text())=="") 
+                        totexcsbl+=0
+                    else
+                        totexcsbl+=parseFloat($(this).find("td:eq(13)").text())
                      t=1;
                      break;
                  }
@@ -181,6 +203,8 @@ function GetCheched(){
                  $(this).remove();
              t=0;
          });
+        $("#dt6").val(sum);
+        $("#dt7").val(sumcst-sum-totexcsbl);
         return lsck;
     } 
     else {
@@ -197,22 +221,28 @@ function WriteChecked(ret){
     var sumfatt=0;
     var sumvnd=0;
     var label="";
+    var totexcsbl=0;
     label='<tr>'
     for (i=0;i<ret.length;i++){
-        //ft=parseFloat(ret[i].find("input.prz").val())*parseFloat(ret[i].find("td:eq(4)").text());
-       // r=ret[i].find("td:eq(9)").text(ft);
         prz=parseFloat(ret[i].find("input.prz").val());
         p=parseFloat(ret[i].find("td:eq(4)").text());
         iva=1+parseFloat(ret[i].find("td:eq(11)").text());
+        
+        if(isNaN(ret[i].find("td:eq(13)").text()) | (ret[i].find("td:eq(13)").text()=="")) 
+            totexcsbl+=0
+        else
+            totexcsbl+=parseFloat(ret[i].find("td:eq(13)").text());
+
+        
         ret[i].find("td:eq(9)").text((prz*p).toFixed(2));
-        ret[i].find("td:eq(10)").text(prz*p*iva);
-        label=label+ret;
-        sumfatt+=(prz*p*iva);    
+        ret[i].find("td:eq(10)").text((prz*p*iva).toFixed(2));
+        label=label+ret[i];
+        sumfatt+=prz*p;    
         sumvnd+=parseFloat(ret[i].find("td:eq(7)").text());
     }
     label=label+'</tr>'
     $("tb62").html(label);
     $("#dt6").val(sumfatt);
-    $("#dt7").val(sumvnd-sumfatt);
+    $("#dt7").val(sumvnd-sumfatt-totexcsbl);
 };
 

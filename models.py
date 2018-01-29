@@ -79,9 +79,9 @@ class Sito(models.Model):
 		return "%s" % (self.citta)
 	
 class ExCsBl(models.Model):
-	facc=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
-	trasporto=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
-	vari=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)	
+	facc=models.DecimalField(max_digits=7,decimal_places=2,null=True,blank=True,default=0)
+	trasporto=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	vari=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)	
 
 class Carico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
