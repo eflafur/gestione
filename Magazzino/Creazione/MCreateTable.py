@@ -9,7 +9,7 @@ import io
 
 class CreateData:
     
-    def EntrataBolla(self,ls,bl,dt,facc,tras,vari):
+    def EntrataBolla(self,ls,bl,bl1,dt,facc,tras,vari):
         rec=0
         cnt=0
         i=0
@@ -19,11 +19,20 @@ class CreateData:
         line= sorted(ls, key=lambda k: k['cod']) 
         seg=line[0]["cod"].split('-')
         pc=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__azienda=seg[0]))
+        pc1=Carico.objects.filter(Q(bolla=bl1),Q(idcod__produttore__azienda=seg[0]))
+        if (pc1):
+            return 3
         if(pc):
             p=pc.filter().values("qn","cassa","cassaexit","idcod__id","data","excsbl__id")
-            rec=ExCsBl.objects.get(id=p[0].excsbl__id)
+            o=p[0]["qn"]
+            o1=p[0]["excsbl__id"]
+            rec=ExCsBl.objects.get(id=o1)
+            rec.facc=Decimal(facc)
+            rec.trasporto=Decimal(tras)
+            rec.vari=Decimal(vari)
+            rec.save()
             data=list(p)
-#            pc.delete()
+            pc.delete()
             dt=data[0]["data"]
             cnt=1
         s=Saldo.objects.all()
@@ -49,7 +58,7 @@ class CreateData:
                 rec=ExCsBl(facc=Decimal(facc),trasporto=Decimal(tras),vari=Decimal(vari))
                 rec.save()
             codid=cod.get(id=item["id"])
-            rec1=Carico(excsbl=rec,tara=item["tara"],qn=item["ps"],cassa=item["css"],bolla=bl,idcod=codid,data=dt,cassaexit=csx)
+            rec1=Carico(excsbl=rec,tara=item["tara"],qn=item["ps"],cassa=item["css"],bolla=bl1,idcod=codid,data=dt,cassaexit=csx)
             rec1.save()
             cnt+=1
         return 2        

@@ -2,6 +2,7 @@ var ar1= [];
 var i=0;
 var pvl=$("#psps").text();
 var dt1="";   
+var str=""; 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#brand").text("Nuova Bolla");
@@ -150,19 +151,22 @@ function Eval(){
         $("#cassa").val("");
         $("#css").hide();
         $("#btadd").hide();
+        $("#facc").val("");
+        $("#tras").val("");
+        $("#vari").val("");
 }
 
 function GetCod(){
     var cl=$("#cliente option:selected").val();
-    var str = ($("#bolla").val()).replace(/\s/g, '');
+    str = ($("#bolla").val()).replace(/\s/g, '');
     $.post(
         "entrata",
         {cliente:cl,bolla:str,azione:"gid",dod:pvl},
         function(res){
-          if(typeof res.a!='undefined')
-            GetCodId(res);
-        else
-            GetCodT(res);
+            if(typeof res.a!='undefined')
+                GetCodId(res);
+            else
+                GetCodT(res);
     });
 };
 
@@ -221,7 +225,7 @@ function Fill(){
 };
 
 function Invia(act){
-    var str = ($("#bolla").val()).replace(/\s/g, '');
+    var str1 = ($("#bolla").val()).replace(/\s/g, '');
     var fc=$("#facc").val();
     var ts=$("#tras").val();
     var vr=$("#vari").val();
@@ -234,8 +238,10 @@ function Invia(act){
     
     $.post(
         "entrata",
-        {res:JSON.stringify(ar1),bolla:str,azione:act,dt:dt1,facc:fc,tras:ts,vari:vr},
+        {res:JSON.stringify(ar1),bolla:str,bolla1:str1,azione:act,dt:dt1,facc:fc,tras:ts,vari:vr},
         function(res){
+            if(res==3)
+                alert("Bolla"+ str1 + ": gia esistente");
         });
     return;
 };

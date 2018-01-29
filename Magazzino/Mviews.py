@@ -45,12 +45,13 @@ def CreaBolla(request):
         elif(message["azione"]=="I"):
             lst = jsonpickle.decode(message['res'])
             bolla=message["bolla"]
+            bolla1=message["bolla1"]
             facc=message["facc"]
             tras=message["tras"]
             vari=message["vari"]
             dt=message["dt"]
             obj1=MCreateTable.CreateData()
-            res=obj1.EntrataBolla(lst,bolla,dt,facc,tras,vari)
+            res=obj1.EntrataBolla(lst,bolla,bolla1,dt,facc,tras,vari)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         message=request.GET
