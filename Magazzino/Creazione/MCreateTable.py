@@ -21,7 +21,8 @@ class CreateData:
         pc=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__azienda=seg[0]))
         pc1=Carico.objects.filter(Q(bolla=bl1),Q(idcod__produttore__azienda=seg[0]))
         if (pc1):
-            return 3
+            if(bl!=bl1):
+                return 3
         if(pc):
             p=pc.filter().values("qn","cassa","cassaexit","idcod__id","data","excsbl__id")
             o=p[0]["qn"]
