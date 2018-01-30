@@ -36,13 +36,18 @@ $(document).ready(function(){
         $("#codice").attr("disabled",true);
     } 
     $("#cliente").click(function(){
+        ar1.length=0
         Eval();
         GetLotto();
         $("#pagam").attr('disabled',false);
         $("#cod").show();
     });
 
-    $("#dsc").click(function(){
+    $("#tara1").click(function(){
+        $("#ps").show();
+    });
+    $("#desc").click(function(){
+        $("#lt").show();
         $("#tr").show();
     });
     $(".pr").click(function(){
@@ -60,17 +65,17 @@ $(document).ready(function(){
             return false;
         }
         if($(this).val()==0){
-            $("#btadd").hide();
+//            $("#btadd").hide();
             $("#chc").show();
             $(".tot").attr("readonly",false);
         }
         else{
             $("#chc").hide();
             $(".tot").attr("readonly",true);
-            $("#btadd").show();
+     //       $("#btadd").show();
         }
-        if($(this).val()==0 && ar1.length==0 && n==1)
-            $("#btadd").hide();
+//        if($(this).val()==0 && ar1.length==0 && n==1)
+       //     $("#btadd").hide();
         if(n==1)
             return false;
     });
@@ -79,7 +84,7 @@ $(document).ready(function(){
         choice=$("#chc :checked").val();
         if (tipo=="sc")
             return;
-        $("#btadd").show();
+      //  $("#btadd").show();
     });
 
      $("#btltsos").click(function(){
@@ -105,7 +110,7 @@ $(document).ready(function(){
         if(ret!=0){
             $("#dsc").show();
             $("#desc").focus();
-            $("#lt").show();
+//            $("#lt").show();
         }
     else{
         alert("LOTTI NON DISPONIBILI");
@@ -132,7 +137,7 @@ $(document).ready(function(){
     });
     
     $("#prezzo").keypress(function(){
-        if(n==1)
+       // if(n==1)
             $("#btadd").show();
         $("#pgm").show();
     });
@@ -221,7 +226,7 @@ $(document).ready(function(){
             Fill();
 //            if((tipo!="dd"))
                 //$("#codice").attr('disabled',false);
-            //$("#btadd").hide();
+            $("#btadd").hide();
         }
         dtl="";
         trl.length=0;
@@ -239,6 +244,7 @@ $(document).ready(function(){
         lt=$("#lotto option:selected").val();
         if(isNaN(lt))
             lt="";
+        $("#ps").show();
     });
 
 
@@ -272,8 +278,8 @@ function Eval(){
     $("#prezzo").val("");
     $("#cassa").val("");
     $("#tara1").val("");
-    if(ar1.length==0 && n==1)
-        $("#cod").hide();
+    //if(ar1.length==0 && n==1)
+        //$("#cod").hide();
 };
 
 function Fill(){

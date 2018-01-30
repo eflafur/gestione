@@ -3,98 +3,84 @@
 
 {%block insert%}
 
-<div class="container col-md-offset-2">
+<div class="container">
  
-  <div class="row">
-
 
   <div class="row">
-     <div class="col-md-3">     
-       <div class="input-group" id="fcg">
-           <p>Facchinaggio:<input type = "text" id = "facc" style="width: 85px"></p>
-       </div>   
-       <div class="input-group" id="trsp">
-           <p>Trasporto:<input type = "text" id = "tras" style="width: 85px"></p>
-       </div>   
-       <div class="input-group" id="vr">
-           <p>Vari:<input type = "text" id = "vari" style="width: 85px"></p>
-       </div>   
-    </div>     
-  </div>     
 
-   <div class="col-md-4">
-     <div class="row">
-      <div class="col-md-4"> 
-       <div class="input-group" id="bl">
-        <p>Bolla<input type="text" id="bolla" class="form-control" name="a2" ></p>
-       </div>
+     <div class="col-md-1" id="fcg" >     
+           <label >Facchinaggio</label></br>
+           <input type = "text" id = "facc" style="width: 60px">
+     </div>   
+ 
+     <div class="col-md-1" id="trsp">    
+           <label >Trasporto</label></br>
+           <input type = "text" id = "tras" style="width: 60px">
+     </div>   
+     <div class="col-md-1" id="vr">     
+        <label >Vari</label></br>
+           <input type = "text" id = "vari" style="width: 60px">
     </div> 
- </br>
-     <div class="btn-group">
-              <button type="button" class="btn  btn-success" id="btems">Emissione</button>
-              <button type="button" class="btn  btn-success" id="btanl">Annulla</button>
-      </div>
-    </div>
-    </br>
 
- 
-  <div class="row">
+    <div class="col-md-2" id="bl">
+          <label >Bolla</label></br>
+          <input type="text" id="bolla" class="form-control" name="a2" >
+    </div> 
 
-   <div class="col-md-7">  
-    <div class="input-group" id="cln">
-     <p>Cliente<select class="form-control" name="cln" id="cliente"></p>
+   <div class="col-md-3" id="cln">  
+     <label >Azienda</label></br>
+     <select class="form-control" name="cln" id="cliente">
        {% for entry in prod %}
            <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
        {% endfor %}
      </select>
-    </div>
    </div>
-     <div class="col-md-3">     
-            <div class="input-group" id="dtft">
-                <p>Data:<input type = "text" id = "dt2" style="width: 85px"></p>
-            </div>   
-        </div>     
-  </div>
-  </br>
-  
-  <div class="row">
-    <div class="col-md-11" id="cod">  
-     <p>Codice<select class="form-control" name="a1" id="codice"></p>
-     </select>
-   </div>
-  </div>
-  
-  
-   <div class="row">
-   <div class="col-md-4"> 
-    <div class="input-group" id="ps">
-     <p>Peso<input type="number" id="peso" class="form-control" name="a2" placeholder="KG" min="0"></p>
-    </div>
-   </div> 
 
-   <div class="col-md-3"> 
-    <div class="input-group" id="css">
-     <p>Casse<input type="number" id="cassa" class="form-control" name="a4" placeholder="KG" min="0"></p>
-    </div>
-   </div> 
-
-   <div class="col-md-4 "> 
-    <div class="input-group" id="prz">
-     <p>Tara<input type="number" id="prezzo" class="form-control" name="a3" min="0"></p>
-    </div>
-   </div>
+  <div class="col-md-1"> 
+        <button type="button" class="btn  btn-success" id="btems">Emissione</button>
   </div>
-  </br>
-  
-   <div class="row">
-     <div class="col-md-1 "> 
+  <div class="col-md-1"> 
+        <button type="button" class="btn  btn-success" id="btanl">Annulla</button>
+  </div>
+  <div class="col-md-1 "> 
        <button type="submit" class="btn btn-primary" id="btadd">Aggiungi </button>  
    </div>
-  </div>
  </div>
+
  
-     
-   <div class=" col-md-7" id="tbf" >
+  <div class="row">
+   <div class="col-md-2" id="dtft">   
+        <label >Data</label></br>
+         <input type = "text" id = "dt2" style="width: 85px">
+   </div>     
+  
+  
+    <div class="col-md-4" id="cod">  
+      <label >Codice</label></br>
+      <select class="form-control" name="a1" id="codice">
+      </select>
+   </div>
+  
+  
+   <div class="col-md-2" id="ps"> 
+     <label >Peso</label></br>
+     <input type="number" id="peso" class="form-control" name="a2" placeholder="KG" min="0">
+   </div> 
+
+   <div class="col-md-2" id="css"> 
+        <label >Cassa</label></br>
+     <input type="number" id="cassa" class="form-control" name="a4" placeholder="KG" min="0">
+   </div> 
+
+   <div class="col-md-2" id="prz"> 
+        <label >Tara</label></br>
+     <input type="number" id="prezzo" class="form-control" name="a3" min="0">
+   </div>
+  </div>
+  </br>
+
+<div class="row">     
+   <div class=" col-md-12" id="tbf" >
       <table id="mytable"  class="table table-hover">
           <thead id="thd">
               <tr>
@@ -110,13 +96,8 @@
   </div>
  </div>
  </div>
- </br>
  
  <p id="psps">{{el}}</p>
-
-</div>
-  
-
   
 {%endblock%}
 

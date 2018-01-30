@@ -6,6 +6,7 @@ var str="";
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
     $("#brand").text("Nuova Bolla");
+    $("#btems").hide();
     if(pvl!=""){
         $("#cln").show();
         $("#cliente").attr('disabled',true);
@@ -36,7 +37,7 @@ $(document).ready(function(){
          dt1=date;
          $("#cod").show();
          $("#codice").focus();
-         $("#btt").show(); 
+//         $("#btt").show(); 
          $("#pf").hide();
       }
     });
@@ -117,6 +118,7 @@ $(document).ready(function(){
             $("#bolla").attr('disabled',true);
             $("#prezzo").val("");
             $("#prz").hide();
+            $("#btems").show();
         }
         return;
     });
@@ -150,6 +152,7 @@ function Eval(){
         $("#prz").hide();
         $("#cassa").val("");
         $("#css").hide();
+        $("#btems").hide();
         $("#btadd").hide();
         $("#facc").val("");
         $("#tras").val("");
@@ -163,8 +166,10 @@ function GetCod(){
         "entrata",
         {cliente:cl,bolla:str,azione:"gid",dod:pvl},
         function(res){
-            if(typeof res.a!='undefined')
+            if(typeof res.a!='undefined'){
+                $("#btems").show();
                 GetCodId(res);
+            }
             else
                 GetCodT(res);
     });

@@ -3,7 +3,7 @@
 
 {%block insert%}
 
-<div class="container col-md-offset-2">
+<div class="container">
 
  <div class="row">
      <div class="col-md-3" id="cln">  
@@ -14,22 +14,66 @@
        </select>
      </div>
      
-      <div class="col-md-4" id="cod">  
-       <!--<div class="input-group" id="cod">-->
+      <div class="col-md-3" id="cod">  
         <p>Codice<select class="form-control" name="a1" id="codice"></p>
           {% for entry in items %}
               <option value="{{ entry.genere__iva}} {{ entry.id}} ">{{ entry.cod}}</option>
           {% endfor %}
         </select>
-       <!--</div>-->
       </div>
-      <div class="col-md-2" id="pgm">  
-        <p>Pagamento<select class="form-control" name="a6" id="pagam"></p>
-          {% for entry in itemsp %}
-              <option value="{{ entry.giorni}}">{{ entry.tipo}} </option>
-          {% endfor %}
-        </select>
+
+ <div class="col-md-2" id="dsc">  
+    <p>Descrizione<select class="form-control" name="a5" id="desc"></p>
+      {% for entry in itemsd %}
+          <option value="{{ entry.tipo}}">{{ entry.tipo}} </option>
+      {% endfor %}
+    </select>
+  </div> 
+
+  <div class="col-md-2" id="lt">  
+   <p> Lotto<select class="form-control" id="lotto" ></p>
+     </select>
+  </div>
+  <div class="col-md-1">  
+    <button type="button" class="btn  btn-success  btn-xs" id="btltsos">Bypass</button>
+  </div>
+  
+    <div class="col-md-1" id="tr">  
+      <p>Tara<input type="text" list="tara" id="tara1" class="pr"   style="height:30px"></input></p>
+          <datalist id="tara" >
+             {% for entry in itemtr %}
+                 <option value="{{ entry.q}}">{{ entry.cont}} </option>
+             {% endfor %}
+          </datalist>
+    </div>
+  
+ 
+  
+
+  
+</div>
+  
+<div class="row">
+      
+     <div class="col-md-1" id="ps"> 
+        <p>Peso<input type="text" id="peso" class="form-control" name="a2" placeholder="KG" min="0"></input></p>
       </div>
+      <div class="col-md-1" id="css"> 
+        <p>Colli<input type="text" id="cassa" class="form-control" name="a4" placeholder="Num" min="0"></input></p>
+      </div> 
+      
+     <div class="col-md-1" id="prz"> 
+       <p>Prezzo<input type="text" id="prezzo" class="form-control" name="a3" min="0"></p>
+    </div>
+    
+    <div class="col-md-2" id="pgm">  
+      <p>Pagamento<select class="form-control" name="a6" id="pagam" ></p>
+        {% for entry in itemsp %}
+            <option value="{{ entry.giorni}}">{{ entry.tipo}} </option>
+        {% endfor %}
+      </select>
+    </div>
+    
     <div class="col-md-1 " >  
       <div class="input-group" id="chc">
         <div class="radio">
@@ -40,75 +84,26 @@
         </div>
      </div>
   </div>
-
+    
+    </br>
     <div class="col-md-1"> 
        <button type="submit" class="btn btn-primary" id="btadd">Aggiungi </button>  
    </div>
    
-    <div class="col-md-2" id="btemit">
-      <!--<div class="btn-group">-->
-          <div class="row">
-              <button type="button" style="height:40px;width:80px" class="btn  btn-success" id="btems">Fattura</button>
-              <button type="button" style="height:40px;width:80px" class="btn  btn-success" id="ddtft">DDT</button>
+      <div class="btn-group" id="btemit">
+          <div class="col-md-2">
+              <button type="button" class="btn  btn-success" id="btems">Fattura</button>
           </div>
-          <div class="row">
-              <button type="button" style="height:40px;width:80px" class="btn  btn-success" id="btsps">Sospesa</button>
-              <button type="button" style="height:40px;width:80px" class="btn  btn-success" id="btanl">Annulla</button>        
+          <div class="col-md-2" >
+              <button type="button" class="btn  btn-success" id="ddtft">DDT</button>
           </div>
-      <!--</div>-->
+          <div class="col-md-2" >
+              <button type="button" class="btn  btn-success" id="btsps">Sospesa</button>
+          </div>
      </div>
-</div>
-  
-   
-    <div class="row">
-
-      <div class="col-md-2" id="lt">  
-       <p> Lotto<select class="form-control" id="lotto" ></p>
-         </select>
-      </div>
-      <div class="col-md-1">  
-        <button type="button" class="btn  btn-success  btn-xs" id="btltsos">Bypass</button>
-      </div>
-   
-      <div class="col-md-2" id="dsc">  
-        <p>Descrizione<select class="form-control" name="a5" id="desc"></p>
-          {% for entry in itemsd %}
-              <option value="{{ entry.tipo}}">{{ entry.tipo}} </option>
-          {% endfor %}
-        </select>
-      </div> 
-
-      <div class="col-md-1" id="tr">  
-        <input type="text" list="tara" id="tara1" class="pr"   style="width: 70px"></input>
-            <datalist id="tara" >
-               {% for entry in itemtr %}
-                   <option value="{{ entry.q}}">{{ entry.cont}} </option>
-               {% endfor %}
-            </datalist>
-      </div>
-      
-     <div class="col-md-2"> 
-       <div class="input-group" id="ps">
-        <p>Peso<input type="number" id="peso" class="form-control" name="a2" placeholder="KG" min="0"></input></p>
-       </div>
-      </div> 
-      <div class="col-md-2"> 
-       <div class="input-group" id="css">
-        <p>Colli<input type="number" id="cassa" class="form-control" name="a4" placeholder="Num" min="0"></input></p>
-       </div>
-      </div> 
-      
-      
-     <div class="col-md-2"> 
-      <div class="input-group" id="prz">
-       <p>Prezzo<input type="number" id="prezzo" class="form-control" name="a3" min="0"></p>
-      </div>
-    </div>
  </div>
-</br>
-</br>
-</br>
 
+</br>
 <div class="row">
    <div class=" col-md-12" id="tbf" >
       <table id="mytable"  class="table table-hover">
