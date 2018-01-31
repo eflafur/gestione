@@ -31,7 +31,7 @@
      <label >Azienda</label></br>
      <select class="form-control" name="cln" id="cliente">
        {% for entry in prod %}
-           <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+           <option value="{{ entry.id}}">{{ entry.azienda}}</option>
        {% endfor %}
      </select>
    </div>

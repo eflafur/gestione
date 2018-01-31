@@ -43,6 +43,13 @@ $(document).ready(function(){
     });
     
      $("#codice").click(function(){
+        var cod=$("#codice option:selected").text();
+        for(i=0;i<ar1.length;i++)
+            if (cod==ar1[i].id){
+                alert("codice gia presente")
+                $("#btadd").hide();
+                return false;
+            }
         $("#ps").show();
         $("#peso").focus();
     });
