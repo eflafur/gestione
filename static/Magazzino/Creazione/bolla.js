@@ -94,7 +94,7 @@ $(document).ready(function(){
         }
         else {
             for(i=0;i<ar1.length;i++)
-                if ($("#codice option:selected").text()==ar1[i].cod){
+                if ($("#codice option:selected").val()==ar1[i].id){
                     alert("codice gia presente")
                     return 1;
                 }
