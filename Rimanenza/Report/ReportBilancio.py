@@ -1,6 +1,8 @@
 #import django
 #django.setup()
 from gestione.models import Produttore,IDcod,Carico,libro,sp,ce,saldocliente,ivacliente,ivaforn,saldoprod
+from gestione.models import contocln,contofrn,contoce,contosp
+
 from django.db.models import Q,F,Sum
 import os,time,openpyxl,subprocess,decimal
 
@@ -177,4 +179,19 @@ class Estrazionecn:
         data=list(res)
         return data    
         
-            
+        
+
+class Reportms:
+
+    @staticmethod
+    def Contims(cod):
+        dic={}
+        lsms=[]
+        ls=[]
+        lsms=cod["ms"].split(".")
+        res=contocln.objects.filter(cod=lsms[0],sub=lsms[1])
+        sumdare=res.aggregate(Sum("dare"))
+        sumavere=res.aggregate(Sum("avere"))
+        ls.append(sumdare["dare__sum"])
+        ls.append(sumavere["avere__sum"])
+        return ls

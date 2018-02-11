@@ -43,10 +43,10 @@ $(document).ready(function(){
     });
     
      $("#codice").click(function(){
-        var cod=$("#codice option:selected").text();
+        var cod=$("#codice option:selected").val();
         for(i=0;i<ar1.length;i++)
             if (cod==ar1[i].id){
-                alert("codice gia presente")
+                alert(""+ar1[i].cod+" :già presente")
                 $("#btadd").hide();
                 return false;
             }
@@ -93,11 +93,7 @@ $(document).ready(function(){
             $("#cassa").focus()
         }
         else {
-            for(i=0;i<ar1.length;i++)
-                if ($("#codice option:selected").val()==ar1[i].id){
-                    alert("codice gia presente")
-                    return 1;
-                }
+
     
            if(parseFloat($("#cassa").val()) % 1 !=0){
                 alert(" Valore Colli non valido")

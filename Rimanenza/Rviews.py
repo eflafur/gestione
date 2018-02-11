@@ -142,7 +142,24 @@ def FattMese(request):
 
 
 
+#metodi per report mastrini
 
+def ContiMs(request):
+    if(login==0):
+        context={}
+        return render(request,"Validazione/login.html",context)         
+    if(request.method=="POST"):
+        message=request.POST
+        res=ReportBilancio.Reportms.Contims(message)
+        return JsonResponse(res,safe=False)        
+    if(request.method=="GET"):
+        context={"items":" "}
+        return render(request,"Rimanenza/Report/Contims.html",context)          
+
+
+
+
+#metodi per report mastrini
 
 
 def RBase(request):

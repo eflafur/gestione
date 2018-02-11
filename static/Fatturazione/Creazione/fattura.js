@@ -101,7 +101,7 @@ $(document).ready(function(){
         codls=$("#codice option:selected").val().split(" ");
         for(i=0;i<ar1.length;i++)
             if (codls[1]==ar1[i].id){
-                alert("codice gia presente")
+                alert(""+ar1[i].cod+ " già presente")
                 $("#btadd").hide();
                 return false;
             }
@@ -331,7 +331,7 @@ function Invia(act){
         
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t,chc:choice},
+      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t,chc:choice,cln:$("#cliente").val()},
     function (result){
     });
     ar1.length=0

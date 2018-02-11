@@ -142,7 +142,6 @@ class Scarico(models.Model):
 	rs=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	rscassa=models.IntegerField(null=True,blank=True,default=0)
 
-
 class Sospese(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
@@ -194,6 +193,55 @@ class ivacliente(models.Model):
 	erario=models.DecimalField(max_digits=8,decimal_places=2,null=True)
 	esenzione=models.CharField(max_length=20,null=True)
 	saldo=models.DecimalField(max_digits=14,decimal_places=2,null=True,blank=True,default=0)
+	
+	
+class contocln (models.Model):
+	cod=models.CharField(max_length=2)
+	sub=models.CharField(max_length=2)
+	ssub=models.CharField(max_length=2,default="")
+	dtreg=models.DateField(default=date.today)
+	doc=models.CharField(max_length=20,null=True)
+	dtdoc=models.DateField(default=date.today)
+	dare=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	avere=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)	
+	saldo=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	regis=models.CharField(max_length=60,null=True)
+	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
+	
+class contofrn (models.Model):
+	cod=models.CharField(max_length=2)
+	sub=models.CharField(max_length=2)
+	ssub=models.CharField(max_length=2,default="")
+	dtreg=models.DateField(default=date.today)
+	doc=models.CharField(max_length=20,null=True)
+	dtdoc=models.DateField(default=date.today)
+	dare=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	avere=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)	
+	saldo=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	regis=models.CharField(max_length=60,null=True)
+	forn=models.ForeignKey(Produttore,on_delete=models.CASCADE,null=True)	
+	
+class contosp (models.Model):#(iva,banca,cassa,erario)
+	cod=models.CharField(max_length=2)
+	sub=models.CharField(max_length=2)
+	ssub=models.CharField(max_length=2,default="")
+	dtreg=models.DateField(default=date.today)
+	doc=models.CharField(max_length=20,null=True)
+	dtdoc=models.DateField(default=date.today)
+	dare=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	avere=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)	
+	regis=models.CharField(max_length=60,null=True)
+
+class contoce (models.Model):#(cost,ricavi) 
+	cod=models.CharField(max_length=2)
+	sub=models.CharField(max_length=2)
+	ssub=models.CharField(max_length=2,default="")
+	dtreg=models.DateField(default=date.today)
+	doc=models.CharField(max_length=20,null=True)
+	dtdoc=models.DateField(default=date.today)
+	dare=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
+	avere=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)	
+	regis=models.CharField(max_length=60,null=True)
 	
 class ivaforn(models.Model):
 	dtreg=models.DateField(default=date.today)

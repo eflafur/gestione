@@ -9,7 +9,7 @@
         <div class="col-md-4">     
             <p>Cliente<select id="cln"></p>
                 {% for entry in items %}
-                    <option> {{entry.azienda}}</option>
+                    <option value={{entry.id}}> {{entry.azienda}}</option>
                 {%endfor%}
             </select>
         </div>

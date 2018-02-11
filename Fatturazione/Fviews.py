@@ -161,8 +161,9 @@ def Fattura(request):
             tot=message["tot"]
             pgm=message["pgm"]
             chc=message["chc"]
+            cln=message["cln"]
             lst = jsonpickle.decode(message['res'])
-            res=objf.ScriviFattura(lst,itm,pgm,tot,chc)
+            res=objf.ScriviFattura(lst,itm,pgm,tot,chc,cln)
         elif (message["azione"]=="S"):
             itm=message["item"]
             lst = json.loads(message['res'])

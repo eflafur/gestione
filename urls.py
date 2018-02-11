@@ -66,5 +66,6 @@ urlpatterns = [
     url('rscln',Rviews.RScln),
     url('rsfrn',Rviews.RSfrn),
     url('fattmese',Rviews.FattMese),
+    url('contims',Rviews.ContiMs),
    
 ]

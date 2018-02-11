@@ -39,7 +39,7 @@ class Produt:
         sc.save()
         return (1)
     
-    def ScriviFattura(self,line,sps,pgm,tot,conto):
+    def ScriviFattura(self,line,sps,pgm,tot,conto,cln):
         ltstr=""
         i=0
         bl=[]
@@ -62,7 +62,8 @@ class Produt:
         f=(s.fattura).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
-        c=Cliente.objects.get(azienda=line[0]["cln"])
+#        c=Cliente.objects.get(azienda=line[0]["cln"])
+        c=Cliente.objects.get(id=cln)
         for item in line:
             ltt=item["lotto"]
             ltcod=lotto.filter(idcod__id=item["id"])
@@ -124,9 +125,11 @@ class Produt:
             lsdc.append(ls)
     
 #registrazione contabile
-        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,line[0]["cln"],fatt)
+#        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,line[0]["cln"],fatt)
+        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,c,fatt)
         res.SetErarioCliente()
-        res.Vendita()
+#        res.Vendita()
+        res.Venditams()
 #registrazione contabile
         obj=Pdf.PrintTable("FATTURA",lsdc,imp+erario-Decimal(tot))
         obj.PrintArt()
@@ -153,7 +156,7 @@ class Produt:
         f=(s.ddt).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
-        c=Cliente.objects.get(azienda=line[0]["cln"])
+        c=Cliente.objects.get(id=line[0]["cln"])
         for item in line:
             ltt=item["lotto"]
             cod=IDcod.objects.get(id=item["id"])
@@ -285,7 +288,7 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cl"]!=" "):
-            recls=Scarico.objects.filter(Q(cliente__azienda=message["cl"]),Q(rscassa__gte=0),Q(cassa__gt=F("rscassa"))).exclude(id=0).values("rscassa",
+            recls=Scarico.objects.filter(Q(cliente__id=message["cl"]),Q(rscassa__gte=0),Q(cassa__gt=F("rscassa"))).exclude(id=0).values("rscassa",
                                                     "tara","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
         else:
             recls=Scarico.objects.filter(Q(rscassa__gte=0)).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","tara")
@@ -312,6 +315,7 @@ class Produt:
                 i=i+1
             before=item["fattura"]
         return ss        
+    
     def RecDdt(self,message):
         somma=0
         before=" "
@@ -413,13 +417,15 @@ class Produt:
         cl.save()
         s=Scarico.objects.filter(fattura=line["pg"])
         s.update(pagato=line["ppg"],note=line["nt"])
-        s1=s.values("q","prezzo","cassa","idcod__genere__iva","tara","data","cliente__azienda")
+        s1=s.values("q","prezzo","cassa","idcod__genere__iva","tara","data","cliente__id")
+        c=Cliente.objects.get(id=s1[0]["cliente__id"])
         for item in s1:
             imp+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]
             erario+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]*(item["idcod__genere__iva"])
-        res=Registra.ComVen(line["chc"],line["part"],imp,erario,"3.1",0,s1[0]["cliente__azienda"],line["pg"])
+        res=Registra.ComVen(line["chc"],line["part"],imp,erario,"3.1",0,c,line["pg"])
         #res.put() 
-        res.Vendita(1)
+#        res.Vendita(1)
+        res.Venditams(1)
         
     def GetFatturabyNum(self,num):
         recls=Scarico.objects.filter(fattura=num).values("id","idcod__cod","idcod__genere__iva","q","cassa","fattura",
@@ -434,7 +440,7 @@ class Produt:
         ll=[]
         ss=[]
         if(message["cliente"]!=""):
-            recls=trasporto.objects.filter(Q(cliente__azienda=message["cliente"]),Q(status=0)).exclude(id=1).values("tara","idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
+            recls=trasporto.objects.filter(Q(cliente__id=message["cliente"]),Q(status=0)).exclude(id=1).values("tara","idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
         else:
             recls=trasporto.objects.filter(Q(status=0)).exclude(id=1).values("tara","idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
         
@@ -494,7 +500,7 @@ class Produt:
         f=(s.fattura).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
-        cln=Cliente.objects.get(azienda=cliente)
+        cln=Cliente.objects.get(id=cliente)
         if (int(pgm)!=0):
             pg=1
         gg=datetime.now()+timedelta(int(pgm))
@@ -504,7 +510,7 @@ class Produt:
             rec=Scarico(idcod=cod,cliente=cln,prezzo=item["prz"],q=item["q"],cassa=item["css"],
                                     fattura=fatt,lotto=item["lotto"],iva=item["iva"],pagato=pg,scadenza=gg,tara=item["tara"])
             rec.save()
-            cln=Cliente.objects.get(azienda=cliente)
+       #     cln=Cliente.objects.get(id=cliente)
             imp+=row
             erario+=Decimal(item["iva"])*row
             ls={}
@@ -517,8 +523,8 @@ class Produt:
             ls["css"]=item["cassa"]
             ls["ps"]=item["q"]
             lsdc.append(ls)
-        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,cliente,fatt)
-        res.Vendita()
+        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,cln,fatt)
+        res.Venditams()
         res.SetErarioCliente()
    
         obj=Pdf.PrintTable("FATTURA",lsdc,imp+erario-Decimal(tot))
@@ -538,7 +544,7 @@ class Produt:
         f=(s.fattura).split("-")
         r=int(f[1])+1
         prg=f[0]+"-"+str(r)
-        c=Cliente.objects.get(azienda=cln)
+        c=Cliente.objects.get(id=cln)
 
         for item in line:
             d=0
@@ -600,9 +606,10 @@ class Produt:
 #registrazione contabile
         #if(int(tot)==-1):
             #tot=-imp-erario
-        res=Registra.ComVen(conto,-imp-erario,-imp,-erario,"3.1",0,cln,prg)
+        res=Registra.ComVen(conto,-imp-erario,-imp,-erario,"3.1",0,c,prg)
         res.SetErarioCliente(1)
-        res.Vendita()
+#        res.Vendita()
+        res.Venditams()
 #registrazione contabile  
 #        self.stampaFattura(fatt,c,rg)
         obj=Pdf.PrintTable("Nota di Credito",lsdc,0)
