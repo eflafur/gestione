@@ -9,7 +9,7 @@ import io
 
 class CreateData:
     
-    def EntrataBolla(self,ls,bl,bl1,dt,facc,tras,vari):
+    def EntrataBolla(self,ls,bl,bl1,dt,facc,tras,vari,cl):
         rec=0
         cnt=0
         i=0
@@ -18,8 +18,8 @@ class CreateData:
         totcss=0
         line= sorted(ls, key=lambda k: k['cod']) 
         seg=line[0]["cod"].split('-')
-        pc=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__azienda=seg[0]))
-        pc1=Carico.objects.filter(Q(bolla=bl1),Q(idcod__produttore__azienda=seg[0]))
+        pc=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__id=cl))
+        pc1=Carico.objects.filter(Q(bolla=bl1),Q(idcod__produttore__id=cl))
         if (pc1):
             if(bl!=bl1):
                 return 3

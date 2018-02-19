@@ -148,6 +148,7 @@ def Fattura(request):
         context={}
         return render(request,"Validazione/login.html",context)        
     res=""
+    res1=""
     itm=" "
     context={}
     if(request.method=="POST"):
@@ -175,8 +176,7 @@ def Fattura(request):
         elif (message["azione"]=="R"):
             itm=message["item"]
             lst = jsonpickle.decode(message['res'])
-            res=objf.ResoDDT(lst,message["item"])
-           # res=objf.ScriviDDT(lst,itm)
+            res=objf.ResoDDT(lst,message["item"],message["cln"])
         elif (message["azione"]=="reazione"):
             itm=message["item"]
             objf=FGetTable.GetData()
@@ -197,6 +197,7 @@ def Fattura(request):
             ls=[]
             res1=objf.GetClienteByNumSospese(message["nome"])
             dc["azienda"]=res1["doc"][0]["cliente__azienda"]
+            dc["id"]=res1["doc"][0]["cliente__id"]
             ls.append(dc)
             context={"items":res,"itemsd":res2,"itemsp":res3,"itemsf":ls,"el":message["nome"],"itemtr":res4}
         else:

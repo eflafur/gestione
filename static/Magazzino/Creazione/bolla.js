@@ -246,7 +246,7 @@ function Invia(act){
     
     $.post(
         "entrata",
-        {res:JSON.stringify(ar1),bolla:str,bolla1:str1,azione:act,dt:dt1,facc:fc,tras:ts,vari:vr},
+        {res:JSON.stringify(ar1),bolla:str,bolla1:str1,azione:act,dt:dt1,facc:fc,tras:ts,vari:vr,cl:$("#cliente option:selected").val()},
         function(res){
             if(res==3)
                 alert("Bolla"+ str1 + ": gia esistente");

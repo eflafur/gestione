@@ -192,6 +192,7 @@ class Reportms:
         res=contocln.objects.filter(cod=lsms[0],sub=lsms[1])
         sumdare=res.aggregate(Sum("dare"))
         sumavere=res.aggregate(Sum("avere"))
-        ls.append(sumdare["dare__sum"])
-        ls.append(sumavere["avere__sum"])
+        dic["dare"]=sumdare["dare__sum"]
+        dic["avere"]=sumavere["avere__sum"]
+        ls.append(dic)
         return ls

@@ -185,7 +185,7 @@ class GetData:
             imp+=Decimal(item["vnd"])
             erario+=Decimal(item["vnd"])*(Decimal(item["iva"]))
         f=Produttore.objects.get(id=idfrn)
-        res=Registra.ComVen(0,0,imp,erario,"53.1",0,f,ft,data,idfrn)
+        res=Registra.ComVen(0,0,imp,erario,"33.03.01",0,f,ft,"55.01.07",data,idfrn)
  #       res.Acquisto()
         res.Acquistoms()
         res.SetErarioForn()   
@@ -259,6 +259,6 @@ class GetData:
             imp+=item["fattimp"]
             erario+=item["fattimp"]*(item["idcod__genere__iva"])
         f=Produttore.objects.get(id=line["idfrn"])
-        res=Registra.ComVenBnc(line["chc"],line["part"],imp,erario,"53.1",0,line["pg"],s1[0]["datafatt"],f,line["idfrn"])
+        res=Registra.ComVenBnc(line["chc"],line["part"],imp,erario,"33.03.01",0,line["pg"],s1[0]["datafatt"],f,line["idfrn"])
    #     res.putfrn()
         res.putfrnms()

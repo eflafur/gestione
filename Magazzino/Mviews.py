@@ -50,8 +50,9 @@ def CreaBolla(request):
             tras=message["tras"]
             vari=message["vari"]
             dt=message["dt"]
+            cl=message["cl"]
             obj1=MCreateTable.CreateData()
-            res=obj1.EntrataBolla(lst,bolla,bolla1,dt,facc,tras,vari)
+            res=obj1.EntrataBolla(lst,bolla,bolla1,dt,facc,tras,vari,cl)
         return JsonResponse(res,safe=False)
     if(request.method=="GET"):
         message=request.GET

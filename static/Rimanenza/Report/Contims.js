@@ -29,6 +29,10 @@ function GetBT(data,cod){
         return
 };
 
+function GetMs(ret,cod){
+
+}
+
 function Write(res,cod){
     var label="";
     var subtot=0;
@@ -37,16 +41,16 @@ function Write(res,cod){
         subtot+=res[i].sum__dare
         if(res[i].cliente__azienda!=cliente && cliente!=""){
             label=label + '<tr>';
-            label=label + '<td>' + res[i].sum__dare+ '</td>';
-            label=label + '<td>' + res[i].sum__avere+ '</td>';
+            label=label + '<td>' + res[i].dare+ '</td>';
+            label=label + '<td>' + res[i].avere+ '</td>';
             label=label + '<td>' +res[i].cliente__azienda+ '</td>';
             label=label + '</tr>';
         
         }
         else{
             label=label + '<tr>';
-            label=label + '<td>' + res[i].sum__dare+ '</td>';
-            label=label + '<td>' + res[i].sum__avere+ '</td>';
+            label=label + '<td>' + res[i].dare+ '</td>';
+            label=label + '<td>' + res[i].avere+ '</td>';
             label=label + '<td>' +res[i].cliente__azienda+ '</td>';
             label=label + '</tr>';
         }

@@ -126,7 +126,7 @@ class Produt:
     
 #registrazione contabile
 #        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,line[0]["cln"],fatt)
-        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,c,fatt)
+        res=Registra.ComVen(conto,tot,imp,erario,"11.03.01",pg,c,fatt,"47.01.03")
         res.SetErarioCliente()
 #        res.Vendita()
         res.Venditams()
@@ -422,7 +422,7 @@ class Produt:
         for item in s1:
             imp+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]
             erario+=(item["q"]-(item["cassa"]*item["tara"]))*item["prezzo"]*(item["idcod__genere__iva"])
-        res=Registra.ComVen(line["chc"],line["part"],imp,erario,"3.1",0,c,line["pg"])
+        res=Registra.ComVen(line["chc"],line["part"],imp,erario,"11.03.01",0,c,line["pg"],"")
         #res.put() 
 #        res.Vendita(1)
         res.Venditams(1)
@@ -479,7 +479,7 @@ class Produt:
         trs=trasporto.objects.filter(status=0).values("tara","ddt","q","prezzo","data","lotto","cassa",
                                 "idcod__cod","cliente__azienda","idcod__genere__iva","status","cliente__azienda")
         trstrs=trs.annotate(cod=F("idcod__cod"),ps=F("q"),css=F("cassa"),prz=F("prezzo"),iva=F("idcod__genere__iva")).values("cod",
-                                   "q","css","prz","iva","data","lotto","ddt","cliente__azienda","tara")
+                                   "q","css","prz","iva","data","lotto","ddt","cliente__azienda","tara","idcod__id")
         for item in ls:
             t=trstrs.filter(ddt=item).values()
             data=list(t)
@@ -506,7 +506,8 @@ class Produt:
         gg=datetime.now()+timedelta(int(pgm))
         for item in line:
             row=Decimal(item["prz"])*(Decimal(item["q"])-(int(item["cassa"])*Decimal(item["tara"])))
-            cod=IDcod.objects.get(cod=item["cod"])
+       #     cod=IDcod.objects.get(cod=item["cod"])
+            cod=IDcod.objects.get(id=item["idcod_id"])
             rec=Scarico(idcod=cod,cliente=cln,prezzo=item["prz"],q=item["q"],cassa=item["css"],
                                     fattura=fatt,lotto=item["lotto"],iva=item["iva"],pagato=pg,scadenza=gg,tara=item["tara"])
             rec.save()
@@ -523,7 +524,7 @@ class Produt:
             ls["css"]=item["cassa"]
             ls["ps"]=item["q"]
             lsdc.append(ls)
-        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,cln,fatt)
+        res=Registra.ComVen(conto,tot,imp,erario,"11.03.01",pg,cln,fatt,"47.01.03")
         res.Venditams()
         res.SetErarioCliente()
    
@@ -606,7 +607,7 @@ class Produt:
 #registrazione contabile
         #if(int(tot)==-1):
             #tot=-imp-erario
-        res=Registra.ComVen(conto,-imp-erario,-imp,-erario,"3.1",0,c,prg)
+        res=Registra.ComVen(conto,-imp-erario,-imp,-erario,"11.03.01",0,c,prg,"47.05.07")
         res.SetErarioCliente(1)
 #        res.Vendita()
         res.Venditams()
@@ -618,7 +619,7 @@ class Produt:
         return 0        
     
   
-    def ResoDDT(self,line,fatt):
+    def ResoDDT(self,line,fatt,cln):
         s=""
         impfatt=0
         imp=0;
@@ -629,7 +630,7 @@ class Produt:
         bl=[]
         nodi=trasporto.objects.filter(ddt=fatt)
         crc=Carico.objects.filter(pagato=0)
-        c=Cliente.objects.get(azienda=line[0]["cln"])
+        c=Cliente.objects.get(id=cln)
 
         for item in line:
             rm=0

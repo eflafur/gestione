@@ -25,7 +25,7 @@ class GetData:
         elif(nome[:2]=="fc"):
             rec=Scarico.objects.filter(fattura=nome).values("idcod__id","tara","cliente__azienda","data","fattura","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
         else:
-            rec=trasporto.objects.filter(ddt=nome).values("idcod__id","tara","cliente__azienda","data","ddt","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto")
+            rec=trasporto.objects.filter(ddt=nome).values("idcod__id","tara","cliente__azienda","data","ddt","q","cassa","prezzo","idcod__cod","idcod__genere__iva","lotto","cliente__id")
         d1=list(rec)
         dic["doc"]=d1
         return dic

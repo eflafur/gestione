@@ -65,17 +65,13 @@ $(document).ready(function(){
             return false;
         }
         if($(this).val()==0){
-//            $("#btadd").hide();
             $("#chc").show();
             $(".tot").attr("readonly",false);
         }
         else{
             $("#chc").hide();
             $(".tot").attr("readonly",true);
-     //       $("#btadd").show();
         }
-//        if($(this).val()==0 && ar1.length==0 && n==1)
-       //     $("#btadd").hide();
         if(n==1)
             return false;
     });
@@ -224,17 +220,10 @@ $(document).ready(function(){
             ar1.push(obj);
             lt="";
             Fill();
-//            if((tipo!="dd"))
-                //$("#codice").attr('disabled',false);
             $("#btadd").hide();
         }
         dtl="";
         trl.length=0;
-        //if(tipo=="dd"){
-            //$("#ddtft").show();
-            //$("#btanl").show();
-            //return;
-            //}
         $("#btemit").show();
         return;
     });
@@ -257,7 +246,6 @@ $(document).ready(function(){
             AddRow(arr[0]);
     });
 });
-
 
 function Eval(){
     $("#btltsos").hide();
@@ -328,10 +316,15 @@ function Invia(act){
         t=0;
     else if(sumf>t)
         pg=1
-        
+    if(pg==0)
+        if(choice==""){
+            alert("selezionare Cassa/Banca")
+            return 1
+        }
+    
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t,chc:choice,cln:$("#cliente").val()},
+      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t,chc:choice,cln:$("#cliente option:eq(0)").val()},
     function (result){
     });
     ar1.length=0
