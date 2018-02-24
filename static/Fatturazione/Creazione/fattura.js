@@ -135,7 +135,8 @@ $(document).ready(function(){
     $("#prezzo").keypress(function(){
        // if(n==1)
             $("#btadd").show();
-        $("#pgm").show();
+        if(tipo!="dd")
+            $("#pgm").show();
     });
     
     $("#btsps").click(function(){
@@ -224,7 +225,13 @@ $(document).ready(function(){
         }
         dtl="";
         trl.length=0;
-        $("#btemit").show();
+        if(tipo=="dd"){
+            $("#btemit").show();
+            $("#btems").hide();
+            $("#btsps").hide();
+        }
+        else
+            $("#btemit").show();
         return;
     });
 
@@ -310,11 +317,12 @@ function Fill(){
 function Invia(act){
 //$(".tot").trigger(function(e){
 //});
-    var t=parseFloat($(".tot").val());
+    var t=parseFloat($(".tot").val()).toFixed(2);
     var pg=$("#pagam").val();
+    var sf=sumf.toFixed(2);
     if(pg>0)
         t=0;
-    else if(sumf>t)
+    else if(sf>t)
         pg=1
     if(pg==0)
         if(choice==""){

@@ -104,43 +104,28 @@ function GetDdt(){
             sum+=parseFloat($(this).find("td:eq(3)").text());
          });
     }
-    $("#tot").val(sum);
+    $("#tot").val(sum.toFixed(2));
     if($("#pagam").val()!=0)
         $("#tot").attr("readonly",true);
  };
 
 
 function SendDdt(){
-    var t=parseFloat($("#tot").val());
+    var t=parseFloat($("#tot").val()).toFixed(2);
     var pg=$("#pagam").val();
+    var sf=sum.toFixed(2);
     if(pg>0)
         t=0;
-    else if(t>sum || t<0){
+    else if(t>sf|| t<0){
         alert ("valore inammissibile")
         return 1;
     }
-    else if(t<sum)
+    else if(t<sf)
         pg=1
     $.post(
         "ddt",
         {ddt:JSON.stringify(ar),action:"ddt",cln:$("#clientes option:selected").val(),pgm:pg,tot:t,chc:choice},
         function(res){
-            //var label="";
-            //for (i=0;i<res.length;i++){
-                //imp=parseFloat(res[i]["q"])*parseFloat(res[i]["prz"])*(parseFloat(res[i]["iva"])+1);
-                //label=label + '<tr>';
-                //label=label + '<td>'+res[i]["ddt"]+'</td>';
-                //label=label + '<td>' + res[i]["cod"] + '</td>';
-                //label=label + '<td>' + res[i]["q"] + '</td>';
-                //label=label + '<td>' + res[i]["css"] + '</td>';
-                //label=label + '<td>' + res[i]["prz"] + '</td>';
-                //label=label + '<td>' + res[i]["iva"]+ '</td>';
-                //label=label + '<td>' + imp + '</td>';
-                //label=label + '<td>' + res[i]["data"] + '</td>';
-                //label=label + '<td>' + res[i]["lotto"] + '</td>';
-                //label=label + '</tr>';
-            //}
-            //$("#tb7").html(label);
-            //$("#tbf2").show();
+
         });
 };

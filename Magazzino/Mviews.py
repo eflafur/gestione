@@ -123,7 +123,6 @@ def EliminaBolla(request):
     if(request.method=="POST"):
         message=request.POST
         res=message["a1"]
-#        res=re.sub('[" "]',"",message["a1"])
         var=res.split(":")
         obj5=MModifica.ModProd()
         res=obj5.DelBolla(var)

@@ -1,6 +1,6 @@
 import django
 django.setup()
-from gestione.models import Carico
+from gestione.models import Carico,Saldo,ExCsBl
 from django.db.models import Q
     
 class ModProd:
@@ -40,5 +40,12 @@ class ModProd:
     
     def DelBolla(self,line):
         rec=Carico.objects.filter(Q(bolla=line[0]), Q(idcod__produttore__azienda=line[1]))
+        rec1=rec.values("idcod","cassa","excsbl")
+        for c in rec1:
+            s=Saldo.objects.get(idcod=c["idcod"])
+            s.q-=c["cassa"]
+            s.save()
+        x=ExCsBl.objects.get(id=rec1[0]["excsbl"])
+        x.delete()
         rec.delete()
         return 1
