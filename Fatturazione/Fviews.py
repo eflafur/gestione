@@ -301,6 +301,8 @@ def DDT(request):
         res=objf.GetCliente()
         context={"items":res,"itemtp":res3}
         return render(request,"fatturazione/Modifica/ddt-cliente.html",context)
+    
+    
 
 def LKFatturabyCliente(request):
     if(login==0):

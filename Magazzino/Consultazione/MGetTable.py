@@ -45,8 +45,60 @@ class GetData:
         data=list(rec)
         return data    
     def GetCaricoTotale(self,message):
-        rec=Carico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","cassa","bolla","data").order_by("bolla")
+        beforefatt=""
+        beforefrn=""
+        rec=Carico.objects.filter(Q(data__gte=message["data"])).values("idcod__cod","q","cassa","bolla","data","cassa","cassaexit",
+                                    "fatt","pagato","fattimp","excsbl","idcod__produttore__azienda").order_by("bolla","idcod__produttore__azienda")
         data=list(rec)
+
+
+        #if(len(rec)==0):
+            #return 1
+        #for el in rec:
+            #if((el["bolla"]!=beforefatt)  or (el["idcod__produttore__id"]!=beforefrn)):
+                #if(beforefatt!=" "):
+                    #dic={}
+                    #dic["fatt"]=beforefatt
+                    #dic["imp"]=imp
+                    #dic["erario"]=erario
+                    #dic["frn"]=frn
+                    #dic["idfrn"]=idfrn
+                    #dic["dt"]=dt
+                    #dic["dtadd"]=dt+datetime.timedelta(days=15)
+                    #dic["note"]=note
+                    #dic["pg"]=pg
+                    #dic["saldo"]=ss.saldo
+                    #ll.append(dic)
+                #erario=0
+                #imp=0
+                #imp+=el["fattimp"]
+                #erario+=el["fattimp"]*el["idcod__genere__iva"]
+                #frn=el["idcod__produttore__azienda"]
+                #idfrn=el["idcod__produttore__id"]
+                #dt=el["data"]
+                #note=el["note"]
+                #pg=el["pagato"]
+                #ss=ivaforn.objects.get(Q(fatt=el["fatt"]),Q(nome=el["idcod__produttore__id"]))
+            #else:
+                #imp+=el["fattimp"]
+                #erario+=el["fattimp"]*el["idcod__genere__iva"]
+            #beforefatt=el["fatt"]
+            #beforefrn=el["idcod__produttore__id"]
+        #dic={}
+        #dic["fatt"]=beforefatt
+        #dic["imp"]=imp
+        #dic["erario"]=erario
+        #dic["frn"]=frn
+        #dic["idfrn"]=idfrn
+        #dic["dt"]=dt
+        #dic["dtadd"]=dt+datetime.timedelta(days=15)
+        #dic["note"]=note
+        #dic["pg"]=pg
+        #dic["saldo"]=ss.saldo
+        #ll.append(dic)
+
+
+
         return data    
     def GetCaricobyIdcod(self):
         dic={}

@@ -1,5 +1,5 @@
 
-var UserTable=$("#mytable");
+var UserTable=$("#tablef");
 var TempUserTable=null;
 
 var option=""
@@ -56,3 +56,45 @@ function GetTable(date){
 };
 
 
+function GetTableDT(date){
+     $.post(
+        "lktotale",
+        {data:date},
+        function(res){
+            var below=" ";
+            var label="";
+            var ar=[];
+            var bl=" ";
+            if(res.length==0)
+                return;
+
+        if (TempUserTable!=null)
+          TempUserTable.destroy();
+          TempUserTable=UserTable.DataTable({
+    //        "searching": false,
+            "ordering":true,
+            data:eval(res),
+            columns:[
+              {data:"bolla"},
+              {data:"idcod__cod"},
+              {data:"idcod__cod"},
+              {data:"idcod__cod"},
+              {data:"idcod__produttore__azienda"},
+              {data:"cassa"},
+              {data:"fatt"}
+              //{ render: function(data, type,row){
+              //return row["valore"];}
+              //}
+            ]
+        });
+        //var table = $('#tablef').DataTable();
+        //t=table.column( 2 ).data().sum();
+        //$("#totale").val(t.toFixed(2));
+        //$("#pgm").hide();
+        //$("#tbf3").show();
+        //$("#tott").show()
+//      return;
+  });
+              $("#idLKP").show();
+  x=1;
+  };

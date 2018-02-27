@@ -54,6 +54,7 @@ urlpatterns = [
     url('delcliente',Fviews.DelCliente),
     url('modana',Fviews.ModificaAnagrafica),
     url('ddt',Fviews.DDT),
+#    url('ddtt',Fviews.DDTT),
     url('gino',Fviews.LKDdt),
     
     #URL DI BILANCIO

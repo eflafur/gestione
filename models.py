@@ -82,7 +82,19 @@ class ExCsBl(models.Model):
 	facc=models.DecimalField(max_digits=7,decimal_places=2,null=True,blank=True,default=0)
 	trasporto=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
 	vari=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)	
-
+	datafatt=models.DateField(default=date.today)
+	costo=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True,default=0)
+	p=models.SmallIntegerField(default=0)
+	cv=models.IntegerField(null=True,blank=True,default=0)
+	fattimp=models.DecimalField(max_digits=14,decimal_places=2,null=True,blank=True,default=0)
+	fatt=models.CharField(max_length=10,null=True)
+	pagato=models.BooleanField(default=0)
+	note=models.TextField(max_length=30,default="")
+	qn=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	cassaexit=models.IntegerField(null=True,blank=True,default=0)
+	cassa=models.IntegerField(null=True,blank=True,default=0)
+	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	
 class Carico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)
 	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)

@@ -31,6 +31,11 @@
                     {%endfor%}
             </select> 
         </div>
+        </br>
+        <div class="col-md-3">
+            <button type="button" class="btn  btn-success" id="bttt">Tutti</button>
+        </div>
+
         <div class="col-md-3" id="pgm">  
             <p>Pagamento<select class="form-control" name="a6" id="pagam"></p>
               {% for entry in itemtp %}
@@ -38,17 +43,23 @@
             {% endfor %}
             </select>
         </div>
+
+        <div class="col-md-2" id="tott"> 
+           <p>Totale<input type="text" id="totale" class="form-control" name="a3" min="0" readonly></p>
+        </div>
+
         </br>
         <div class="col-sm-2"> 
             <button type="submit" class="btn btn-primary" id="btsel">Seleziona </button>  
             <button type="submit" class="btn btn-primary" id="btddt">Emetti </button>  
+            <!--<button type="submit" class="btn btn-primary" id="btdt">Somma </button>  -->
         </div>
     </div>
     </br>
 
     <div class="row">
-        <div class=" col-md-9" id="tbf1" >
-            <table id="tablef"  class="table table-hover">
+        <div class=" col-md-12" id="tbf1" >
+            <table id="tablef"  class="table table-hover" >
                 <thead id="thd">
                     <tr>
                         <th></th>
@@ -61,9 +72,25 @@
                 <tbody id="tb6"></tbody>
             </table>
         </div>
+        
+        
+        <div class=" col-md-12" id="tbf3" >
+            <table id="tablef3"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Ddt</th>
+                        <th>Cliente</th>
+                        <th>Valore</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="tb63"></tbody>
+            </table>
+        </div>
+        
           <div class=" col-md-12" id="tbf2" >
             <table id="tableddt"  class="table table-hover">
-                <thead id="thd">
+                <thead id="thd3">
                     <tr>
                         <th>Ddt</th>
                         <th>Articolo</th>

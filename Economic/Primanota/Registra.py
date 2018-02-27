@@ -24,8 +24,8 @@ class Commercio:
       #  self.s=sp.objects.all()
      #   self.cln=self.s.get(cod=cod)
       #  self.iva=self.s.get(cod="20.20")
-        prt=libro.objects.latest("id")
-        self.p=prt.id
+      #  prt=libro.objects.latest("id")
+      #  self.p=prt.id
 
     def Venditams(self,chc=0,):
         sl=saldocliente.objects.get(cliente=self.clnt)
@@ -48,9 +48,9 @@ class Commercio:
             res.save()
             res=contosp(cod=ls[0],sub=ls[1],ssub=ls[2],dare=self.tot,regis="PAGAMENTO")#CLIENTE
             res.save()
-            l=libro(id=self.p+4,prot=self.p+4,doc=self.fatt,desc="Cassa/Banca per vendita a " +self.clnt.azienda,conto=self.conto,
+            l=libro(doc=self.fatt,desc="Cassa/Banca per vendita a " +self.clnt.azienda,conto=self.conto,
                         dare=self.tot)#self.erario+self.imp)
-            l1=libro(id=self.p+5,prot=self.p+4,doc=self.fatt,desc="fattura acquisto da " +self.clnt.azienda,conto=self.cod,
+            l1=libro(doc=self.fatt,desc="fattura acquisto da " +self.clnt.azienda,conto=self.cod,
                             avere=self.tot)#self.erario+self.imp)
             l.save()
             l1.save()
@@ -76,39 +76,39 @@ class Commercio:
             res.save()
             
     def SetErarioCliente(self,r=0):
-        rec=ivacliente.objects.latest("id")
-        res=ivacliente(prot=rec.prot+1,fatt=self.fatt,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
+#        rec=ivacliente.objects.latest("id")
+        res=ivacliente(fatt=self.fatt,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
             erario=self.erario,saldo=self.imp+self.erario-self.tot)
         res.save()
         if(r==0):
-            l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="fattura vendita a " +self.clnt.azienda,conto=self.cod,
+            l=libro(doc=self.fatt,desc="fattura vendita a " +self.clnt.azienda,conto=self.cod,
                         dare=self.erario+self.imp)
-            l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,desc="fattura IVA " +self.clnt.azienda,conto="35.01.03",
+            l1=libro(doc=self.fatt,desc="fattura IVA " +self.clnt.azienda,conto="35.01.03",
                          avere=self.erario)
-            l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,desc="fattura ricavi " +self.clnt.azienda,conto="47.01.03",
+            l2=libro(doc=self.fatt,desc="fattura ricavi " +self.clnt.azienda,conto="47.01.03",
                          avere=self.imp)
         else:
-            l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,desc="reso vendita a" +self.clnt.azienda,conto=self.cod,
+            l=libro(doc=self.fatt,desc="reso vendita a " +self.clnt.azienda,conto=self.cod,
                             dare=self.erario+self.imp)
-            l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,desc="storno IVA " +self.clnt.azienda,conto="35.01.03",
+            l1=libro(doc=self.fatt,desc="storno IVA " +self.clnt.azienda,conto="35.01.03",
                              avere=self.erario)
-            l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,desc="reso su vendite" +self.clnt.azienda,conto="47.05.07",
+            l2=libro(doc=self.fatt,desc="reso vendite" +self.clnt.azienda,conto="47.05.07",
                              avere=self.imp)
         l.save()
         l1.save()
         l2.save()
     def SetErarioForn(self):
-        rec=ivaforn.objects.latest("id")
+#        rec=ivaforn.objects.latest("id")
   
-        res=ivaforn(saldo=self.imp+self.erario-self.tot,prot=rec.prot+1,fatt=self.fatt,nome=self.idfrn,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
+        res=ivaforn(saldo=self.imp+self.erario-self.tot,fatt=self.fatt,nome=self.idfrn,tot=self.imp+self.erario,imp=self.imp,erario=self.erario)
         res.save()
-        prt=libro.objects.latest("id")
-        p=prt.id
-        l=libro(id=self.p+1,prot=self.p+1,doc=self.fatt,dtdoc=self.data,desc="fattura acquisto da " +self.clnt.azienda,conto=self.cod,
+        #prt=libro.objects.latest("id")
+        #p=prt.id
+        l=libro(doc=self.fatt,dtdoc=self.data,desc="fattura vendite a " +self.clnt.azienda,conto=self.cod,
                     avere=self.erario+self.imp)
-        l1=libro(id=self.p+2,prot=self.p+2,doc=self.fatt,dtdoc=self.data,desc="fattura IVA " +self.clnt.azienda,conto="35.01.01",
+        l1=libro(doc=self.fatt,dtdoc=self.data,desc="fattura IVA " +self.clnt.azienda,conto="35.01.01",
                      dare=self.erario)
-        l2=libro(id=self.p+3,prot=self.p+3,doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.clnt.azienda,conto="55.01.07",
+        l2=libro(doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.clnt.azienda,conto="55.01.07",
                      dare=self.imp)
         l.save()
         l1.save()
@@ -139,9 +139,9 @@ class Banca:
             res=contosp(cod="19",sub="01",ssub="01",dare=self.tot,regis="PAG BANCA") #PAGAMENTO  BANCA
             resf=contofrn(cod="33",sub="03",ssub="01",avere=self.tot,forn=self.clnt,regis="ACQUISTO")#fornitore
             resf.save()
-            l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.clnt.azienda,conto="19.01.01",
+            l=libro(doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.clnt.azienda,conto="19.01.01",
                             dare=self.tot)#self.erario+self.imp)
-            l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc=" Storno cliente vendita a " +self.clnt.azienda,conto="3.1",
+            l1=libro(doc=self.doc,dtdoc=self.data,desc=" Storno cliente vendita a " +self.clnt.azienda,conto="3.1",
                              avere=self.tot)#self.erario+self.imp)
             l.save()
             l1.save()
@@ -163,9 +163,9 @@ class Banca:
         if(self.sgn==0):
             res=contosp(cod=ls[0],sub=ls[1],ssub=ls[2],avere=self.tot,regis="PAG BANCA") #PAGAMENTO  BANCA
             resf=contofrn(cod="33",sub="03",ssub="01",dare=self.tot,forn=self.frn,regis="ACQUISTO")#fornitore
-            l=libro(id=self.p+1,prot=self.p+1,doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.frn.azienda,conto=self.conto,
+            l=libro(doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.frn.azienda,conto=self.conto,
                             avere=self.tot)#self.erario+self.imp)
-            l1=libro(id=self.p+2,prot=self.p+2,doc=self.doc,dtdoc=self.data,desc="Storno fornitore acquisto da " +self.frn.azienda,conto="55.01.07",
+            l1=libro(doc=self.doc,dtdoc=self.data,desc="Storno fornitore acquisto da " +self.frn.azienda,conto="55.01.07",
                              dare=self.tot)#self.erario+self.imp)
             l.save()
             l1.save()

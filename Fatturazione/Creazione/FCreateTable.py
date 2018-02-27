@@ -439,7 +439,7 @@ class Produt:
         i=0
         ll=[]
         ss=[]
-        if(message["cliente"]!=""):
+        if(message["cliente"]!="0"):
             recls=trasporto.objects.filter(Q(cliente__id=message["cliente"]),Q(status=0)).exclude(id=1).values("tara","idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")
         else:
             recls=trasporto.objects.filter(Q(status=0)).exclude(id=1).values("tara","idcod__cod","idcod__genere__iva","q","cassa","ddt","data","prezzo","cliente__azienda")

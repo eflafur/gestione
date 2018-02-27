@@ -1,3 +1,4 @@
+
 var ar1= [];
 var sum;
 var sumf;
@@ -319,7 +320,7 @@ function Invia(act){
 //});
     var t=parseFloat($(".tot").val()).toFixed(2);
     var pg=$("#pagam").val();
-    var sf=sumf.toFixed(2);
+    var sf=parseFloat(sumf.toFixed(2));
     if(pg>0)
         t=0;
     else if(sf>t)
@@ -516,4 +517,4 @@ function SelLottoSos(cod){
         }
     $('#lotto').html(option);
     };
-    
+ 
