@@ -40,6 +40,8 @@ class CreateData:
             rec.vari=Decimal(vari)
             rec.qn=pssum
             rec.cassa=csssum
+            rec.bolla=bl1
+            rec.data=dt
             rec.save()
             data=list(p)
             pc.delete()
@@ -65,7 +67,7 @@ class CreateData:
             s1.q=qs+diff
             s1.save()
             if(cnt==0):
-                rec=ExCsBl(facc=Decimal(facc),trasporto=Decimal(tras),vari=Decimal(vari),qn=pssum,cassa=csssum)
+                rec=ExCsBl(data=dt,bolla=bl1,facc=Decimal(facc),trasporto=Decimal(tras),vari=Decimal(vari),qn=pssum,cassa=csssum)
                 rec.save() 
             codid=cod.get(id=item["id"])
             rec1=Carico(excsbl=rec,tara=item["tara"],qn=item["ps"],cassa=item["css"],bolla=bl1,idcod=codid,data=dt,cassaexit=csx)

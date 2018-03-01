@@ -184,7 +184,7 @@ function GetCodId(res){
     for (i=0;i<res.a.length;i++){
         label=label +'<option value='+res.a[i].id+'>'+res.a[i].cod+'</option>';
     }
-    $("#dtft").hide();
+//    $("#dtft").hide();
     $("#codice").html(label);
     label=" "
     for (i=0;i<res.b.length;i++){
