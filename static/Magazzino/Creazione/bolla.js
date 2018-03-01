@@ -23,6 +23,7 @@ $(document).ready(function(){
         });
     
     $("#cliente").click(function(){
+        ar1.length=0
         $("#cliente").attr("disabled",false);
         GetCod();
         $("#dtft").show();

@@ -16,6 +16,9 @@ class CreateData:
         before=" "
         tot=0
         totcss=0
+        pssum=0
+        csssum=0
+        cssexitsum=0
         line= sorted(ls, key=lambda k: k['cod']) 
         seg=line[0]["cod"].split('-')
         pc=Carico.objects.filter(Q(bolla=bl),Q(idcod__produttore__id=cl))
@@ -23,6 +26,10 @@ class CreateData:
         if (pc1):
             if(bl!=bl1):
                 return 3
+        for item in line:
+            pssum+=Decimal(item["ps"])
+            csssum+=int(item["css"])
+        
         if(pc):
             p=pc.filter().values("qn","cassa","cassaexit","idcod__id","data","excsbl__id")
             o=p[0]["qn"]
@@ -31,6 +38,8 @@ class CreateData:
             rec.facc=Decimal(facc)
             rec.trasporto=Decimal(tras)
             rec.vari=Decimal(vari)
+            rec.qn=pssum
+            rec.cassa=csssum
             rec.save()
             data=list(p)
             pc.delete()
@@ -56,12 +65,12 @@ class CreateData:
             s1.q=qs+diff
             s1.save()
             if(cnt==0):
-                rec=ExCsBl(facc=Decimal(facc),trasporto=Decimal(tras),vari=Decimal(vari))
-                rec.save()
+                rec=ExCsBl(facc=Decimal(facc),trasporto=Decimal(tras),vari=Decimal(vari),qn=pssum,cassa=csssum)
+                rec.save() 
             codid=cod.get(id=item["id"])
             rec1=Carico(excsbl=rec,tara=item["tara"],qn=item["ps"],cassa=item["css"],bolla=bl1,idcod=codid,data=dt,cassaexit=csx)
             rec1.save()
-            cnt+=1
+            cnt=1
         return 2        
     
  

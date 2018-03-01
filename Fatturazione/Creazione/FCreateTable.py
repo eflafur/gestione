@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto,ivacliente,saldocliente
+from gestione.models import Cliente,Scarico,IDcod,Sospese,Saldo,Carico,trasporto,ivacliente,saldocliente,ExCsBl
 from decimal import Decimal
 from django.db.models import Q,F
 import time,os,subprocess,datetime
@@ -62,18 +62,19 @@ class Produt:
         f=(s.fattura).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
-#        c=Cliente.objects.get(azienda=line[0]["cln"])
         c=Cliente.objects.get(id=cln)
         for item in line:
             ltt=item["lotto"]
             ltcod=lotto.filter(idcod__id=item["id"])
             try:
                 ltt1=ltcod.get(id=ltt)
+                x=ExCsBl.objects.get(id=ltt1.excsbl_id)
             except:
                 f=open("/home/jafu/djangolog","w")
                 f.write("errore su assegnazione Lotto :+"+item + datetime.now())
                 f.close()
                 return 1
+            
             bls.clear()
             bl.clear()
             if(item["tara"]==""):
@@ -86,22 +87,29 @@ class Produt:
             css=int(item["css"])
             qcss=ps/css-tara
             cod=IDcod.objects.get(id=item["id"])
-    
             bl.append(ltt)
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
                 bls.append(str(ltt)+"-"+str(css))
+                x.cassaexit+=css
+                x.costo+=qcss*css*prz
+                x.q+=qcss*css
                 ltt1.cassaexit+=css
                 ltt1.costo+=qcss*css*prz
                 ltt1.q+=qcss*css
                 ltt1.save()
+                x.save()
                 rim=0
             else:
                 bls.append(str(ltt)+"-"+str(css+rim))
+                x.cassaexit+=ltt1.cassa
+                x.costo+=prz*(css+rim)*qcss
+                x.q+=(css+rim)*qcss
                 ltt1.cassaexit=ltt1.cassa
                 ltt1.costo+=prz*(css+rim)*qcss
                 ltt1.q+=(css+rim)*qcss
                 ltt1.save()
+                x.save()
                 ltt2=ltcod.exclude(id=ltt).order_by("id")
                 data=list(ltt2)
                 rim=self.DelLotto(ltt2,-rim,prz,qcss,0,bl,bls)
@@ -167,6 +175,7 @@ class Produt:
                 bl.append(ltt)
             try:
                 ltt1=ltcod.get(id=ltt)
+                x=ExCsBl.objects.get(id=ltt1.excsbl_id)
             except:
                 f=open("/home/jafu/djangolog","w")
                 f.write("errore su assegnazione Lotto :+"+item + datetime.now())
@@ -201,17 +210,25 @@ class Produt:
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
                 bls.append(str(ltt)+"-"+str(css))
+                x.cassaexit+=css
+                x.costo+=qcss*css*prz
+                x.q+=qcss*css
                 ltt1.cassaexit+=css
                 ltt1.costo+=qcss*css*prz
                 ltt1.q+=qcss*css
                 ltt1.save()
+                x.save()
                 rim=0
             else:
                 bls.append(str(ltt)+"-"+str(css+rim))
+                x.cassaexit+=ltt1.cassa
+                x.costo+=prz*(css+rim)*qcss
+                x.q+=(css+rim)*qcss                
                 ltt1.cassaexit=ltt1.cassa
                 ltt1.costo+=prz*(css+rim)*qcss
                 ltt1.q+=(css+rim)*qcss
                 ltt1.save()
+                x.save()
                 ltt2=ltcod.exclude(id=ltt)
                 data=list(ltt2)
                 rim=self.DelLotto(ltt2,-rim,prz,qcss,0,bl,bls)
@@ -567,21 +584,30 @@ class Produt:
                 ar=i.split("-")
                 try:
                     lt=crc.get(id=ar[0])
+                    x=ExCsBl.objects.get(id=lt.excsbl_id)
                 except:
                     continue
                 bl.append(ar[0])
                 d=int(ar[1])-rscss
                 if(css<=d):
+                    x.costo-=nodo.prezzo*css*pscss
+                    x.cassaexit-=css
+                    x.q-=css*pscss
                     lt.costo-=nodo.prezzo*css*pscss
                     lt.cassaexit-=css
                     lt.q-=css*pscss
                     lt.save()
+                    x.save()
                     break
                 elif(css>d & d>0):
+                    x.costo-=nodo.prezzo*d*pscss
+                    x.cassaexit-=d
+                    x.q-=d*pscss                    
                     lt.costo-=nodo.prezzo*d*pscss
                     lt.cassaexit-=d
                     lt.q-=d*pscss
                     lt.save()
+                    x.save
                     rscss=0
                     css-=d
                 else:

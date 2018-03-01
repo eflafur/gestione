@@ -79,6 +79,7 @@ class Sito(models.Model):
 		return "%s" % (self.citta)
 	
 class ExCsBl(models.Model):
+	bolla=models.CharField(max_length=20,null=True)
 	facc=models.DecimalField(max_digits=7,decimal_places=2,null=True,blank=True,default=0)
 	trasporto=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
 	vari=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)	

@@ -34,18 +34,18 @@ function GetTable(date){
             var ar=[];
             var bl=" ";
             for (i=0;i<res.length;i++){
-                ar=res[i].idcod__cod.split("-");
-                bl=res[i].bolla +'-'+ ar[0];
+                ar=res[i].carico__idcod__cod.split("-");
+                bl=res[i].carico__bolla +'-'+ ar[0];
                 if(bl!=below){
                     label=label + '<tr>';
                     label=label + '<td><a href="#">' + bl+ '</a></td>';
                 }
                 else
                 label=label + '<tr><td></td>';
-                label=label + '<td>' + res[i].idcod__cod+ '</td>';
+                label=label + '<td>' + res[i].carico__idcod__cod+ '</td>';
                 label=label + '<td>' + res[i].q+ '</td>';
                 label=label + '<td>' + res[i].cassa+ '</td>';
-                label=label + '<td>' +res[i].data + '</td>';
+                label=label + '<td>' +res[i].carico__data + '</td>';
                 label=label + '</tr>';
                 below=bl
             }
