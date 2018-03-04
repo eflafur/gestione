@@ -145,13 +145,21 @@ def Contov(request):
         if(message["azione"]=="b"):
             obj=MGetTable.GetData()
             v=message["cln"]
-            res=obj.GetBollaCv(v)
-        if(message["azione"]=="p"):
+            res=obj.GetBollaCv1(v)
+        elif(message["azione"]=="b1"):
+            obj=MGetTable.GetData()
+            res=obj.GetBollabyPrd(message)
+        elif(message["azione"]=="p"):
             ret=jsonpickle.decode(message["data"])
             mrg=message["mrg"]
             frn=message["frn"]
             obj=MGetTable.GetData()
             res=obj.PushBollaCv(ret,frn,mrg)
+        elif(message["azione"]=="p1"):
+            ret=jsonpickle.decode(message["data"])
+            frn=message["frn"]
+            obj=MGetTable.GetData()
+            res=obj.GetBolla1(ret,frn)            
         return JsonResponse(res,safe=False)        
     if(request.method=="GET"):
         obj=Modifica.ModProd()

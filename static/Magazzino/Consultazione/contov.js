@@ -5,19 +5,18 @@ $(document).ready(function(){
     $("#brand").text("Clienti CV");
     Evidance();
     $("#azienda").click(function(){
+        $("#tbf2").hide();
         $("#btddt").hide();
         $("#btmrg").show();
         $("#btslz").show();
         $("#btcrc").show();
-        $("#tbf2").show();  
-        $("#tbf1").show();
         $("#cldt2").show();
         $("#cldt3").show();
         $("#cldt4").show();
         $("#cldt5").show();
         $("#cldt6").show();
         $("#cldt7").show();
-        GetCv();
+        GetBolle();
     });
     
     $("#btmrg").click(function(){
@@ -32,9 +31,9 @@ $(document).ready(function(){
     $("#btsel").click(function(){
         $("#btmrg").hide();
         $("#btslz").hide();
-        ret=GetCheched();
+        ret=GetCheched1();
+        PostChecked(ret);
         $("#btddt").show();
-//        WriteChecked(ret);
     });
 });
 
@@ -43,6 +42,8 @@ $(document).ready(function(){
         PushDdt(ret);
 //        $("#btddt").hide();
         $("#tbf1").hide();
+        $("#tbf2").hide();
+        $("#tbf3").hide();
         $("#cldt2").hide();
         $("#cldt3").hide();
         $("#cldt4").hide();
@@ -52,7 +53,15 @@ $(document).ready(function(){
         $("#cl").hide();
     });
     
+    $("#tbf1").on('click','a',function(){
+        var bl=$(this).text();
+        GetBolla(bl);
+    });
+    
 function Evidance(){
+    $("#tbf1").hide();
+    $("#tbf2").hide();
+    $("#tbf3").hide();
     $("#btslz").toggle();
     $("#cldt2").toggle();
     $("#cldt3").toggle();
@@ -62,112 +71,77 @@ function Evidance(){
     $("#cldt7").toggle();
 };
 
-function GetCv(){
+
+function GetBolle(){
+    var label="";
+    $("#tbf3").hide();  
     $.post(
         "cvc",
-        {cln:$("#azienda option:selected").text(),azione:"b"},
+        {cln:$("#azienda option:selected").val(),azione:"b"},
         function(res){
-            var k=res.length;
-            var mrg=0;
-            res1=res;
-            $("#dt2").val(res1[k-1].mrg);
-            $("#tbf2").show();
-            Write($("#dt2").val());
-        });
+        var x=0;
+            for (i=0;i<res.length;i++){
+                x=parseFloat(res[i].cassa)-parseFloat(res[i].cassaexit)
+                label=label + '<tr>';
+                label=label + '<td><input type="checkbox" value='+res[i].bolla+'></td>';
+                label=label + '<td><a href="#">' + res[i].bolla+ '</a></td>';
+                label=label + '<td>' + res[i].data+ '</td>';
+                label=label + '<td>' + res[i].cassa+ '</td>';
+                label=label + '<td>' + res[i].cassaexit+ '</td>';
+                label=label + '<td>' + res[i].facc+ '</td>';
+                label=label + '<td>' + res[i].trasporto+ '</td>';
+                label=label + '<td>' + res[i].vari+ '</td>';
+                label=label + '<td>' + res[i].produttore__margine+ '</td>';
+                label=label + '<td>' + x+ '</td>';
+                if(res[i].cassa>res[i].cassaexit)
+                    label=label + '<td><button class="btn-danger btn-sm" value="'+ x +'"></button></td>';
+                else
+                    label=label + '<td><button class="btn-success btn-sm" value="'+ x +'"></button></td>';
+                label=label + '</tr>';
+            }
+        $("#tbf1").show();  
+        $("#tb61").html(label);          
+    });
     return;
 };
 
-function Write(mrg){
-    var before="";
-    var label="";
-    var sum=0;
-    var sumcst=0;
-    var excs=0;
-    var totexcsbl=0;
-    for (i=0;i<res1.length-1;i++){
-        excs=parseFloat(res1[i].excsbl__trasporto)+parseFloat(res1[i].excsbl__facc)+parseFloat(res1[i].excsbl__vari)
-        nt1=(res1[i].costo/res1[i].q)*(1-mrg/100);
-        nt=nt1*res1[i].q;
-        iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
-        sum=sum+nt;
-        sumcst=sumcst+parseFloat(res1[i].costo);
-        label=label + '<tr>';
-        if(res1[i].bolla!=before){
-            label=label + '<td><input type="checkbox" value='+res1[i].bolla+'></td>';
-            label=label + '<td>' + res1[i].bolla+ '</td>';
-        }
-        else
-           label=label+'<td></td><td></td>'
-        label=label + '<td style="display: none">' + res1[i].bolla+ '</td>';
-        label=label + '<td>' + res1[i].data+ '</td>';
-        label=label + '<td>' + res1[i].q+ '</td>';
-        label=label + '<td>' + res1[i].cassa+ '</td>';
-        label=label + '<td>' + res1[i].idcod__cod+ '</td>';
-        label=label + '<td>' + res1[i].costo+ '</td>';
-        label=label + '<td><input class="prz" type=number value='+nt1+'></input></td>';
-        label=label + '<td>'+nt.toFixed(2)+'</td>';
-        label=label + '<td>' + iva.toFixed(2)+ '</td>';
-        label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
-        label=label + '<td style="display: none">' + res1[i].id+ '</td>';
-
-        if(res1[i].bolla!=before){
-            label=label + '<td>' + excs+ '</td>';
-            totexcsbl+=excs
-        }
 
 
-        label=label + '</tr>';
-        before=res1[i].bolla;
-    }
-    $("#cldt2").show();
-    $("#dt3").val(res1[i].ct);
-    $("#dt4").val(res1[i].rg);
-    $("#dt5").val(res1[i].pi);
-    $("#dt6").val(sum);
-    $("#cldt2").show();
-    $("#cldt3").show();
-    $("#cldt4").show();
-    $("#cldt5").show();
-    
-    $("#tbf2").show();  
-    $("#tb62").html(label);  
-    $("#dt6").val(sum);
-    $("#dt7").val(sumcst-sum-totexcsbl);
-};
-
-
-
-function ReadChange(n){
-    var ls=[];
-    $("#tb62 tr").each(function(){
-        if(n==0)
-            ls.push($(this));
-        else if(n==1){
-            var dc={}
-            dc["id"]=$(this).find("td:eq(12)").text();
-//             dc["id"]=$(this).find("td:last").text();
-             dc["prz"]=$(this).find("input.prz").val();
-             dc["fatt"]=$(this).find("td:eq(9)").text();
-             ls.push(dc);
-        } 
-     });
-     //if(xx==0)
-         //ls.splice(0,1)
-     return ls;
-};
-
-function PushDdt(ret){
-    var ar=[];
-    ar=JSON.stringify(ret);
+function GetBolla(bl){
     $.post(
         "cvc",
-        {data:ar,azione:"p",mrg:$("#dt2").val(),frn:$("#azienda option:selected").val()},
-        function(){
-            window.location.replace("cvc");
-    });
-};
+        {cln:$("#azienda option:selected").val(),bolla:bl,azione:"b1"},
+        function(res){
+            var label="";
+            var x=0;
+            for (i=0;i<res.length;i++){
+                x=parseFloat(res[i].qn)/parseFloat(res[i].costo)
+                label=label + '<tr>';
+                label=label + '<td>' + res[i].bolla+ '</td>';
+                label=label + '<td>' + res[i].idcod__cod+ '</td>';
+                label=label + '<td>' + res[i].cassa+ '</td>';
+                label=label + '<td>' + res[i].cassaexit+ '</td>';
+                label=label + '<td>' + res[i].q+ '</td>';
+                label=label + '<td>' + res[i].qn+ '</td>';
+                label=label + '<td>' + res[i].tara+ '</td>';
+                label=label + '<td>' +x.toFixed(2) + '</td>';
+                label=label + '<td>' + res[i].costo+ '</td>';
+                label=label + '</tr>';
+            }
+        $("#tbf1").hide();  
+        $("#tbf3").show();  
+        $("#tb63").html(label);          
+        });
+    }
 
-function GetCheched(){
+
+
+
+
+
+
+
+function GetCheched1(){
     var ar=[];
     var lsck=[]
     var t=0;
@@ -176,46 +150,124 @@ function GetCheched(){
     var sumcst=0;
     var excs=0;
     var totexcsbl=0;
-    $("#tbf2 :checked").each(function(index){
+    $("#tbf1 :checked").each(function(index){
         xx=index+1;
         ar[index]=$(this).val();
     });
 
     if(xx>0){
-        $("#tb62 tr").each(function(){
+        $("#tb61 tr").each(function(){
              r=$(this).find("td:eq(2)").text();
-             for (i=0;i<ar.length;i++){
-                 if(r==ar[i]){
-                     lsck.push($(this));
-                     sumcst+=parseFloat($(this).find("td:eq(7)").text())   
-                     sum+=parseFloat($(this).find("td:eq(9)").text())   
-                    io=$(this).find("td:eq(13)").text()
-                     if(isNaN( $(this).find("td:eq(13)").text()) | ($(this).find("td:eq(13)").text())=="") 
-                        totexcsbl+=0
-                    else
-                        totexcsbl+=parseFloat($(this).find("td:eq(13)").text())
-                     t=1;
-                     break;
-                 }
-                 continue;
-             }
-             if(t==0)
-                 $(this).remove();
-             t=0;
-         });
-        $("#dt6").val(sum);
-        $("#dt7").val(sumcst-sum-totexcsbl);
-        return lsck;
-    } 
+        }); 
+    }
     else {
         $("input:checkbox:not(:checked)").each(function(index){
             x=index
             ar[x]=$(this).val();
         });
     }
-    return ;
+    return ar;
 };
 
+function PostChecked(ret){
+    var x=[]
+    ar=JSON.stringify(ret);
+    $.post(
+        "cvc",
+        {data:ar,azione:"p1",frn:$("#azienda option:selected").val()},
+        function(res1){
+            var before="";
+            var label="";
+            var sum=0;
+            var sumcst=0;
+            var excs=0;
+            var totexcsbl=0;
+            var mrg=res1[res1.length-1]["mrg"]
+            for (i=0;i<res1.length-1;i++){
+                excs=parseFloat(res1[i].excsbl__trasporto)+parseFloat(res1[i].excsbl__facc)+parseFloat(res1[i].excsbl__vari)
+                nt1=(res1[i].costo/res1[i].q)*(1-mrg/100);
+                nt=nt1*res1[i].q;
+                iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
+                sum=sum+nt;
+                sumcst=sumcst+parseFloat(res1[i].costo);
+                label=label + '<tr>';
+                if(res1[i].bolla!=before){
+                    label=label + '<td>' + res1[i].bolla+ '</td>';
+                }
+                else
+                   label=label+'<td></td>'
+                label=label + '<td style="display: none">' + res1[i].bolla+ '</td>';
+                label=label+'<td>Scarico</td>'
+                label=label + '<td>' + res1[i].data+ '</td>';
+                label=label + '<td>' + res1[i].q+ '</td>';
+                label=label + '<td>' + res1[i].cassa+ '</td>';
+                label=label + '<td>' + res1[i].idcod__cod+ '</td>';
+                label=label + '<td>' + res1[i].costo+ '</td>';
+                label=label + '<td><input class="prz" type=text style=width:40% value='+nt1.toFixed(2)+'></input></td>';
+                label=label + '<td>'+nt.toFixed(2)+'</td>';
+                label=label + '<td>' + iva.toFixed(2)+ '</td>';
+                label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
+                label=label + '<td style="display: none">' + res1[i].id+ '</td>';
+                label=label + '</tr>';
+                
+//                label=label + '<tr bgcolor="#CCEEFF>';
+                label=label + '<tr style="color: #008000" >'
+                label=label + '<td></td>'
+                label=label + '<td style="display: none">' + res1[i].bolla+ '</td>';
+                label=label+'<td>Ricavo</td>'
+                label=label + '<td>' + res1[i].data+ '</td>';
+                label=label + '<td><input class="psr" type=text maxlength="6" size="6" value=0></input></td>';
+                label=label + '<td><input class="clr" type=text style=width:30% value=0></input></td>';
+                label=label + '<td> ' + res1[i].idcod__cod+ ' </td>';
+                label=label + '<td>0</td>';
+                label=label + '<td><input class="przr" type=text style=width:40% value=0></input></td>';
+                label=label + '<td>0</td>';
+                label=label + '<td>0</td>';
+                label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
+                label=label + '<td style="display: none">' + res1[i].id+ '</td>';
+                label=label + '</tr>';
+                
+                before=res1[i].bolla;
+            }
+            $("#cldt2").show();
+            $("#dt3").val(res1[i].ct);
+            $("#dt4").val(res1[i].rg);
+            $("#dt5").val(res1[i].pi);
+            $("#dt6").val(sum);
+            $("#cldt2").show();
+            $("#cldt3").show();
+            $("#cldt4").show();
+            $("#cldt5").show();
+            
+            $("#tbf1").hide();  
+            $("#tbf2").show();  
+            $("#tb62").html(label);  
+            $("#dt6").val(sum);
+            $("#dt7").val(sumcst-sum-totexcsbl);
+            });
+};
+
+function ReadChange(n){
+    var ls=[];
+    var rcv="";
+    $("#tb62 tr").each(function(){
+        rcv=$(this).find("td:eq(2)").text();
+        if(rcv=="Ricavo")
+            if(n==0)
+                ls.push($(this));
+            else if(n==1){
+                var dc={}
+                    dc["id"]=$(this).find("td:eq(12)").text();
+                     dc["przr"]=$(this).find("input.przr").val();
+                     dc["psr"]=$(this).find("input.psr").val();
+                     dc["fatt"]=$(this).find("td:eq(10)").text();
+                     ls.push(dc);
+            }
+     });
+     //if(xx==0)
+         //ls.splice(0,1)
+     return ls;
+};
 
 function WriteChecked(ret){
     var sumfatt=0;
@@ -224,16 +276,9 @@ function WriteChecked(ret){
     var totexcsbl=0;
     label='<tr>'
     for (i=0;i<ret.length;i++){
-        prz=parseFloat(ret[i].find("input.prz").val());
-        p=parseFloat(ret[i].find("td:eq(4)").text());
+        prz=parseFloat(ret[i].find("input.przr").val());
+        p=parseFloat(ret[i].find("input.psr").val());
         iva=1+parseFloat(ret[i].find("td:eq(11)").text());
-        
-        if(isNaN(ret[i].find("td:eq(13)").text()) | (ret[i].find("td:eq(13)").text()=="")) 
-            totexcsbl+=0
-        else
-            totexcsbl+=parseFloat(ret[i].find("td:eq(13)").text());
-
-        
         ret[i].find("td:eq(9)").text((prz*p).toFixed(2));
         ret[i].find("td:eq(10)").text((prz*p*iva).toFixed(2));
         label=label+ret[i];
@@ -246,3 +291,13 @@ function WriteChecked(ret){
     $("#dt7").val(sumvnd-sumfatt-totexcsbl);
 };
 
+function PushDdt(ret){
+    var ar=[];
+    ar=JSON.stringify(ret);
+    $.post(
+        "cvc",
+        {data:ar,azione:"p",mrg:$("#dt2").val(),frn:$("#azienda option:selected").val()},
+        function(){
+            window.location.replace("cvc");
+    });
+};

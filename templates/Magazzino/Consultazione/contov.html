@@ -12,7 +12,7 @@
       <div class="col-md-3" id="cl0">  
             <p>Fornitore<select class="form-control" id="azienda"></p> 
                 {% for entry in items %}
-                    <option value="{{entry.azienda}}">{{entry.azienda}}</option>
+                    <option value="{{entry.id}}">{{entry.azienda}}</option>
                 {%endfor%}
             </select> 
       </div>
@@ -64,21 +64,56 @@
        </div>
   </div>  
       </br>
-  <!--<div class=row>-->
-       <!--<div class="col-md-1" >  -->
-          <!--<div class="btn-group" id="btslz">-->
-            <!--<button type="button" class="btn  btn-xs btn-warning" id="btsel">Seleziona</button>-->
-          <!--</div>-->
-       <!--</div>-->
-      <!--</div>-->
+ 
+ 
+ 
+   <div class="row">
+          <div class=" col-md-12" id="tbf1" >
+            <table id="tablef1"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Spunta</th>
+                        <th>Bolla</th>
+                        <th>Data</th>
+                        <th>Carico</th>
+                       <th>Scarico</th>
+                       <th>Facchinaggio</th>
+                       <th>Trasporto</th>
+                       <th>Vari</th>
+                        <th>Margine</th>
+                        <th>Mancanti</th>
+                        <th>Stato</th>
+                    </tr>
+                </thead>
+                <tbody id="tb61"></tbody>
+            </table>
+        </div>
         
+        <div class=" col-md-12" id="tbf3" >
+            <table id="tablef3"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Bolla</th>
+                       <th>Articolo</th>
+                       <th>Carico Lotti</th>
+                       <th>Scarico Lotti</th>
+                       <th>Carico Peso</th>
+                       <th>Scarico Peso</th>
+                       <th>Tara</th>
+                       <th>Prezzo</th>
+                        <th>Totale</th>
+                    </tr>
+                </thead>
+                <tbody id="tb63"></tbody>
+            </table>
+        </div>
         
         <div class=" col-md-12" id="tbf2" >
             <table id="tablef2"  class="table table-hover">
                 <thead id="thd">
                     <tr>
-                        <th></th>
                         <th>Bolla</th>
+                        <th>Tipo</th>
                         <th>Data</th>
                         <th>Peso</th>
                        <th>Colli</th>
@@ -87,7 +122,6 @@
                        <th>Prezzo</th>
                         <th>Imponibile</th>
                         <th>Totale</th>
-                        <th>Extracosti</th>
                     </tr>
                 </thead>
                 <tbody id="tb62"></tbody>

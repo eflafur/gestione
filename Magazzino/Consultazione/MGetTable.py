@@ -63,6 +63,7 @@ class GetData:
         d2=list(c)
         dic["cr"]=d2
         return dic
+    
     def GetBollaCv(self,nome):
         dic={}
         ls=[]
@@ -74,12 +75,12 @@ class GetData:
         for  item in cm2:
             ls.append(item["bolla"])
         cm1=c.filter(Q(cassa=F("cassaexit"))).values("excsbl__facc","excsbl__trasporto","excsbl__vari","id","idcod__genere__iva",
-                                   "idcod__cod","q","cassa","data","bolla","costo").order_by("bolla")
+                                                         "idcod__cod","q","cassa","data","bolla","costo").order_by("bolla")
         for item in cm1:
             if(item["bolla"] in ls):
                 continue
             ls1.append(item)
-            
+    
         frn=Produttore.objects.get(azienda=nome)
         dic["ct"]=frn.citta
         dic["pi"]=frn.pi
@@ -87,6 +88,38 @@ class GetData:
         dic["rg"]=frn.regione            
         ls1.append(dic)
         return ls1 
+
+    def GetBolla1(self,ls,frn):
+        ls1=[]
+        dic={}
+        for item in ls: 
+            c=Carico.objects.filter(Q(bolla=item),Q(idcod__produttore__id=frn)).values("excsbl__facc","excsbl__trasporto","excsbl__vari","id","idcod__genere__iva",
+                                   "idcod__cod","q","cassa","data","bolla","costo","id").order_by("bolla")
+            for item in c:
+                ls1.append(item)            
+            #ls1.append(list(c))    
+            
+            
+        frn=Produttore.objects.get(id=frn)
+        dic["ct"]=frn.citta
+        dic["pi"]=frn.pi
+        dic["mrg"]=frn.margine
+        dic["rg"]=frn.regione            
+        ls1.append(dic)
+        return ls1 
+
+    def GetBollaCv1(self,nome):
+        rec=ExCsBl.objects.filter(Q(produttore=nome),Q(p=0)).values("bolla","data","facc","trasporto","vari",
+                                    "cassa","cassaexit","produttore__margine")
+        data=list(rec)
+        return data
+        
+    def GetBollabyPrd(self,ls):
+        rec=Carico.objects.filter(Q(bolla=ls["bolla"]),Q(idcod__produttore__id=ls["cln"])).values("idcod__cod","q","qn","cassa",
+                                "cassaexit","bolla","tara","costo")
+        data=list(rec)
+        return data        
+
 
     def GetBollaCvT(self):
         ls=[]
@@ -110,9 +143,9 @@ class GetData:
         erario=0
         ls=[]
         lsbl=[]
-        cliente=Produttore.objects.get(azienda=cln)
+        cliente=Produttore.objects.get(id=cln)
         ccv=Carico.objects.filter().values("cv").order_by("cv").last()
-        c=Carico.objects.filter(Q(idcod__produttore__azienda=cln),Q(p=0)).values("id",
+        c=Carico.objects.filter(Q(idcod__produttore__id=cln),Q(p=0)).values("id",
                                    "idcod__cod","q","cassa","data","bolla","costo","idcod__genere__iva","excsbl").order_by("bolla")
         fatt=ccv["cv"]+1
         for item in line:
@@ -137,7 +170,7 @@ class GetData:
             x.p=1
             x.cv=fatt
             x.save()
-            c1.update(fattimp=item["fatt"],mrg=mrgn,p=1,cv=fatt)
+            c1.update(fattimp=Decimal(item["fatt"]),p=1,cv=fatt)
             ls.append(ddt)
             lsblt="Bolle: "+" ".join(lsbl)
         obj=Pdf.PrintTable("CV",ls,0)

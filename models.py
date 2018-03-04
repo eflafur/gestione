@@ -96,6 +96,7 @@ class ExCsBl(models.Model):
 	cassa=models.IntegerField(null=True,blank=True,default=0)
 	q=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	data=models.DateField(default=date.today)
+	produttore=models.ForeignKey(Produttore,on_delete=models.CASCADE,null=True)
 	
 class Carico(models.Model):
 	idcod=models.ForeignKey(IDcod,on_delete=models.CASCADE,null=True)

@@ -1,6 +1,6 @@
 #import django
 #django.setup()
-from gestione.models import IDcod,Carico,Genere,Saldo,ExCsBl
+from gestione.models import IDcod,Carico,Genere,Saldo,ExCsBl,Produttore
 from django.db.models import Q
 from decimal import Decimal
 import re
@@ -66,10 +66,11 @@ class CreateData:
             qs=s1.q
             s1.q=qs+diff
             s1.save()
-            if(cnt==0):
-                rec=ExCsBl(data=dt,bolla=bl1,facc=Decimal(facc),trasporto=Decimal(tras),vari=Decimal(vari),qn=pssum,cassa=csssum)
-                rec.save() 
             codid=cod.get(id=item["id"])
+            prd=Produttore.objects.get(id=cl)
+            if(cnt==0):
+                rec=ExCsBl(produttore=prd,data=dt,bolla=bl1,facc=Decimal(facc),trasporto=Decimal(tras),vari=Decimal(vari),qn=pssum,cassa=csssum)
+                rec.save() 
             rec1=Carico(excsbl=rec,tara=item["tara"],qn=item["ps"],cassa=item["css"],bolla=bl1,idcod=codid,data=dt,cassaexit=csx)
             rec1.save()
             cnt=1

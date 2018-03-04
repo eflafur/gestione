@@ -51,7 +51,7 @@ class Siti:
     
 class ModProd:
     def GetProduttori(self):
-        res=Produttore.objects.all()
+        res=Produttore.objects.all().values("azienda","id")
         data=list(res)
         return data
     def GetAll(self,line):
