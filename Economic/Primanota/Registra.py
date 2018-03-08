@@ -48,9 +48,9 @@ class Commercio:
             res.save()
             res=contosp(cod=ls[0],sub=ls[1],ssub=ls[2],dare=self.tot,regis="PAGAMENTO")#CLIENTE
             res.save()
-            l=libro(doc=self.fatt,desc="Cassa/Banca per vendita a " +self.clnt.azienda,conto=self.conto,
+            l=libro(doc=self.fatt,descr="Cassa/Banca per vendita a " +self.clnt.azienda,conto=self.conto,
                         dare=self.tot)#self.erario+self.imp)
-            l1=libro(doc=self.fatt,desc="fattura acquisto da " +self.clnt.azienda,conto=self.cod,
+            l1=libro(doc=self.fatt,descr="fattura acquisto da " +self.clnt.azienda,conto=self.cod,
                             avere=self.tot)#self.erario+self.imp)
             l.save()
             l1.save()
@@ -75,24 +75,30 @@ class Commercio:
             res=contosp(cod="19",sub="03",ssub="03",avere=self.imp+self.erario,regis="PAGAMENTO")#fornitore
             res.save()
             
-    def SetErarioCliente(self,r=0):
+    def SetErarioCliente(self,fatt="",r=0):
 #        rec=ivacliente.objects.latest("id")
-        res=ivacliente(fatt=self.fatt,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
-            erario=self.erario,saldo=self.imp+self.erario-self.tot)
+        if (r==1):
+            res=ivacliente.objects.get(fatt=fatt)
+            res.saldo+=self.imp+self.erario
+            res=ivacliente(fatt=self.fatt,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
+                erario=self.erario,saldo=self.imp+self.erario-self.tot)
+        else:
+            res=ivacliente(fatt=self.fatt,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
+                erario=self.erario,saldo=self.imp+self.erario-self.tot)
         res.save()
         if(r==0):
-            l=libro(doc=self.fatt,desc="fattura vendita a " +self.clnt.azienda,conto=self.cod,
+            l=libro(doc=self.fatt,descr="fattura vendita a " +self.clnt.azienda,conto=self.cod,
                         dare=self.erario+self.imp)
-            l1=libro(doc=self.fatt,desc="fattura IVA " +self.clnt.azienda,conto="35.01.03",
+            l1=libro(doc=self.fatt,descr="fattura IVA " +self.clnt.azienda,conto="35.01.03",
                          avere=self.erario)
-            l2=libro(doc=self.fatt,desc="fattura ricavi " +self.clnt.azienda,conto="47.01.03",
+            l2=libro(doc=self.fatt,descr="fattura ricavi " +self.clnt.azienda,conto="47.01.03",
                          avere=self.imp)
         else:
-            l=libro(doc=self.fatt,desc="reso vendita a " +self.clnt.azienda,conto=self.cod,
+            l=libro(doc=self.fatt,descr="reso vendita a " +self.clnt.azienda,conto=self.cod,
                             dare=self.erario+self.imp)
-            l1=libro(doc=self.fatt,desc="storno IVA " +self.clnt.azienda,conto="35.01.03",
+            l1=libro(doc=self.fatt,descr="storno IVA " +self.clnt.azienda,conto="35.01.03",
                              avere=self.erario)
-            l2=libro(doc=self.fatt,desc="reso vendite" +self.clnt.azienda,conto="47.05.07",
+            l2=libro(doc=self.fatt,descr="reso vendite" +self.clnt.azienda,conto="47.05.07",
                              avere=self.imp)
         l.save()
         l1.save()
@@ -104,11 +110,11 @@ class Commercio:
         res.save()
         #prt=libro.objects.latest("id")
         #p=prt.id
-        l=libro(doc=self.fatt,dtdoc=self.data,desc="fattura vendite a " +self.clnt.azienda,conto=self.cod,
+        l=libro(doc=self.fatt,dtdoc=self.data,descr="fattura vendite a " +self.clnt.azienda,conto=self.cod,
                     avere=self.erario+self.imp)
-        l1=libro(doc=self.fatt,dtdoc=self.data,desc="fattura IVA " +self.clnt.azienda,conto="35.01.01",
+        l1=libro(doc=self.fatt,dtdoc=self.data,descr="fattura IVA " +self.clnt.azienda,conto="35.01.01",
                      dare=self.erario)
-        l2=libro(doc=self.fatt,dtdoc=self.data,desc="fattura costi " +self.clnt.azienda,conto="55.01.07",
+        l2=libro(doc=self.fatt,dtdoc=self.data,descr="fattura costi " +self.clnt.azienda,conto="55.01.07",
                      dare=self.imp)
         l.save()
         l1.save()
@@ -139,9 +145,9 @@ class Banca:
             res=contosp(cod="19",sub="01",ssub="01",dare=self.tot,regis="PAG BANCA") #PAGAMENTO  BANCA
             resf=contofrn(cod="33",sub="03",ssub="01",avere=self.tot,forn=self.clnt,regis="ACQUISTO")#fornitore
             resf.save()
-            l=libro(doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.clnt.azienda,conto="19.01.01",
+            l=libro(doc=self.doc,dtdoc=self.data,descr="Banca per vendita a " +self.clnt.azienda,conto="19.01.01",
                             dare=self.tot)#self.erario+self.imp)
-            l1=libro(doc=self.doc,dtdoc=self.data,desc=" Storno cliente vendita a " +self.clnt.azienda,conto="3.1",
+            l1=libro(doc=self.doc,dtdoc=self.data,descr=" Storno cliente vendita a " +self.clnt.azienda,conto="3.1",
                              avere=self.tot)#self.erario+self.imp)
             l.save()
             l1.save()
@@ -163,9 +169,9 @@ class Banca:
         if(self.sgn==0):
             res=contosp(cod=ls[0],sub=ls[1],ssub=ls[2],avere=self.tot,regis="PAG BANCA") #PAGAMENTO  BANCA
             resf=contofrn(cod="33",sub="03",ssub="01",dare=self.tot,forn=self.frn,regis="ACQUISTO")#fornitore
-            l=libro(doc=self.doc,dtdoc=self.data,desc="Banca per vendita a " +self.frn.azienda,conto=self.conto,
+            l=libro(doc=self.doc,dtdoc=self.data,descr="Banca per vendita a " +self.frn.azienda,conto=self.conto,
                             avere=self.tot)#self.erario+self.imp)
-            l1=libro(doc=self.doc,dtdoc=self.data,desc="Storno fornitore acquisto da " +self.frn.azienda,conto="55.01.07",
+            l1=libro(doc=self.doc,dtdoc=self.data,descr="Storno fornitore acquisto da " +self.frn.azienda,conto="55.01.07",
                              dare=self.tot)#self.erario+self.imp)
             l.save()
             l1.save()

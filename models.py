@@ -117,6 +117,8 @@ class Carico(models.Model):
 	qn=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
 	tara=models.DecimalField(max_digits=3,decimal_places=2,null=True,blank=True,default=0)
 	excsbl=models.ForeignKey(ExCsBl,on_delete=models.CASCADE,null=True)
+	qcv=models.DecimalField(max_digits=9,decimal_places=2,null=True,blank=True,default=0)
+	fattcv=models.DecimalField(max_digits=14,decimal_places=2,null=True,blank=True,default=0)
 	def __str__(self):
 		return "%s" % (self.bolla)	
 	
@@ -276,7 +278,7 @@ class libro(models.Model):
 	prot=models.IntegerField(null=True,blank=True,default=0)
 	doc=models.CharField(max_length=20,null=True)
 	dtdoc=models.DateField(default=date.today)
-	desc=models.CharField(max_length=60,null=True)
+	descr=models.CharField(max_length=60,null=True)
 	conto=models.CharField(max_length=10,null=True)
 	dare=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)
 	avere=models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True,default=0)

@@ -9,13 +9,14 @@ $(document).ready(function(){
         $("#btddt").hide();
         $("#btmrg").show();
         $("#btslz").show();
-        $("#btcrc").show();
+//        $("#btcrc").show();
         $("#cldt2").show();
         $("#cldt3").show();
         $("#cldt4").show();
         $("#cldt5").show();
         $("#cldt6").show();
         $("#cldt7").show();
+        $("#btcrc").hide();
         GetBolle();
     });
     
@@ -25,22 +26,26 @@ $(document).ready(function(){
     });
     $("#btcrc").click(function(){
         ret=ReadChange(0);
+        if(ret.length==0)
+            return false;
         WriteChecked(ret);
     });
     
     $("#btsel").click(function(){
+        $("#btcrc").show();
         $("#btmrg").hide();
         $("#btslz").hide();
         ret=GetCheched1();
         PostChecked(ret);
-        $("#btddt").show();
     });
 });
 
     $("#btddt").click(function(){
         ret=ReadChange(1);
+        if(ret.length==0)
+            return false;
+
         PushDdt(ret);
-//        $("#btddt").hide();
         $("#tbf1").hide();
         $("#tbf2").hide();
         $("#tbf3").hide();
@@ -59,6 +64,7 @@ $(document).ready(function(){
     });
     
 function Evidance(){
+    $("#btcrc").hide();
     $("#tbf1").hide();
     $("#tbf2").hide();
     $("#tbf3").hide();
@@ -195,15 +201,32 @@ function PostChecked(ret){
                     label=label + '<td>' + res1[i].bolla+ '</td>';
                 }
                 else
-                   label=label+'<td></td>'
+                    label=label+'<td></td>'
+                label=label + '<td style="display: none">' + res1[i].bolla+ '</td>';
+                label=label+'<td>Carico</td>'
+                label=label + '<td>' + res1[i].data+ '</td>';
+                label=label + '<td>' + res1[i].qn+ '</td>';
+                label=label + '<td>' + res1[i].cassa+ '</td>';
+                label=label + '<td>' + res1[i].idcod__cod+ '</td>';
+                label=label + '<td>' + res1[i].costo+ '</td>';
+                label=label + '<td>'+nt1.toFixed(2)+'</td>';
+                label=label + '<td>'+nt.toFixed(2)+'</td>';
+                label=label + '<td>' + iva.toFixed(2)+ '</td>';
+                label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
+                label=label + '<td style="display: none">' + res1[i].id+ '</td>';
+                label=label + '</tr>';
+
+                
+                label=label + '<tr style="color: #0000FF" >';
+                label=label+'<td></td>'
                 label=label + '<td style="display: none">' + res1[i].bolla+ '</td>';
                 label=label+'<td>Scarico</td>'
                 label=label + '<td>' + res1[i].data+ '</td>';
                 label=label + '<td>' + res1[i].q+ '</td>';
-                label=label + '<td>' + res1[i].cassa+ '</td>';
+                label=label + '<td>' + res1[i].cassaexit+ '</td>';
                 label=label + '<td>' + res1[i].idcod__cod+ '</td>';
                 label=label + '<td>' + res1[i].costo+ '</td>';
-                label=label + '<td><input class="prz" type=text style=width:40% value='+nt1.toFixed(2)+'></input></td>';
+                label=label + '<td>'+nt1.toFixed(2)+'</td>';
                 label=label + '<td>'+nt.toFixed(2)+'</td>';
                 label=label + '<td>' + iva.toFixed(2)+ '</td>';
                 label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
@@ -217,7 +240,7 @@ function PostChecked(ret){
                 label=label+'<td>Ricavo</td>'
                 label=label + '<td>' + res1[i].data+ '</td>';
                 label=label + '<td><input class="psr" type=text maxlength="6" size="6" value=0></input></td>';
-                label=label + '<td><input class="clr" type=text style=width:30% value=0></input></td>';
+                label=label + '<td><input class="clr" type=text maxlength="6" size="6" value=0></input></td>';
                 label=label + '<td> ' + res1[i].idcod__cod+ ' </td>';
                 label=label + '<td>0</td>';
                 label=label + '<td><input class="przr" type=text style=width:40% value=0></input></td>';
@@ -225,7 +248,11 @@ function PostChecked(ret){
                 label=label + '<td>0</td>';
                 label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
                 label=label + '<td style="display: none">' + res1[i].id+ '</td>';
+                label=label + '<td>0</td>';
+                label=label + '<td style="display: none">'+nt1.toFixed(2)+'</td>';
+                label=label + '<td style="display: none">'+res1[i].cassa+'</td>';
                 label=label + '</tr>';
+                label=label + '<tr><td></td></tr>';
                 
                 before=res1[i].bolla;
             }
@@ -252,7 +279,15 @@ function ReadChange(n){
     var rcv="";
     $("#tb62 tr").each(function(){
         rcv=$(this).find("td:eq(2)").text();
-        if(rcv=="Ricavo")
+        if(rcv=="Ricavo" ){
+            colli=parseFloat($(this).find("td:eq(15)").text());
+            collir=parseFloat($(this).find("input.clr").val());
+            if(collir!=colli){
+                alert("Num. Colli ricavi inferiore al carico della bolla")
+                $("#btddt").hide();
+                ls.length=0;
+                return false;
+            }
             if(n==0)
                 ls.push($(this));
             else if(n==1){
@@ -263,6 +298,7 @@ function ReadChange(n){
                      dc["fatt"]=$(this).find("td:eq(10)").text();
                      ls.push(dc);
             }
+        }
      });
      //if(xx==0)
          //ls.splice(0,1)
@@ -270,17 +306,34 @@ function ReadChange(n){
 };
 
 function WriteChecked(ret){
+    var summrg=0;
     var sumfatt=0;
     var sumvnd=0;
     var label="";
     var totexcsbl=0;
+    var przcr=0;
     label='<tr>'
     for (i=0;i<ret.length;i++){
         prz=parseFloat(ret[i].find("input.przr").val());
         p=parseFloat(ret[i].find("input.psr").val());
         iva=1+parseFloat(ret[i].find("td:eq(11)").text());
+        przcr=parseFloat(ret[i].find("td:eq(14)").text());
+        colli=parseFloat(ret[i].find("td:eq(15)").text());
+        collir=parseFloat(ret[i].find("input.clr").val());
         ret[i].find("td:eq(9)").text((prz*p).toFixed(2));
         ret[i].find("td:eq(10)").text((prz*p*iva).toFixed(2));
+        if(prz==0){
+            przcr=1;
+            prz=1;
+        }
+        if(collir!=colli){
+            alert("Num. Colli ricavi inferiore al carico della bolla")
+            $("#btddt").hide();
+            return 1;
+        }
+            
+        ret[i].find("td:eq(13)").text((przcr/prz-1).toFixed(2));
+        summrg=summrg+(przcr/prz-1);
         label=label+ret[i];
         sumfatt+=prz*p;    
         sumvnd+=parseFloat(ret[i].find("td:eq(7)").text());
@@ -288,7 +341,10 @@ function WriteChecked(ret){
     label=label+'</tr>'
     $("tb62").html(label);
     $("#dt6").val(sumfatt);
+    $("#dt2").val(summrg/i);
     $("#dt7").val(sumvnd-sumfatt-totexcsbl);
+    $("#btddt").show();
+
 };
 
 function PushDdt(ret){

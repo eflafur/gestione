@@ -333,7 +333,7 @@ function Invia(act){
     
     $.post(
         "fattura",
-      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t,chc:choice,cln:$("#cliente option:eq(0)").val()},
+      {res:JSON.stringify(ar1),azione:act,item:pvl,pgm:pg,tot:t,chc:choice,cln:$("#cliente option:selected").val()},
     function (result){
     });
     ar1.length=0

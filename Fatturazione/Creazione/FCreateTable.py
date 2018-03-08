@@ -40,6 +40,7 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps,pgm,tot,conto,cln):
+        csx=0
         ltstr=""
         i=0
         bl=[]
@@ -86,30 +87,29 @@ class Produt:
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qcss=ps/css-tara
+            
+            x.cassaexit+=css
+            x.costo+=qcss*css*prz
+            x.q+=qcss*css
+            x.save()
+            
             cod=IDcod.objects.get(id=item["id"])
             bl.append(ltt)
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
                 bls.append(str(ltt)+"-"+str(css))
-                x.cassaexit+=css
-                x.costo+=qcss*css*prz
-                x.q+=qcss*css
                 ltt1.cassaexit+=css
                 ltt1.costo+=qcss*css*prz
                 ltt1.q+=qcss*css
                 ltt1.save()
-                x.save()
                 rim=0
             else:
                 bls.append(str(ltt)+"-"+str(css+rim))
-                x.cassaexit+=ltt1.cassa
-                x.costo+=prz*(css+rim)*qcss
-                x.q+=(css+rim)*qcss
+                csx=ltt1.cassaexit
                 ltt1.cassaexit=ltt1.cassa
-                ltt1.costo+=prz*(css+rim)*qcss
-                ltt1.q+=(css+rim)*qcss
+                ltt1.costo+=prz*(ltt1.cassa-csx)*qcss
+                ltt1.q+=(ltt1.cassa-csx)*qcss
                 ltt1.save()
-                x.save()
                 ltt2=ltcod.exclude(id=ltt).order_by("id")
                 data=list(ltt2)
                 rim=self.DelLotto(ltt2,-rim,prz,qcss,0,bl,bls)
@@ -131,6 +131,7 @@ class Produt:
             ls["css"]=css
             ls["ps"]=ps
             lsdc.append(ls)
+            
     
 #registrazione contabile
 #        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,line[0]["cln"],fatt)
@@ -145,6 +146,7 @@ class Produt:
         return 0
     
     def ScriviDDT(self,line,sps):
+        csx=0
         ltstr=""
         i=0
         bl=[]
@@ -192,6 +194,12 @@ class Produt:
             ps=Decimal(item["ps"])
             css=int(item["css"])
             qcss=ps/css-tara
+            
+            x.cassaexit+=css
+            x.costo+=qcss*css*prz
+            x.q+=qcss*css
+            x.save()
+            
             ltt=item["lotto"]
             cod=IDcod.objects.get(id=item["id"])
             ltcod=lotto.filter(idcod__id=item["id"])
@@ -210,25 +218,18 @@ class Produt:
             rim=ltt1.cassa-(ltt1.cassaexit+css)
             if(rim>=0):
                 bls.append(str(ltt)+"-"+str(css))
-                x.cassaexit+=css
-                x.costo+=qcss*css*prz
-                x.q+=qcss*css
                 ltt1.cassaexit+=css
                 ltt1.costo+=qcss*css*prz
                 ltt1.q+=qcss*css
                 ltt1.save()
-                x.save()
                 rim=0
             else:
                 bls.append(str(ltt)+"-"+str(css+rim))
-                x.cassaexit+=ltt1.cassa
-                x.costo+=prz*(css+rim)*qcss
-                x.q+=(css+rim)*qcss                
+                csx=ltt1.cassaexit
                 ltt1.cassaexit=ltt1.cassa
-                ltt1.costo+=prz*(css+rim)*qcss
-                ltt1.q+=(css+rim)*qcss
+                ltt1.costo+=prz*(ltt1.cassa-csx)*qcss
+                ltt1.q+=(ltt1.cassa-csx)*qcss                
                 ltt1.save()
-                x.save()
                 ltt2=ltcod.exclude(id=ltt)
                 data=list(ltt2)
                 rim=self.DelLotto(ltt2,-rim,prz,qcss,0,bl,bls)
@@ -261,9 +262,10 @@ class Produt:
             return num
         if(rim<0):
             ltt=lotti.get(id=cod)
+            csx=ltt.cassaexit
             ltt.cassaexit=ltt.cassa
-            ltt.costo+=prz*(num+rim)*qcss
-            ltt.q=(num+rim)*qcss
+            ltt.costo+=prz*(ltt.cassa-csx)*qcss
+            ltt.q+=(ltt.cassa-csx)*qcss
             bls.append(str(cod)+"-"+str(num+rim))
             ltt.save()
             lt.append(cod)
@@ -273,7 +275,7 @@ class Produt:
             bls.append(str(cod)+"-"+str(num))
             ltt.cassaexit+=num
             ltt.costo+=prz*num*qcss
-            ltt.q=num*qcss
+            ltt.q+=num*qcss
             ltt.save()
             lt.append(cod)
             rim=0
@@ -634,7 +636,7 @@ class Produt:
         #if(int(tot)==-1):
             #tot=-imp-erario
         res=Registra.ComVen(conto,-imp-erario,-imp,-erario,"11.03.01",0,c,prg,"47.05.07")
-        res.SetErarioCliente(1)
+        res.SetErarioCliente(fatt,1)
 #        res.Vendita()
         res.Venditams()
 #registrazione contabile  

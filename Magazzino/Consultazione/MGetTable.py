@@ -94,7 +94,7 @@ class GetData:
         dic={}
         for item in ls: 
             c=Carico.objects.filter(Q(bolla=item),Q(idcod__produttore__id=frn)).values("excsbl__facc","excsbl__trasporto","excsbl__vari","id","idcod__genere__iva",
-                                   "idcod__cod","q","cassa","data","bolla","costo","id").order_by("bolla")
+                                   "qn","cassaexit","idcod__cod","q","cassa","data","bolla","costo","id").order_by("bolla")
             for item in c:
                 ls1.append(item)            
             #ls1.append(list(c))    
@@ -154,10 +154,11 @@ class GetData:
             ddt['costo']=item["fatt"]
             ddt["cod"]=c1[0]["idcod__cod"]
             ddt["lotto"]=c1[0]["id"]
-            ddt["ps"]=c1[0]["q"]
+            ddt["ps"]=Decimal(item["psr"])
             ddt["css"]=c1[0]["cassa"]
             ddt["iva"]=c1[0]["idcod__genere__iva"]
-            ddt["prz"]=round(Decimal(item["fatt"])/c1[0]["q"],2)
+            ddt["prz"]=Decimal(item["przr"])
+           # ddt["prz"]=round(Decimal(item["fatt"])/Decimal(item["psr"]),2)
 #            ddt["tara"]="0.2"
 #            x=60
             #f = lambda x: ['small', 'big'][x>100]
@@ -170,7 +171,7 @@ class GetData:
             x.p=1
             x.cv=fatt
             x.save()
-            c1.update(fattimp=Decimal(item["fatt"]),p=1,cv=fatt)
+            c1.update(fattcv=Decimal(item["fatt"]),p=1,cv=fatt,qcv=item["psr"])
             ls.append(ddt)
             lsblt="Bolle: "+" ".join(lsbl)
         obj=Pdf.PrintTable("CV",ls,0)
