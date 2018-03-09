@@ -560,10 +560,16 @@ class Produt:
         erario=0
         nodi=Scarico.objects.filter(fattura=fatt)
         crc=Carico.objects.filter(pagato=0)
-        s=Scarico.objects.latest("id")
-        f=(s.fattura).split("-")
-        r=int(f[1])+1
-        prg=f[0]+"-"+str(r)
+#        s=Scarico.objects.latest("id")
+#        f=(s.fattura).split("-")
+#        r=int(f[1])+1
+#        prg=f[0]+"-"+str(r)
+        try:
+            res=Scarico.objects.filter(fattura__startswith="nc").order_by("id").last()
+            ls=res.fattura.split("-")
+            prg="nc-"+str(int(ls[1])+1)
+        except:
+            prg="nc-1"
         c=Cliente.objects.get(id=cln)
 
         for item in line:

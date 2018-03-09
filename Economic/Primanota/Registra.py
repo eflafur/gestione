@@ -77,11 +77,20 @@ class Commercio:
             
     def SetErarioCliente(self,fatt="",r=0):
 #        rec=ivacliente.objects.latest("id")
+        ls=[]
         if (r==1):
             res=ivacliente.objects.get(fatt=fatt)
             res.saldo+=self.imp+self.erario
-            res=ivacliente(fatt=self.fatt,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
-                erario=self.erario,saldo=self.imp+self.erario-self.tot)
+            res.save()
+            res=ivacliente.objects.filter(fatt__startswith="nc").order_by("id").last()
+            try:
+                ls=res.fatt.split("-")
+                nc="nc-"+str(int(ls[1])+1)
+                res=ivacliente(fatt=nc,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
+                    erario=self.erario,saldo=self.imp+self.erario-self.tot)
+            except:
+                res=ivacliente(fatt="nc-1",nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
+                    erario=self.erario,saldo=self.imp+self.erario-self.tot)
         else:
             res=ivacliente(fatt=self.fatt,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
                 erario=self.erario,saldo=self.imp+self.erario-self.tot)
