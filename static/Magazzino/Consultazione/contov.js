@@ -5,11 +5,11 @@ $(document).ready(function(){
     $("#brand").text("Clienti CV");
     Evidance();
     $("#azienda").click(function(){
+    Evidance();
         $("#tbf2").hide();
         $("#btddt").hide();
         $("#btmrg").show();
         $("#btslz").show();
-//        $("#btcrc").show();
         $("#cldt2").show();
         $("#cldt3").show();
         $("#cldt4").show();
@@ -32,6 +32,8 @@ $(document).ready(function(){
     });
     
     $("#btsel").click(function(){
+        $("#gr1").show();
+        $("#gr2").show();
         $("#btcrc").show();
         $("#btmrg").hide();
         $("#btslz").hide();
@@ -64,6 +66,8 @@ $(document).ready(function(){
     });
     
 function Evidance(){
+    $("#gr1").hide();
+    $("#gr2").hide();
     $("#btcrc").hide();
     $("#tbf1").hide();
     $("#tbf2").hide();
@@ -141,12 +145,6 @@ function GetBolla(bl){
     }
 
 
-
-
-
-
-
-
 function GetCheched1(){
     var ar=[];
     var lsck=[]
@@ -191,9 +189,10 @@ function PostChecked(ret){
             var mrg=res1[res1.length-1]["mrg"]
             for (i=0;i<res1.length-1;i++){
                 excs=parseFloat(res1[i].excsbl__trasporto)+parseFloat(res1[i].excsbl__facc)+parseFloat(res1[i].excsbl__vari)
-                nt1=(res1[i].costo/res1[i].q)*(1-mrg/100);
+                nt1=res1[i].costo/res1[i].q//*(1-mrg/100);
                 nt=nt1*res1[i].q;
                 iva=nt*(1+parseFloat(res1[i].idcod__genere__iva))
+                ntb=(nt1*res1[i].qn).toFixed(2)
                 sum=sum+nt;
                 sumcst=sumcst+parseFloat(res1[i].costo);
                 label=label + '<tr>';
@@ -208,14 +207,13 @@ function PostChecked(ret){
                 label=label + '<td>' + res1[i].qn+ '</td>';
                 label=label + '<td>' + res1[i].cassa+ '</td>';
                 label=label + '<td>' + res1[i].idcod__cod+ '</td>';
-                label=label + '<td>' + res1[i].costo+ '</td>';
+                label=label + '<td>' + (res1[i].qn*nt1).toFixed(2)+ '</td>';
                 label=label + '<td>'+nt1.toFixed(2)+'</td>';
-                label=label + '<td>'+nt.toFixed(2)+'</td>';
-                label=label + '<td>' + iva.toFixed(2)+ '</td>';
+                label=label + '<td>'+ntb+'</td>';
+                label=label + '<td>' + (ntb*(1+parseFloat(res1[i].idcod__genere__iva))).toFixed(2)+ '</td>';
                 label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
                 label=label + '<td style="display: none">' + res1[i].id+ '</td>';
                 label=label + '</tr>';
-
                 
                 label=label + '<tr style="color: #0000FF" >';
                 label=label+'<td></td>'
@@ -225,7 +223,7 @@ function PostChecked(ret){
                 label=label + '<td>' + res1[i].q+ '</td>';
                 label=label + '<td>' + res1[i].cassaexit+ '</td>';
                 label=label + '<td>' + res1[i].idcod__cod+ '</td>';
-                label=label + '<td>' + res1[i].costo+ '</td>';
+                label=label + '<td>' + parseFloat(res1[i].costo).toFixed(2)+ '</td>';
                 label=label + '<td>'+nt1.toFixed(2)+'</td>';
                 label=label + '<td>'+nt.toFixed(2)+'</td>';
                 label=label + '<td>' + iva.toFixed(2)+ '</td>';
@@ -239,17 +237,17 @@ function PostChecked(ret){
                 label=label + '<td style="display: none">' + res1[i].bolla+ '</td>';
                 label=label+'<td>Ricavo</td>'
                 label=label + '<td>' + res1[i].data+ '</td>';
-                label=label + '<td><input class="psr" type=text maxlength="6" size="6" value=0></input></td>';
-                label=label + '<td><input class="clr" type=text maxlength="6" size="6" value=0></input></td>';
+                label=label + '<td><input class="psr" type=text maxlength="6" size="6" value=' + res1[i].q+'></input></td>';
+                label=label + '<td><input class="clr" type=text maxlength="6" size="6" value='+ res1[i].cassaexit+'></input></td>';
                 label=label + '<td> ' + res1[i].idcod__cod+ ' </td>';
-                label=label + '<td>0</td>';
-                label=label + '<td><input class="przr" type=text style=width:40% value=0></input></td>';
-                label=label + '<td>0</td>';
-                label=label + '<td>0</td>';
+                label=label + '<td>' + parseFloat(res1[i].costo*(1-mrg/100)).toFixed(2)+ '</td>';
+                label=label + '<td><input class="przr" type=text style=width:40% value='+(nt1.toFixed(2)*(1-mrg/100)).toFixed(2)+'></input></td>';
+                label=label + '<td>'+(nt.toFixed(2)*(1-mrg/100)).toFixed(2)+'</td>';
+                label=label + '<td>' +((1-mrg/100)*iva).toFixed(2)+ '</td>';
                 label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
                 label=label + '<td style="display: none">' + res1[i].id+ '</td>';
                 label=label + '<td>0</td>';
-                label=label + '<td style="display: none">'+nt1.toFixed(2)+'</td>';
+                label=label + '<td style="display: none">'+(nt1.toFixed(2)*(1-mrg/100)).toFixed(2)+'</td>';
                 label=label + '<td style="display: none">'+res1[i].cassa+'</td>';
                 label=label + '</tr>';
                 label=label + '<tr><td></td></tr>';
@@ -261,10 +259,10 @@ function PostChecked(ret){
             $("#dt4").val(res1[i].rg);
             $("#dt5").val(res1[i].pi);
             $("#dt6").val(sum);
-            $("#cldt2").show();
             $("#cldt3").show();
             $("#cldt4").show();
             $("#cldt5").show();
+            $("#dt2").val(mrg);
             
             $("#tbf1").hide();  
             $("#tbf2").show();  
@@ -341,7 +339,7 @@ function WriteChecked(ret){
     label=label+'</tr>'
     $("tb62").html(label);
     $("#dt6").val(sumfatt);
-    $("#dt2").val(summrg/i);
+    $("#dt2").val((summrg/i).toFixed(2));
     $("#dt7").val(sumvnd-sumfatt-totexcsbl);
     $("#btddt").show();
 

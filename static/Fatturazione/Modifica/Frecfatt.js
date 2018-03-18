@@ -9,6 +9,7 @@ $(document).ready(function(){
     $("#rmb").hide();
     $("#chc").hide();
     $("#btctrl").hide();
+    $("#valore").hide();
     $("#cln").click(function(){
         $("#rmb").hide();
         $("#chc").hide();
@@ -46,10 +47,11 @@ function GetTable(){
             var label="";
             for (i=0;i<res.length;i++){
                 label=label + '<tr>';
-                label=label + '<td><a href="#">' + res[i].fattura + '</a></td>';
-                label=label + '<td>' + res[i].cliente__azienda + '</td>';
-                label=label + '<td>' + res[i].valore+ '</td>';
-                label=label + '<td>' +res[i].data + '</td>';
+                label=label + '<td><a href="#">' + res[i].fatt + '</a></td>';
+                label=label + '<td>' + res[i].nome + '</td>';
+                label=label + '<td>' + res[i].tot+ '</td>';
+                label=label + '<td>' + res[i].saldo+ '</td>';
+                label=label + '<td>' +res[i].dtfatt + '</td>';
                 label=label + '</tr>';
             }
             $("#tbf1").show();
@@ -67,11 +69,10 @@ function GetFatt(fatt,cl){
         function(res){
             var label="";
             var sumf=0;
-            for (i=0;i<res.length;i++){
+            for (i=0;i<res.length-2;i++){
                 net=res[i].q-res[i].rs;
                 netcss=res[i].cassa-res[i].rscassa;
                 imp=res[i].prezzo*(res[i].q-res[i].cassa*res[i].tara)*(parseFloat(res[i].idcod__genere__iva)+1)
-                sumf=sumf+imp;
                 label = label + '<tr>';
                 label = label + '<td style="display: none">' + res[i].id+ '</td>';
                 label = label + '<td>' + res[i].idcod__cod+ '</td>';
@@ -87,8 +88,10 @@ function GetFatt(fatt,cl){
                 label = label + '<td>' + netcss+ '</td>';
                 label = label + '</tr>';
             }
-            label=label + '<tr><td>TOT</td><td></td><td></td><td></td><td></td><td>'+sumf.toFixed(2)+ '</td></tr>';
+            $("#totale").val(res[i]);
+            $("#saldo").val(res[i+1]);
             $("#tbf1").hide();
+            $("#valore").show();
             $("#tbf").show();
             $("#tbfb").html(label);
 //            $("#tbfb tr:last").find("td:last").css("color","blue");
@@ -122,6 +125,7 @@ function LoopTable(){
         "recfatt",
         {rsls:ret,ft:fatt,action:"rs",cln:$("#cln").val(),chc:choice},
         function(res){
-          
+            saldo=parseFloat($("#saldo").val());
+            $("#saldo").val(saldo+parseFloat(res));
         });
 };

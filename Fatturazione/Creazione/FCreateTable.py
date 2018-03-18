@@ -40,6 +40,7 @@ class Produt:
         return (1)
     
     def ScriviFattura(self,line,sps,pgm,tot,conto,cln):
+        csstot=0
         csx=0
         ltstr=""
         i=0
@@ -59,8 +60,9 @@ class Produt:
         if(sps[:2]=="sc"):
             rec=Sospese.objects.filter(fatturas=sps)
             rec.delete()
-        s=Scarico.objects.latest("id")
-        f=(s.fattura).split("-")
+        s=Scarico.objects.filter(fattura__startswith="fc")
+        s1=s.latest("id")
+        f=(s1.fattura).split("-")
         r=int(f[1])+1
         fatt=f[0]+"-"+str(r)
         c=Cliente.objects.get(id=cln)
@@ -86,6 +88,7 @@ class Produt:
             prz=Decimal(item["prz"])
             ps=Decimal(item["ps"])
             css=int(item["css"])
+            csstot+=css
             qcss=ps/css-tara
             
             x.cassaexit+=css
@@ -136,7 +139,7 @@ class Produt:
 #registrazione contabile
 #        res=Registra.ComVen(conto,tot,imp,erario,"3.1",pg,line[0]["cln"],fatt)
         res=Registra.ComVen(conto,tot,imp,erario,"11.03.01",pg,c,fatt,"47.01.03")
-        res.SetErarioCliente()
+        res.SetErarioCliente(csstot)
 #        res.Vendita()
         res.Venditams()
 #registrazione contabile
@@ -301,39 +304,10 @@ class Produt:
         return
     
     def RecFatt(self,message):
-        somma=0
-        before=" "
-        i=0
-        ll=[]
-        ss=[]
-        if(message["cl"]!=" "):
-            recls=Scarico.objects.filter(Q(cliente__id=message["cl"]),Q(rscassa__gte=0),Q(cassa__gt=F("rscassa"))).exclude(id=0).values("rscassa",
-                                                    "tara","idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda")
-        else:
-            recls=Scarico.objects.filter(Q(rscassa__gte=0)).values("idcod__cod","idcod__genere__iva","q","cassa","fattura","data","prezzo","cliente__azienda","tara")
-        
-        for el in recls:
-            iva=el["idcod__genere__iva"]+1
-            if(el["fattura"]!=before):
-                if(before!=" "):
-                    ll.append(somma)
-                somma=0
-                somma=somma+el["prezzo"]*(el["q"]-el["cassa"]*el["tara"])*iva
-            else:
-                somma=somma+el["prezzo"]*(el["q"]-el["cassa"]*el["tara"])*iva
-            before=el["fattura"]
-        
-        ll.append(somma)
-        before=" "
-        i=0
-        
-        for item in recls:
-            if (item["fattura"]!=before):
-                item["valore"]=round(ll[i],2)
-                ss.append(item)
-                i=i+1
-            before=item["fattura"]
-        return ss        
+        res=ivacliente.objects.filter(prot__gt=0,fatt__startswith="fc",cliente_id=message["cl"]).values("fatt","dtfatt","nome","tot","saldo")
+        data=list(res)
+        return data
+
     
     def RecDdt(self,message):
         somma=0
@@ -447,9 +421,12 @@ class Produt:
         res.Venditams(1)
         
     def GetFatturabyNum(self,num):
-        recls=Scarico.objects.filter(fattura=num).values("id","idcod__cod","idcod__genere__iva","q","cassa","fattura",
+        res=Scarico.objects.filter(fattura=num).values("id","idcod__cod","idcod__genere__iva","q","cassa","fattura",
                                                     "data","prezzo","cliente__azienda","lotto","tara","rs","rscassa")
-        data=list(recls)
+        res1=ivacliente.objects.get(fatt=num)
+        data=list(res)
+        data.append(res1.tot)
+        data.append(res1.saldo)
         return data          
     
     def GetDdt(self,message):
@@ -553,6 +530,7 @@ class Produt:
         return ls        
     
     def ScriviNotaC(self,line,fatt,cln,conto,tot=0):
+        rscsstot=0
         lslotti=[]
         lsdc=[]
         bl=[]
@@ -579,6 +557,7 @@ class Produt:
             nodo=nodi.get(id=item["id"])
             psrs=Decimal(item["rs"])
             css=int(item["rscss"])
+            rscsstot+=css
             pscss=psrs/css-nodo.tara
             rec=Scarico(idcod=nodo.idcod,cliente=nodo.cliente,prezzo=-nodo.prezzo,
                         q=psrs,cassa=css,fattura=prg,lotto=nodo.lotto,tara=nodo.tara,iva=nodo.iva,note=fatt,rscassa=-1)
@@ -641,16 +620,18 @@ class Produt:
 #registrazione contabile
         #if(int(tot)==-1):
             #tot=-imp-erario
-        res=Registra.ComVen(conto,-imp-erario,-imp,-erario,"11.03.01",0,c,prg,"47.05.07")
-        res.SetErarioCliente(fatt,1)
-#        res.Vendita()
-        res.Venditams()
+        res=Registra.ComVen(conto,0,imp,erario,"11.03.01",1,c,prg,"47.05.07")
+        part=res.SetErarioCliente(rscsstot,fatt,1)
+        if(part<=0):
+            s=Scarico.objects.filter(fattura=fatt)
+            s.update(pagato=0)
+        res.Resoams(part,0)
 #registrazione contabile  
 #        self.stampaFattura(fatt,c,rg)
         obj=Pdf.PrintTable("Nota di Credito",lsdc,0)
         obj.PrintArt()
         obj.PrintAna(prg,c,fatt)       
-        return 0        
+        return -imp-erario        
     
   
     def ResoDDT(self,line,fatt,cln):

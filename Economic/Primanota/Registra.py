@@ -21,13 +21,8 @@ class Commercio:
         self.idfrn=idfrn
         self.fatt=fatt
         self.data=data
-      #  self.s=sp.objects.all()
-     #   self.cln=self.s.get(cod=cod)
-      #  self.iva=self.s.get(cod="20.20")
-      #  prt=libro.objects.latest("id")
-      #  self.p=prt.id
 
-    def Venditams(self,chc=0,):
+    def Venditams(self,chc=0,r=0):
         sl=saldocliente.objects.get(cliente=self.clnt)
         if(chc==0):
             sl.attivo+=self.imp+self.erario
@@ -54,7 +49,30 @@ class Commercio:
                             avere=self.tot)#self.erario+self.imp)
             l.save()
             l1.save()
-        
+            
+    def Resoams(self,part,chc=0):
+        if(chc==0):
+            ls=self.cod.split(".")
+            lsce=self.codce.split(".")
+            res=contocln(cod=ls[0],sub=ls[1],ssub=ls[2],avere=self.imp+self.erario,cliente=self.clnt,regis="VENDITA")#CLIENTE
+            res.save()
+            res=contosp(cod="35",sub="01",ssub="03",dare=self.erario,regis="IVA VENDITA") #ERARIO
+            res.save()
+            res=contoce(cod=lsce[0],sub=lsce[1],ssub=lsce[2],dare=self.imp,regis="RESO MERCI")#RICAVI
+            res.save()
+        if(part<0):
+            ls=self.conto.split(".")
+            res=contocln(cod="11",sub="03",ssub="01",dare=-part,cliente=self.clnt,regis="PAGAMENTO")#CLIENTE
+            res.save()
+            res=contosp(cod=ls[0],sub=ls[1],ssub=ls[2],avere=-part,regis="PAGAMENTO")#CLIENTE
+            res.save()
+            l=libro(doc=self.fatt,descr="Cassa/Banca per vendita a " +self.clnt.azienda,conto=self.conto,
+                    dare=-part)#self.erario+self.imp)
+            l1=libro(doc=self.fatt,descr="fattura acquisto da " +self.clnt.azienda,conto=self.cod,
+                        avere=-part)#self.erario+self.imp)
+            l.save()
+            l1.save()            
+    
     def Acquistoms(self):
 #        prd=Produttore.objects.get(id=self.idfrn)
         sprd=saldoprod.objects.get(prod=self.clnt)
@@ -75,43 +93,49 @@ class Commercio:
             res=contosp(cod="19",sub="03",ssub="03",avere=self.imp+self.erario,regis="PAGAMENTO")#fornitore
             res.save()
             
-    def SetErarioCliente(self,fatt="",r=0):
+    def SetErarioCliente(self,rscsstot,fatt="",r=0):
 #        rec=ivacliente.objects.latest("id")
+        part=0
         ls=[]
         if (r==1):
             res=ivacliente.objects.get(fatt=fatt)
-            res.saldo+=self.imp+self.erario
+            res.prot-=rscsstot
+            part=res.saldo-self.imp-self.erario
+            if(part<0):
+                res.saldo=0
+            else:
+                res.saldo=part
             res.save()
             res=ivacliente.objects.filter(fatt__startswith="nc").order_by("id").last()
             try:
                 ls=res.fatt.split("-")
                 nc="nc-"+str(int(ls[1])+1)
-                res=ivacliente(fatt=nc,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
+                res=ivacliente(fatt=nc,nome=self.clnt.azienda,cliente_id=self.clnt.id,tot=self.imp+self.erario,imp=self.imp,
                     erario=self.erario,saldo=self.imp+self.erario-self.tot)
             except:
-                res=ivacliente(fatt="nc-1",nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
+                res=ivacliente(fatt="nc-1",nome=self.clnt.azienda,cliente_id=self.clnt.id,tot=self.imp+self.erario,imp=self.imp,
                     erario=self.erario,saldo=self.imp+self.erario-self.tot)
+            l=libro(doc=self.fatt,descr="reso vendita a " +self.clnt.azienda,conto=self.cod,
+                            avere=self.erario+self.imp)
+            l1=libro(doc=self.fatt,descr="storno IVA " +self.clnt.azienda,conto="35.01.01",
+                             dare=self.erario)
+            l2=libro(doc=self.fatt,descr="reso vendite" +self.clnt.azienda,conto="47.05.07",
+                             dare=self.imp)                
         else:
-            res=ivacliente(fatt=self.fatt,nome=self.clnt.azienda,tot=self.imp+self.erario,imp=self.imp,
+            res=ivacliente(prot=rscsstot,fatt=self.fatt,nome=self.clnt.azienda,cliente_id=self.clnt.id,tot=self.imp+self.erario,imp=self.imp,
                 erario=self.erario,saldo=self.imp+self.erario-self.tot)
-        res.save()
-        if(r==0):
             l=libro(doc=self.fatt,descr="fattura vendita a " +self.clnt.azienda,conto=self.cod,
                         dare=self.erario+self.imp)
             l1=libro(doc=self.fatt,descr="fattura IVA " +self.clnt.azienda,conto="35.01.03",
                          avere=self.erario)
             l2=libro(doc=self.fatt,descr="fattura ricavi " +self.clnt.azienda,conto="47.01.03",
                          avere=self.imp)
-        else:
-            l=libro(doc=self.fatt,descr="reso vendita a " +self.clnt.azienda,conto=self.cod,
-                            dare=self.erario+self.imp)
-            l1=libro(doc=self.fatt,descr="storno IVA " +self.clnt.azienda,conto="35.01.03",
-                             avere=self.erario)
-            l2=libro(doc=self.fatt,descr="reso vendite" +self.clnt.azienda,conto="47.05.07",
-                             avere=self.imp)
+        res.save()
         l.save()
         l1.save()
         l2.save()
+        return part
+        
     def SetErarioForn(self):
 #        rec=ivaforn.objects.latest("id")
   

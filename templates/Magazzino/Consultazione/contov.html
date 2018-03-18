@@ -4,9 +4,6 @@
 {%block insert%}
 
 <div class="container col-md-offset-2">
-   <!--<div class="row">-->
-        <!--<div class="col-md-8"><h4>Registrazione Fattura Fornitore</h4> </div>      -->
-    <!--</div>-->
 
     <div class="row">
       <div class="col-md-3" id="cl0">  
@@ -16,7 +13,8 @@
                 {%endfor%}
             </select> 
       </div>
-        <div class="col-md-2" >  
+    <div id="gr1">  
+        <div class="col-md-2" id="gr1">  
           <div class="input-group" id="cldt2">
             <p>Margine:<input type = "number" id = "dt2"  class="form-control"></p>
           </div>   
@@ -31,9 +29,11 @@
             <p>Saldo:<input type = "number" id = "dt7"  class="form-control" readonly></p>
           </div>   
        </div>
+    </div>
     </br>
     </div>
   <div class="row">
+  <div id="gr2"> 
        <div class="col-md-2" >  
           <div class="input-group" id="cldt3">
             <p>Citta:<input type = "text" id = "dt3"  class="form-control" readonly></p>
@@ -48,7 +48,8 @@
           <div class="input-group" id="cldt5">
             <p>P.I.<input type = "text" id = "dt5"  class="form-control" readonly></p>
           </div>   
-      </div>   
+      </div>
+    </div>
       </br>
       
       

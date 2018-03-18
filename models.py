@@ -210,6 +210,7 @@ class ivacliente(models.Model):
 	erario=models.DecimalField(max_digits=8,decimal_places=2,null=True)
 	esenzione=models.CharField(max_length=20,null=True)
 	saldo=models.DecimalField(max_digits=14,decimal_places=2,null=True,blank=True,default=0)
+	cliente=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=True)
 	
 	
 class contocln (models.Model):

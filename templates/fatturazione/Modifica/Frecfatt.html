@@ -6,15 +6,17 @@
 <div class="container col-md-offset-2">
 
     <div class="row">
-        <div class="col-md-4">     
-            <p>Cliente<select id="cln"></p>
-                {% for entry in items %}
-                    <option value={{entry.id}}> {{entry.azienda}}</option>
-                {%endfor%}
-            </select>
-        </div>
+    
+    
+     <div class="col-md-3">  
+       <p>Cliente<select class="form-control" id="cln"></p>
+         {% for entry in items %}
+             <option value="{{ entry.id}}">{{ entry.azienda}}</option>
+         {% endfor %}
+       </select>
+     </div>
         
-        <div class="col-md-2 " >  
+        <div class="col-md-2" >  
           <div class="input-group" id="chc">
             <div class="radio">
               <label><input type="radio" name="linguaggio" value="19.03.03">Cassa</label>
@@ -32,6 +34,16 @@
               <button type="button" class="btn  btn-success" id="btanl">Annulla</button>        
         </div>
     </div>
+  
+  
+    <div id="valore">    
+        <div class="col-md-2" id="pss"> 
+            <p>Totale<input type="text" id="totale" class="form-control" readonly ></input></p>
+        </div>
+        <div class="col-md-2" id="css"> 
+            <p>Saldo<input type="text" id="saldo" class="form-control" readonly ></input></p>
+        </div> 
+    </div>
 </div>
 
     <div class="row">
@@ -41,7 +53,8 @@
                     <tr>
                         <th>Num</th>
                         <th>Cliente</th>
-                        <th>Valore</th>
+                        <th>Totale</th>
+                        <th>Saldo</th>
                         <th>Data</th>
                     </tr>
                 </thead>
@@ -66,7 +79,6 @@
                   <th>Casse</th>
                   <th>Peso Residuo</th>
                   <th>Casse Residuo</th>
-                  <!--<th>Rimborso</th>-->
               </tr>
           </thead>
           <tbody id="tbfb"></tbody>
