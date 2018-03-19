@@ -105,27 +105,27 @@ function Write(res) {
     if(choice=="cv"){
         for (i=0;i<res.length-1;i++){
             label=label + '<tr>';
-            if(res[i].cv!=before)
-                label=label+'<td color="#FF0000"><a href="#">' + res[i].cv+ '</a></td>';
+            if(res[i].carico__cv!=before)
+                label=label+'<td color="#FF0000"><a href="#">' + res[i].carico__cv+ '</a></td>';
             else
                 label=label + '<td></td>';
-            label=label + '<td>' + res[i].bolla+ '</td>';
-            label=label + '<td>' + res[i].data+ '</td>';
+            label=label + '<td>' + res[i].carico__bolla+ '</td>';
+            label=label + '<td>' + res[i].carico__data+ '</td>';
             label=label + '</tr>';
-            before=res[i].cv
+            before=res[i].carico__cv
         }
     }
     else{
         for (i=0;i<res.length-1;i++){
             label=label + '<tr>';
-            if(res[i].bolla!=before)
-                label=label+'<td color="#FF0000"><a href="#">' + res[i].bolla+ '</a></td>';
+            if(res[i].carico__bolla!=before)
+                label=label+'<td color="#FF0000"><a href="#">' + res[i].carico__bolla+ '</a></td>';
             else
                 label=label + '<td></td>';
-            label=label + '<td>' + res[i].bolla+ '</td>';
-            label=label + '<td>' + res[i].data+ '</td>';
+            label=label + '<td>' + res[i].carico__bolla+ '</td>';
+            label=label + '<td>' + res[i].carico__data+ '</td>';
             label=label + '</tr>';
-            before=res[i].bolla
+            before=res[i].carico__bolla
         }
     }
     $("#tbf1").show();  

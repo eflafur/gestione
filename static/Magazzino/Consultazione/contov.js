@@ -237,7 +237,7 @@ function PostChecked(ret){
                 label=label + '<td style="display: none">' + res1[i].bolla+ '</td>';
                 label=label+'<td>Ricavo</td>'
                 label=label + '<td>' + res1[i].data+ '</td>';
-                label=label + '<td><input class="psr" type=text maxlength="6" size="6" value=' + res1[i].q+'></input></td>';
+                label=label + '<td><input class="psr" type=text maxlength="6" size="7" value=' + res1[i].q+'></input></td>';
                 label=label + '<td><input class="clr" type=text maxlength="6" size="6" value='+ res1[i].cassaexit+'></input></td>';
                 label=label + '<td> ' + res1[i].idcod__cod+ ' </td>';
                 label=label + '<td>' + parseFloat(res1[i].costo*(1-mrg/100)).toFixed(2)+ '</td>';
@@ -246,7 +246,7 @@ function PostChecked(ret){
                 label=label + '<td>' +((1-mrg/100)*iva).toFixed(2)+ '</td>';
                 label=label + '<td style="display: none">' + res1[i].idcod__genere__iva+ '</td>';
                 label=label + '<td style="display: none">' + res1[i].id+ '</td>';
-                label=label + '<td>0</td>';
+                label=label + '<td>'+ (1-(nt*(1-mrg/100))/nt).toFixed(2)   +'</td>';
                 label=label + '<td style="display: none">'+(nt1.toFixed(2)*(1-mrg/100)).toFixed(2)+'</td>';
                 label=label + '<td style="display: none">'+res1[i].cassa+'</td>';
                 label=label + '</tr>';
@@ -262,7 +262,7 @@ function PostChecked(ret){
             $("#cldt3").show();
             $("#cldt4").show();
             $("#cldt5").show();
-            $("#dt2").val(mrg);
+            $("#dt2").val(mrg/100);
             
             $("#tbf1").hide();  
             $("#tbf2").show();  
@@ -274,10 +274,12 @@ function PostChecked(ret){
 
 function ReadChange(n){
     var ls=[];
-    var rcv="";
+    var lbl="";
     $("#tb62 tr").each(function(){
-        rcv=$(this).find("td:eq(2)").text();
-        if(rcv=="Ricavo" ){
+        lbl=$(this).find("td:eq(2)").text();
+        if(lbl=="Scarico" )
+            ls.push($(this));
+        if(lbl=="Ricavo" ){
             colli=parseFloat($(this).find("td:eq(15)").text());
             collir=parseFloat($(this).find("input.clr").val());
             if(collir!=colli){
@@ -290,11 +292,11 @@ function ReadChange(n){
                 ls.push($(this));
             else if(n==1){
                 var dc={}
-                    dc["id"]=$(this).find("td:eq(12)").text();
-                     dc["przr"]=$(this).find("input.przr").val();
-                     dc["psr"]=$(this).find("input.psr").val();
-                     dc["fatt"]=$(this).find("td:eq(10)").text();
-                     ls.push(dc);
+                dc["id"]=$(this).find("td:eq(12)").text();
+                dc["przr"]=$(this).find("input.przr").val();
+                dc["psr"]=$(this).find("input.psr").val();
+                dc["fatt"]=$(this).find("td:eq(10)").text();
+                ls.push(dc);
             }
         }
      });
@@ -310,40 +312,50 @@ function WriteChecked(ret){
     var label="";
     var totexcsbl=0;
     var przcr=0;
+    var n=0;
     label='<tr>'
     for (i=0;i<ret.length;i++){
-        prz=parseFloat(ret[i].find("input.przr").val());
-        p=parseFloat(ret[i].find("input.psr").val());
-        iva=1+parseFloat(ret[i].find("td:eq(11)").text());
-        przcr=parseFloat(ret[i].find("td:eq(14)").text());
-        colli=parseFloat(ret[i].find("td:eq(15)").text());
-        collir=parseFloat(ret[i].find("input.clr").val());
-        ret[i].find("td:eq(9)").text((prz*p).toFixed(2));
-        ret[i].find("td:eq(10)").text((prz*p*iva).toFixed(2));
-        if(prz==0){
-            przcr=1;
-            prz=1;
+        lbl=ret[i].find("td:eq(2)").text();
+        if(lbl=="Scarico" )
+            impsca=parseFloat(ret[i].find("td:eq(10)").text());
+        else{
+            n+=1;
+            prz=parseFloat(ret[i].find("input.przr").val());
+            p=parseFloat(ret[i].find("input.psr").val());
+            iva=1+parseFloat(ret[i].find("td:eq(11)").text());
+            przcr=parseFloat(ret[i].find("td:eq(14)").text());
+            colli=parseFloat(ret[i].find("td:eq(15)").text());
+            collir=parseFloat(ret[i].find("input.clr").val());
+            ret[i].find("td:eq(9)").text((prz*p).toFixed(2));
+            ret[i].find("td:eq(10)").text((prz*p*iva).toFixed(2));
+            if(prz==0){
+                przcr=1;
+                prz=1;
+            }
+            if(collir!=colli){
+                alert("Num. Colli ricavi inferiore al carico della bolla")
+                $("#btddt").hide();
+                return 1;
+            }
+                
+            ret[i].find("td:eq(13)").text((1-(prz*p*iva)/impsca).toFixed(2));
+            summrg+=1-(prz*p*iva)/impsca;
+            label=label+ret[i];
+            sumfatt+=prz*p;    
+            sumvnd+=parseFloat(ret[i].find("td:eq(7)").text());
         }
-        if(collir!=colli){
-            alert("Num. Colli ricavi inferiore al carico della bolla")
-            $("#btddt").hide();
-            return 1;
-        }
-            
-        ret[i].find("td:eq(13)").text((przcr/prz-1).toFixed(2));
-        summrg=summrg+(przcr/prz-1);
-        label=label+ret[i];
-        sumfatt+=prz*p;    
-        sumvnd+=parseFloat(ret[i].find("td:eq(7)").text());
     }
     label=label+'</tr>'
     $("tb62").html(label);
     $("#dt6").val(sumfatt);
-    $("#dt2").val((summrg/i).toFixed(2));
+    $("#dt2").val((summrg/n).toFixed(2));
     $("#dt7").val(sumvnd-sumfatt-totexcsbl);
     $("#btddt").show();
 
 };
+
+
+
 
 function PushDdt(ret){
     var ar=[];

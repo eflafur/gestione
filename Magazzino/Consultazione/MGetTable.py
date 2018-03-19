@@ -190,14 +190,11 @@ class GetData:
         dic={}
         if(line["chc"]=="bl"):
             chc=0
-            rec=Carico.objects.filter(Q(p__gte=0),Q(idcod__produttore__id=line["cln"]))
+            rec=ExCsBl.objects.filter(Q(cv=0),Q(produttore__id=line["cln"]))
         else:
             chc=1
-            rec=Carico.objects.filter(p__gte=1)
-        r1=rec.filter(Q(idcod__produttore__id=line["cln"]),Q(fatt=line["fatt"]))
-        if(r1):
-            return 1
-        r2=rec.filter(Q(idcod__produttore__id=line["cln"]),Q(p=chc)).values("bolla","cv","mrg","data").order_by("cv").distinct()
+            rec=ExCsBl.objects.filter(Q(p__lte=2),Q(cv__gt=0),Q(produttore__id=line["cln"]))
+        r2=rec.values("carico__bolla","carico__cv","carico__mrg","carico__data").order_by("carico__cv").distinct()
         frn=Produttore.objects.get(id=line["cln"])
         dic["ct"]=frn.citta
         dic["pi"]=frn.pi
